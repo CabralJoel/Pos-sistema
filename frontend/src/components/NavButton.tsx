@@ -1,13 +1,18 @@
+import{useNavigate} from "react-router-dom";
 
 type NavButton = {
     text : string;
-    onClick?: ()=> void;
+    to: string;
 };
 
-export default function NavButton({text, onClick}: NavButton){
+export default function NavButton({text, to}: NavButton){
+
+    const navigate = useNavigate();
+
     return(
         <button
-        onClick={onClick}>
+        onClick={()=>navigate(to)}
+        >
             {text}
         </button>
     );
