@@ -1,4 +1,3 @@
-import{useNavigate} from "react-router-dom";
 
 type NavButton = {
     text : string;
@@ -7,11 +6,15 @@ type NavButton = {
 
 export default function NavButton({text, to}: NavButton){
 
-    const navigate = useNavigate();
+    const openNew = () => {
+  console.log("Botón clickeado:", to);
+  window.electronAPI.openWindow(to);
+};
+
 
     return(
         <button
-        onClick={()=>navigate(to)}
+        onClick={openNew}
         >
             {text}
         </button>
