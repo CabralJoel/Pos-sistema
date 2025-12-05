@@ -1,0 +1,66 @@
+/*FORMULARIO DE PRODUCTOS*/
+.form{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 5px;
+}
+
+.container{
+    display: flex;
+    gap: 25px;
+}
+
+.formContainer{
+    border: solid 1px black;
+    border-radius: 8px;
+}
+
+.pList{
+
+}
+
+
+.label{
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+}
+
+input{
+    width: 100%;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputContainer{
+    display: flex;
+    gap: 10px;
+}
+
+.inputWrapper {
+  display: flex;
+  gap: 6px;
+}
+
+h2{
+    margin: 0;
+}
+
+/*LISTA DE PRODUCTOS CARGADOS*/
+
+.pListContainer{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: start;
+}

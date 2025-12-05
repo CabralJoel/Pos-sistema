@@ -1,5 +1,6 @@
 
 type NavButton = {
+    icon?:string;
     text : string;
     to: string;
 };
@@ -14,6 +15,7 @@ export default function NavButton({text, to}: NavButton){
 
     return(
         <button
+        style={{background: "#3996f3ff"}}//cambiar color de botones
         onClick={openNew}
         >
             {text}
