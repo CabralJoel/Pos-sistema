@@ -14,7 +14,7 @@ interface ProductoForm{
 }
 
 export default function CargarProductos(){
-    /*const emptyRows=20;*/
+
     const initialForm: ProductoForm = {
         proveedor:"",
         code:"",
@@ -29,6 +29,9 @@ export default function CargarProductos(){
     const [formData,setFormData] = useState<ProductoForm>(initialForm);
 
     const [productos,setProductos] = useState<ProductoRequestDTO[]>([]);
+
+    const emptyRows=20;
+    const filasVacias = emptyRows - productos.length;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type } = e.target;
@@ -146,6 +149,16 @@ export default function CargarProductos(){
                                     <td>{p.precio}</td>
                                     <td>{p.stock}</td>
                                     <td>{p.ganancia}</td>
+                                </tr>
+                            ))}
+                            {/*filas vacias */}
+                            {Array.from({ length: filasVacias }).map((_, index) => (
+                                <tr key={`empty-${index}`}>
+                                    <td>&nbsp;</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             ))}
                         </tbody>
