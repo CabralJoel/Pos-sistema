@@ -2,8 +2,7 @@ import React from "react";
 import { useNumericInput } from "../hooks/useNumericInput";
 
 interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  className?: string;
-  decimal?: boolean;    // ← NUEVO PROP
+  decimal?: boolean;
 }
 
 export function NumberInput({ decimal = true, ...props }: NumericInputProps) {
