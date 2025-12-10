@@ -79,8 +79,7 @@ export default function CargarProductos(){
         if (!codeErr.ok) ok = false;codeErr.errors.forEach(e => toast.error(e));
 
         // NOMBRE
-        const nombreErr =
-            nombreVal.validate(formData.nombre, [
+        const nombreErr = nombreVal.validate(formData.nombre, [
                 isNotEmpty("Nombre"),
                 maxLength("Nombre", 20),
             ]);
@@ -88,32 +87,28 @@ export default function CargarProductos(){
         if (!nombreErr.ok) ok = false;nombreErr.errors.forEach(e => toast.error(e));
 
         // COSTO
-        const costoErr =
-            costoVal.validate(Number(formData.costo || 0), [
+        const costoErr = costoVal.validate(Number(formData.costo || 0), [
                 isNotEmpty("Costo"),
                 mayorACero("Costo"),
             ]);
         if (!costoErr.ok) ok = false;costoErr.errors.forEach(e => toast.error(e));
 
         // PRECIO
-        const precioErr =
-            precioVal.validate(Number(formData.precio || 0), [
+        const precioErr = precioVal.validate(Number(formData.precio || 0), [
                 isNotEmpty("Precio"),
                 mayorACero("Precio"),
             ]);
         if (!precioErr.ok) ok = false;precioErr.errors.forEach(e => toast.error(e));
 
         // STOCK
-        const stockErr =
-            stockVal.validate(Number(formData.stock || 0), [
+        const stockErr = stockVal.validate(Number(formData.stock || 0), [
                 isNotEmpty("Stock"),
                 mayorACero("Stock"),
             ]);
         if (!stockErr.ok) ok = false;stockErr.errors.forEach(e => toast.error(e));
 
         // GANANCIA
-        const gananciaErr =
-            gananciaVal.validate(Number(formData.ganancia || 0), [
+        const gananciaErr = gananciaVal.validate(Number(formData.ganancia || 0), [
                 isNotEmpty("Ganancia"),
                 mayorACero("Ganancia"),
             ]);
@@ -139,6 +134,31 @@ export default function CargarProductos(){
 
         setFormData(initialForm);
     }
+
+    const handleGuardarProductos = async () =>{
+        
+        if (productos.length === 0){return}
+
+        try{
+            const response = await fetch("http://localhost:8080/productos/cargar",{
+                method: "POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(productos)
+            });
+            if(!response.ok){
+                const errorMsg = await response.text();
+                toast.error(errorMsg);
+                return;
+            }
+            const data = await response.json();
+
+            setProductos([]);
+
+        }
+        catch(error:any){
+            toast.error("Hubo un error inesperado");
+        }
+    };
     
 
     return(
@@ -245,7 +265,10 @@ export default function CargarProductos(){
                 </div>
                 <div className={styles.confirmContainer}>
                     <input type="text" />{/*cambiar input*/}
-                    <button type="button" className={styles.submitButton}>Guardar Productos</button>
+                    <button type="button" className={styles.submitButton}
+                    onClick={handleGuardarProductos}>
+                        Guardar Productos
+                    </button>
                 </div>
             </div>
 

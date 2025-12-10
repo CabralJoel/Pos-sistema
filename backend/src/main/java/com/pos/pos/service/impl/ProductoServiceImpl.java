@@ -64,6 +64,7 @@ public class ProductoServiceImpl implements ProductoService {
         existente.setPrecio(producto.getPrecio());
         existente.sumarStock(producto.getStock());
         existente.setNombre(producto.getNombre());
+        existente.setProveedor(producto.getProveedor());
 
         return productoRepository.save(existente);
     }

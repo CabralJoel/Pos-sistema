@@ -25,11 +25,15 @@ public class Producto {
     @Column(nullable = false)
     private Integer stock;
 
-    public Producto(String codigo,String nombre, Double precio, Integer stock){
+    @Column(nullable = false)
+    private String proveedor;
+
+    public Producto(String codigo,String nombre, Double precio, Integer stock, String proveedor){
         this.code = codigo;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
+        this.proveedor = proveedor;
     }
 
 

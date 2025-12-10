@@ -29,9 +29,9 @@ public class ProductoServiceImplTest {
 
     @BeforeEach
     public void setUp(){
-        producto1 = new Producto("a1b2","shampoo",1000d,10);
-        producto2 = new Producto("a1b3","jabon",500d,15);
-        producto3 = new Producto("a1b4","perfume",500d,5);
+        producto1 = new Producto("a1b2","shampoo",1000d,10,"Dove");
+        producto2 = new Producto("a1b3","jabon",500d,15,"Dove");
+        producto3 = new Producto("a1b4","perfume",500d,5,"Carancho");
 
         listaP = new ArrayList<>(List.of(producto1,producto2));
     }

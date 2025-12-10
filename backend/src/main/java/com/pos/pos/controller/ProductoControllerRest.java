@@ -20,7 +20,7 @@ public class ProductoControllerRest {
     }
 
     @PostMapping("/cargar")
-    public ResponseEntity<List<ProductoResponseDTO>> crearProducto(@RequestBody List<ProductoRequestDTO> dtos) {
+    public ResponseEntity<List<ProductoResponseDTO>> cargarProductos(@RequestBody List<ProductoRequestDTO> dtos) {
 
         List<Producto> productos = dtos.stream().map(ProductoRequestDTO::aModelo).toList();
         List<Producto> saved = productoService.cargarProductos(productos);
