@@ -35,6 +35,7 @@ export function useNumericInput(allowDecimal: boolean = true) {
   }, [allowDecimal]);
 
   const handleWheel = useCallback((e: React.WheelEvent<HTMLInputElement>) => {
+    e.currentTarget.blur();
     e.preventDefault();
   }, []);
 

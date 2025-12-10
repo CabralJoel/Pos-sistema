@@ -2,6 +2,11 @@ import styles from "../styles/CargarProductos.module.css"
 import { NumberInput} from "../components/NumberInput";
 import React, { useState } from "react";
 import type { ProductoRequestDTO } from "../types/producto";
+import { handleAlfanumerico } from "../utils/soloAlfanumericos"; 
+import {toast } from "react-toastify";
+
+import { isNotEmpty, maxLength, mayorACero } from "../utils/validaciones";
+import { useValidator } from "../hooks/useValidator";
 
 interface ProductoForm{
     proveedor:string,
@@ -30,7 +35,7 @@ export default function CargarProductos(){
 
     const [productos,setProductos] = useState<ProductoRequestDTO[]>([]);
 
-    const emptyRows=20;
+    const emptyRows=19;
     const filasVacias = emptyRows - productos.length;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,11 +47,84 @@ export default function CargarProductos(){
         }));
     };
 
-    const validarForm = true;//cambiar por validaciones reales
+
+    const proveedorVal = useValidator<string>();
+    const codeVal = useValidator<string>();
+    const nombreVal = useValidator<string>();
+
+    const precioVal = useValidator<number>();
+    const costoVal = useValidator<number>();
+    const stockVal = useValidator<number>();
+    const gananciaVal = useValidator<number>();
+
+    const validarForm = () => {
+        let ok = true;
+
+        // PROVEEDOR
+        const proveedorRes =
+            proveedorVal.validate(formData.proveedor, [
+                isNotEmpty("Proveedor"),
+                maxLength("Proveedor", 20),
+        ]);
+
+        if (!proveedorRes.ok) {ok = false; proveedorRes.errors.forEach(e => toast.error(e));}
+
+        // CÓDIGO
+        const codeErr =
+            codeVal.validate(formData.code, [
+                isNotEmpty("Código"),
+                maxLength("Código", 20),
+            ]);
+
+        if (!codeErr.ok) ok = false;codeErr.errors.forEach(e => toast.error(e));
+
+        // NOMBRE
+        const nombreErr =
+            nombreVal.validate(formData.nombre, [
+                isNotEmpty("Nombre"),
+                maxLength("Nombre", 20),
+            ]);
+
+        if (!nombreErr.ok) ok = false;nombreErr.errors.forEach(e => toast.error(e));
+
+        // COSTO
+        const costoErr =
+            costoVal.validate(Number(formData.costo || 0), [
+                isNotEmpty("Costo"),
+                mayorACero("Costo"),
+            ]);
+        if (!costoErr.ok) ok = false;costoErr.errors.forEach(e => toast.error(e));
+
+        // PRECIO
+        const precioErr =
+            precioVal.validate(Number(formData.precio || 0), [
+                isNotEmpty("Precio"),
+                mayorACero("Precio"),
+            ]);
+        if (!precioErr.ok) ok = false;precioErr.errors.forEach(e => toast.error(e));
+
+        // STOCK
+        const stockErr =
+            stockVal.validate(Number(formData.stock || 0), [
+                isNotEmpty("Stock"),
+                mayorACero("Stock"),
+            ]);
+        if (!stockErr.ok) ok = false;stockErr.errors.forEach(e => toast.error(e));
+
+        // GANANCIA
+        const gananciaErr =
+            gananciaVal.validate(Number(formData.ganancia || 0), [
+                isNotEmpty("Ganancia"),
+                mayorACero("Ganancia"),
+            ]);
+        if (!gananciaErr.ok) ok = false;gananciaErr.errors.forEach(e => toast.error(e));
+
+        return ok;
+    };
 
     const handleGuardar=()=>{
 
-        if(!validarForm){return;}
+        if(!validarForm()){return;}
 
         const dto: ProductoRequestDTO={
             code:formData.code,
@@ -82,7 +160,8 @@ export default function CargarProductos(){
                         <input type="text"  placeholder="Codigo del producto"
                         name="code"
                         value={formData.code}
-                        onChange={handleChange}/>
+                        onChange={handleChange}
+                        {...handleAlfanumerico}/>
                     </label>
 
                     <label>Nombre

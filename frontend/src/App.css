@@ -22,6 +22,39 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Estilo general de cada toast */
+.Toastify__toast {
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Contenedor (ajustá si te tapa algo) */
+.Toastify__toast-container {
+  padding-top: 40px;
+}
+
+/* Botón de cerrar */
+.Toastify__close-button {
+  opacity: 0.8;
+}
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+.Toastify__toast--error {
+  background: #c62828 !important;
+  color: white !important;
+}
+
+.Toastify__toast--success {
+  background: #2e7d32 !important;
+  color: white !important;
+}
+
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
