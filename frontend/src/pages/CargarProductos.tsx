@@ -7,7 +7,7 @@ import {toast } from "react-toastify";
 
 import { isNotEmpty, maxLength, mayorACero } from "../utils/validaciones";
 import { useValidator } from "../hooks/useValidator";
-
+//TODO: agregar calculos de inputs de precios
 interface ProductoForm{
     proveedor:string,
     code:string,
@@ -60,7 +60,7 @@ export default function CargarProductos(){
     const validarForm = () => {
         let ok = true;
 
-        // PROVEEDOR
+        // PROVEEDOR temporal, despues puede que se quite
         const proveedorRes =
             proveedorVal.validate(formData.proveedor, [
                 isNotEmpty("Proveedor"),
@@ -136,7 +136,7 @@ export default function CargarProductos(){
     }
 
     const handleGuardarProductos = async () =>{
-        
+
         if (productos.length === 0){return}
 
         try{
@@ -150,7 +150,6 @@ export default function CargarProductos(){
                 toast.error(errorMsg);
                 return;
             }
-            const data = await response.json();
 
             setProductos([]);
 
@@ -168,7 +167,7 @@ export default function CargarProductos(){
                 <h2>Ingrese informacion del Producto</h2>
 
                 <label>Proveedor
-                    <input type="text" placeholder="Proveedor"
+                    <input type="text" placeholder="Proveedor"//pasar a input de seleccion
                     name="proveedor"
                     value={formData.proveedor}
                     onChange={handleChange}/>
