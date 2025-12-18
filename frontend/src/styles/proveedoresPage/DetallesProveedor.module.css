@@ -1,0 +1,45 @@
+.detailContiner{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 8px;
+    justify-content: center;
+    min-width: 500px;
+    width: 45%;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+.infoContainer{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.details{/*este es el contenedor de los detalles*/
+    display: flex;
+    flex-direction: column;
+}
+.descripcion{
+    word-break:break-all;
+}
+p{
+    font-size: 20px;
+    text-align: start;
+}
+
+/*SI NO SE ENCUENTRAN PROVEEDORES*/
+
+.empty{
+    font-size: 20px;
+}
+.emptyContainer{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+}

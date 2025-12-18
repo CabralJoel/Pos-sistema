@@ -1,0 +1,37 @@
+import detailStyles from "../../styles/proveedoresPage/DetallesProveedor.module.css";
+import type { Proveedor } from "../../types/proveedor";
+
+interface props {
+    proveedor?: Proveedor;
+}
+
+
+export default function DetallesProveedor ({proveedor}:props){ 
+
+    if(!proveedor){
+        return(
+            <div className={detailStyles.emptyContainer}><p className={detailStyles.empty}>El Proveedor ingresado no existe</p></div>
+        );
+    }
+
+    const descripcion = proveedor.descripcion?.trim()|| "Sin Descripcion";
+    return(
+        <div className={detailStyles.detailContiner}>
+            <h2>Detalles de proveedor</h2>
+
+            <div className={detailStyles.details}>
+                <div className={detailStyles.infoContainer}>
+                    <p>Codigo: {proveedor.code}</p>
+                    <p>CUIT: {proveedor.cuit}</p>
+                </div>
+                <p>Razon social: {proveedor.nombre}</p>
+                <p>Direccion: {proveedor.localidad} -{proveedor.direccion}</p>
+                <div className={detailStyles.infoContainer}>
+                    <p>Email: {proveedor.email}</p>
+                    <p>Telefono: {proveedor.telefono}</p>
+                </div>
+                <p className={detailStyles.descripcion}>Descripcion: {descripcion}</p>
+            </div>
+        </div>
+    )
+}

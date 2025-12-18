@@ -1,0 +1,17 @@
+
+
+/*SI NO SE ENCUENTRAN PROVEEDORES*/
+.empty{
+    font-size: 20px;
+}
+.emptyContainer{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    min-width: 500px;
+}

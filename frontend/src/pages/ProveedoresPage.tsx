@@ -1,4 +1,7 @@
-import styles from "../styles/ProveedoresPage.module.css";
+import styles from "../styles/proveedoresPage/ProveedoresPage.module.css";
+import FormProveedor from "../components/proveedores/FormProveedor";
+import DetallesProveedor from "../components/proveedores/DetallesProveedor";
+import TablaProveedores from "../components/proveedores/TablaProveedores"
 
 export default function proveedores(){
 
@@ -19,48 +22,9 @@ export default function proveedores(){
 
             {/*FORM SECCTION */}
             <div className={styles.formContainer}>
-                <form>
-                    <h2>Complete los datos del proveedor</h2>
-
-                    <div className={styles.labelContainer}>
-                        <label>Codigo
-                            <input type="text" placeholder="Codigo" />
-                        </label>
-                        <label>CUIT
-                            <input type="number" placeholder="CUIT " />{/*TODO:CAMBIAR POR COMPONENTE NUMBERiNPUT */}
-                        </label>
-                        
-                    </div>
-
-                    <label>Razon Social
-                        <input type="text" placeholder="Nombre" />
-                    </label>
-                    
-                    
-                    <div className={styles.labelContainer}>
-                        <label>Localidad
-                            <input type="text" placeholder="Localidad" />
-                        </label>
-                        <label>Calle y Nro
-                            <input type="text" placeholder="Direccion" />
-                        </label>
-                    </div>
-                    <div className={styles.labelContainer}>
-                        <label>Email
-                            <input type="email" placeholder="ejemplo@gmail.com" />
-                        </label>
-                        <label>Telefono
-                            <input type="text" placeholder="15 1234-5678" />
-                        </label>
-                    </div>
-                    
-                    <label>Descripción
-                        <textarea placeholder="Descripción de servicios"></textarea>
-                    </label>
-
-                    <button>Guardar</button>
-                </form>
+                <TablaProveedores/>
             </div>
+            
             
         </div>
     )

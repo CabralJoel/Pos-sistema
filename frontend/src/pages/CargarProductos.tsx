@@ -165,14 +165,14 @@ export default function CargarProductos(){
 
             <div className={styles.formContainer}>
                 <h2>Ingrese informacion del Producto</h2>
-
+                <div style={{paddingBottom:"20px"}}>
                 <label>Proveedor
                     <input type="text" placeholder="Proveedor"//pasar a input de seleccion
                     name="proveedor"
                     value={formData.proveedor}
                     onChange={handleChange}/>
                 </label>
-
+                </div>
                 <form className={styles.form} >
 
                     <label>Codigo

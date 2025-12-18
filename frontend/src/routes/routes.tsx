@@ -12,6 +12,7 @@ export  function AppRoutes(){
              <Route element={<NavLayout/>}>
                 <Route path="/carga" element={<CargarProductos/>}/>
                 <Route path="/proveedores" element={<Proveedores/>}/>
+                <Route path="/inventario" element={<Proveedores/>}/>
              </Route>
              
         </Routes>

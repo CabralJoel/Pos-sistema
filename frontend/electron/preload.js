@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-console.log("PRELOAD CARGÓ!");
+console.log("PRELOAD CARGÓ!");//TODO:borrar los consol.log
 
 contextBridge.exposeInMainWorld("electronAPI", {
   openWindow: (route) => {
