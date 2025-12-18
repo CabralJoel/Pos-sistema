@@ -16,7 +16,7 @@ export default function proveedorTable({proveedores}: props){
     };
 
     return(
-        <table>
+        <table className={tableStyles.proveedorTable}>
             <thead>
                 <tr>
                     <th>Codigo</th>

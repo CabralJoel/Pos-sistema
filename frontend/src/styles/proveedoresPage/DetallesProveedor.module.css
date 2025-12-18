@@ -23,9 +23,13 @@
 .descripcion{
     word-break:break-all;
 }
-p{
+.detailContiner p{
     font-size: 20px;
     text-align: start;
+}
+
+.detailContiner h2{
+    margin: 0;
 }
 
 /*SI NO SE ENCUENTRAN PROVEEDORES*/

@@ -45,7 +45,10 @@
     padding: 30px;
 }
 
-form{
+.container form{
     min-width: 40vw;
 }
 
+.container h2{/*le quito margin a todos los componentes*/
+    margin: 0;
+}
