@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import formStyles from "../../styles/proveedoresPage/FormProveedor.module.css";
-import type { Proveedor } from "../../types/proveedor";
+import type { ProveedorDTO,ProveedorResponse } from "../../types/proveedor";
 
 interface formProv{
     mode:"nuevo"|"edicion",
-    proveedor?:Proveedor,
-    onSubmit:(proveedor:Proveedor)=>void,
+    proveedor?:ProveedorResponse,
+    onSubmit:(proveedor:ProveedorDTO)=>void,
     onCancel?:()=>void
 }
 
 export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formProv){
-        const [formData,setFormData] = useState<Proveedor>(proveedor??//arranca con el que recive o todo vacio como esta abajo
+        const [formData,setFormData] = useState<ProveedorDTO>(proveedor??//arranca con el que recive o todo vacio como esta abajo
             {
                 code:"",
                 cuit:"",
@@ -23,7 +23,7 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
             }
         )
 
-        const handelSubmit = (e:React.ChangeEvent<HTMLInputElement| HTMLTextAreaElement>) =>{
+        const handleChange = (e:React.ChangeEvent<HTMLInputElement| HTMLTextAreaElement>) =>{
             const {name, value} = e.target;
             
             setFormData((prev) => ({
@@ -32,9 +32,10 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
         };
 
         const handleSubmit = (e:React.FormEvent)=>{
+            e.preventDefault();
             onSubmit(formData);
         }
-
+//TODO: agregar los handle al html
         return(
                 <form className={formStyles.proveedorForm}>
                     <h2>Complete los datos del proveedor</h2>

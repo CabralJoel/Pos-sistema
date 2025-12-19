@@ -1,13 +1,19 @@
-import type {Proveedor} from "../../types/proveedor";
+import type {ProveedorResponse} from "../../types/proveedor";
 import tableStyles from "../../styles/proveedoresPage/TablaProveedores.module.css"
 
 interface props {
-    proveedores?:Proveedor[];
+    proveedores?:ProveedorResponse[];
 }
 
 
 export default function proveedorTable({proveedores}: props){
     const sinDatos= !proveedores || proveedores?.length===0;
+
+    const emptyRows=15;
+    const filasVacias = emptyRows;
+    if(proveedores){
+        const filasVacias = emptyRows - proveedores.length;
+    };
 
     if(sinDatos){
         return(
@@ -34,6 +40,16 @@ export default function proveedorTable({proveedores}: props){
                     <td>florencio varela</td>
                     <td>11 1234-1234</td>
                 </tr>
+                {/*filas vacias */}
+                {Array.from({ length: filasVacias }).map((_, index) => (
+                    <tr key={`empty-${index}`}>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                ))}
             </tbody>
         </table>
     )

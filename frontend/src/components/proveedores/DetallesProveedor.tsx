@@ -1,12 +1,13 @@
 import detailStyles from "../../styles/proveedoresPage/DetallesProveedor.module.css";
-import type { Proveedor } from "../../types/proveedor";
+import type { ProveedorResponse } from "../../types/proveedor";
 
 interface props {
-    proveedor?: Proveedor;
+    proveedor?: ProveedorResponse;
+    onEdit?: ()=>void;
 }
 
 
-export default function DetallesProveedor ({proveedor}:props){ 
+export default function DetallesProveedor ({proveedor,onEdit}:props){ 
 
     if(!proveedor){
         return(
@@ -31,6 +32,10 @@ export default function DetallesProveedor ({proveedor}:props){
                     <p>Telefono: {proveedor.telefono}</p>
                 </div>
                 <p className={detailStyles.descripcion}>Descripcion: {descripcion}</p>
+                <div>
+                    <button className={detailStyles.editButton} type="button" onClick={onEdit}>Editar</button>
+                </div>
+                
             </div>
         </div>
     )
