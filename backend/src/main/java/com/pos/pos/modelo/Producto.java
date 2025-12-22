@@ -26,7 +26,7 @@ public class Producto {
     private Integer stock;
 
     @Column(nullable = false)
-    private String proveedor;
+    private String proveedor;//TODO:cambiar por la clase proveedor
 
     public Producto(String codigo,String nombre, Double precio, Integer stock, String proveedor){
         this.code = codigo;

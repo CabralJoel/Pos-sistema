@@ -16,4 +16,8 @@ public class TestService {
         entityManager.createNativeQuery("DELETE FROM producto").executeUpdate();
     }
 
+    public void eliminarProveedores(){
+        entityManager.createNativeQuery("DELETE FROM proveedor").executeUpdate();
+    }
+
 }
