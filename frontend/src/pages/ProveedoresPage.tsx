@@ -2,42 +2,60 @@ import styles from "../styles/proveedoresPage/ProveedoresPage.module.css";
 
 import FormProveedor from "../components/proveedores/FormProveedor";
 import DetallesProveedor from "../components/proveedores/DetallesProveedor";
-import TablaProveedores from "../components/proveedores/TablaProveedores"
+import TablaProveedores from "../components/proveedores/TablaProveedores";
+import BuscadorProveedores from "../components/proveedores/BuscadorProveedores";
 
-import { useState } from "react";
+import { useBusquedaProveedores } from "../hooks/useBusquedaProveedores";
+import { useEffect, useState } from "react";
 
 import type { ProveedorDTO,ProveedorResponse } from "../types/proveedor";
 import { toast } from "react-toastify";
 
 type Vista = "NUEVO"|"TABLA"|"DETALLES"|"EDITAR";
 
-// TEMPORAL – borrar cuando venga de backend
-const proveedorMock: ProveedorResponse = {
-  id:1,
-  code: "P001",
-  cuit: "20-12345678-9",
-  nombre: "Proveedor de Prueba",
-  localidad: "Rosario",
-  direccion: "San Martín 123",
-  email: "test@proveedor.com",
-  telefono: "341-111-1111",
-  descripcion: "ProveedorDTO temporal para pruebas",
-};
-
-
 export default function ProveedorDTOesPage(){
     const [vista,setVista] = useState<Vista>("NUEVO");
     const[proveedores,setProveedores]= useState<ProveedorResponse[]>([]);
     const[provSelecionado,setSeleccion]= useState<ProveedorResponse|undefined>(undefined);
 
-    const handleChangeVista = (vista:Vista)=>{
+    useEffect(()=>{//trae a los proveedores solo al cargar la pagina
+        const fetchProveedores = async () => {
+            try{
+                const response = await fetch("http://localhost:8080/proveedores",{
+                    method: "GET",
+                    });
+                const proveedoresBack:ProveedorResponse[] = await response.json();
+                setProveedores(proveedoresBack);
+            }
+            catch(error){
+                toast.error("No se pudieron cargar los proveedores");
+            }
+        }
+
+        fetchProveedores();
+    },[]);
+
+    const{//hook de busqueda de proveedores
+        busqueda,
+        sugerencias,
+        actualizarBusqueda,
+        confirmarBusqueda,
+        seleccionar,
+    } = useBusquedaProveedores({proveedores,onSelect:(proveedor) => {
+        setSeleccion(proveedor);
+        setVista("DETALLES");
+    },
+    });
+
+    const handleChangeVista = (vista:Vista)=>{//solo cambia vista y reinicia seleccionado
         setSeleccion(undefined);
         setVista(vista);
     }
 
+//TODO:separar logica de handles en hook mas adelante
     const handleGuardar = async(proveedorDTO:ProveedorDTO)=>{
         try{
-            const response = await fetch("",{//TODO:completar la direccion del fetch para crear proveedor
+            const response = await fetch("http://localhost:8080/proveedores/crear",{
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify(proveedorDTO)
@@ -48,6 +66,9 @@ export default function ProveedorDTOesPage(){
                 return
             }
             const proveedorCreado = await response.json();
+
+            setProveedores(prev => [...prev, proveedorCreado]);
+
             setSeleccion(proveedorCreado);//guardo el proveedor creado
             setVista("DETALLES");
             
@@ -58,10 +79,14 @@ export default function ProveedorDTOesPage(){
     };
 
     const handleEditar = async(proveedorDTO:ProveedorDTO) => {
+        if(!provSelecionado){
+            toast.error("Seleccione un proveedor para editar");
+            return;
+        }
         
         try{
-            const response = await fetch("",{//TODO:completar la direccion del fetch para editar proveedor con su id en direccion
-                method: "PATCH",
+            const response = await fetch(`http://localhost:8080/proveedores/update/${provSelecionado.id}`,{
+                method: "PUT",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify(proveedorDTO)
             });
@@ -73,6 +98,11 @@ export default function ProveedorDTOesPage(){
             }
 
             const proveedorEditado = await response.json();
+
+            setProveedores(prev =>
+                prev.map(p => p.id === proveedorEditado.id ? proveedorEditado : p)
+            );
+
             setSeleccion(proveedorEditado);
             setVista("DETALLES");
 
@@ -80,43 +110,25 @@ export default function ProveedorDTOesPage(){
         catch(error){
             toast.error("Hubo un error inesperado");
         }
-
     }
-
-    const handleProveedores = async() =>{
-        try{
-            const response = await fetch("",{
-                method: "GET",
-            });
-
-            const proveedoresBack:ProveedorResponse[] = await response.json();
-            setProveedores(proveedoresBack);
-
-            handleChangeVista("TABLA");
-        }
-        catch(error){
-            toast.error("Hubo un error inesperado");
-        }
-    }
-
 
     return(
         <div className={styles.container}>
             <div className={styles.optionContainer}>
                 <div className={styles.buttonContainer}>
-                    <button className={styles.optionButton} onClick={()=>handleChangeVista("TABLA")}>{/*TODO:cambiar por handleProveedores */}
+                    <button className={styles.optionButton} onClick={()=>handleChangeVista("TABLA")}>
                         Proveedores
                     </button>
                     <button className={styles.optionButton} onClick={()=>handleChangeVista("NUEVO")}>
                         Nuevo Proveedor
                     </button>
                 </div>
-                <div className={styles.searchContainer}>
-                    <input className={styles.search} type="text" placeholder="Buscar proveedor" />
-                    <button className={styles.optionButton} onClick={()=>setVista("DETALLES")}>
-                        Buscar
-                    </button>
-                </div>
+                <BuscadorProveedores
+                busqueda={busqueda}
+                sugerencias={sugerencias}
+                onChange={actualizarBusqueda}
+                onConfirm={confirmarBusqueda}
+                onSelect={seleccionar}/>
                 
             </div>
 

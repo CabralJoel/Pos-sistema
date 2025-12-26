@@ -1,0 +1,10 @@
+.searchContainer{ 
+    display: flex;
+    gap: 10px;
+    flex-grow: 2;
+}
+.search{
+    max-width: 400px; 
+    border-radius: 10px; 
+    flex: 1;
+}

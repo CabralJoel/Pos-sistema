@@ -9,9 +9,7 @@ interface formProv{
     onCancel?:()=>void
 }
 
-export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formProv){
-        const [formData,setFormData] = useState<ProveedorDTO>(proveedor??//arranca con el que recive o todo vacio como esta abajo
-            {
+const emptyForm: ProveedorDTO = {
                 code:"",
                 cuit:"",
                 nombre:"",
@@ -20,8 +18,27 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
                 email:"",
                 telefono:"",
                 descripcion:"",
+            };
+
+export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formProv){
+        const [formData,setFormData] = useState<ProveedorDTO>(emptyForm);
+
+        useEffect(()=>{
+            if(mode === "edicion"&& proveedor){
+                setFormData({
+                    code: proveedor.code,
+                    cuit: proveedor.cuit,
+                    nombre: proveedor.nombre,
+                    localidad: proveedor.localidad,
+                    direccion: proveedor.direccion,
+                    email: proveedor.email,
+                    telefono: proveedor.telefono,
+                    descripcion: proveedor.descripcion,
+                })
+            }else{
+                setFormData(emptyForm);
             }
-        )
+        },[mode,proveedor]);
 
         const handleChange = (e:React.ChangeEvent<HTMLInputElement| HTMLTextAreaElement>) =>{
             const {name, value} = e.target;
@@ -35,45 +52,46 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
             e.preventDefault();
             onSubmit(formData);
         }
-//TODO: agregar los handle al html
+//TODO:cambiar diseño del front, colores
         return(
-                <form className={formStyles.proveedorForm}>
+                <form className={formStyles.proveedorForm} onSubmit={handleSubmit}>
                     <h2>Complete los datos del proveedor</h2>
 
                     <div className={formStyles.labelContainer}>
                         <label>Codigo
-                            <input type="text" placeholder="Codigo" />
+                            <input type="text" placeholder="Codigo" name="code" value={formData.code} onChange={handleChange}/>
                         </label>
                         <label>CUIT
-                            <input type="text" placeholder="CUIT " />
+                            <input type="text" placeholder="CUIT " name="cuit" value={formData.cuit} onChange={handleChange}/>
                         </label>
                         
                     </div>
 
                     <label>Razon Social
-                        <input type="text" placeholder="Nombre" />
+                        <input type="text" placeholder="Nombre" name="nombre"value={formData.nombre}onChange={handleChange}/>
                     </label>
                     
                     
                     <div className={formStyles.labelContainer}>
                         <label>Localidad
-                            <input type="text" placeholder="Localidad" />
+                            <input type="text" placeholder="Localidad" name="localidad" value={formData.localidad}onChange={handleChange}/>
                         </label>
                         <label>Calle y Nro
-                            <input type="text" placeholder="Direccion" />
+                            <input type="text" placeholder="Direccion" name="direccion" value={formData.direccion}onChange={handleChange}/>
                         </label>
                     </div>
                     <div className={formStyles.labelContainer}>
                         <label>Email
-                            <input type="email" placeholder="ejemplo@gmail.com" />
+                            <input type="email" placeholder="ejemplo@gmail.com" name="email" value={formData.email}onChange={handleChange}/>
                         </label>
                         <label>Telefono
-                            <input type="text" placeholder="15 1234-5678" />
+                            <input type="text" placeholder="15 1234-5678" name="telefono" value={formData.telefono}onChange={handleChange}/>
                         </label>
                     </div>
                     
                     <label>Descripción
-                        <textarea className={formStyles.formProvTextarea} placeholder="Descripción de servicios"></textarea>
+                        <textarea className={formStyles.formProvTextarea} placeholder="Descripción de servicios"
+                        name="descripcion" value={formData.descripcion}onChange={handleChange}></textarea>
                     </label>
 
                     <div className={formStyles.buttonContainer}>
@@ -81,7 +99,7 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
                             <button type="button" style={{background:"gray"}} onClick={onCancel}>Cancelar</button>
                         )}
 
-                        <button type="submit" style={{background:"red"}}>{/*TODO:cambiar color de boton */}
+                        <button type="submit" style={{background:"red"}} >
                             {mode==="nuevo"? "Crear Proveedor" : "Guardar"}
                         </button>
                     </div>

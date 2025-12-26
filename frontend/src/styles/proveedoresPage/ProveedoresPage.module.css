@@ -15,25 +15,15 @@
     flex-wrap: wrap;
 
 }
-.buttonContainer{/*TODO:cambiar el color de fondo:*/
+.buttonContainer{
     display: flex;
     gap: 15px;
     flex-grow: 3;
 }
+
 .optionButton{
     white-space: nowrap;
 }
-
-.searchContainer{
-    display: flex;
-    gap: 15px;
-    flex-grow: 2;
-}
-.search{
-    max-width: 400px;
-    border-radius: 10px;
-}
-
 /*Formulario*/
 .formContainer{/*posible cambio de nombre*/
     display: flex;

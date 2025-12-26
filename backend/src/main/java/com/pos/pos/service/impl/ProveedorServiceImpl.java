@@ -2,7 +2,7 @@ package com.pos.pos.service.impl;
 
 import com.pos.pos.controller.Dto.ProveedorUpdatedRequestDTO;
 import com.pos.pos.controller.exception.ParametroIncorrecto;
-import com.pos.pos.controller.exception.ProveedorNoEncontrado;
+import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Proveedor;
 import com.pos.pos.persistencia.interfaces.ProveedorRepository;
 import com.pos.pos.service.ProveedorService;
@@ -34,7 +34,7 @@ public class ProveedorServiceImpl implements ProveedorService {
     public Proveedor update(Long id, ProveedorUpdatedRequestDTO proveedorDTO) {
 
         Optional<Proveedor> optProveedor = this.proveedorRepository.findById(id);
-        if (optProveedor.isEmpty()) throw new ProveedorNoEncontrado("No existe el proveedor que se quiere modificar.");
+        if (optProveedor.isEmpty()) throw new ElementoNoEncontrado("No existe el proveedor que se quiere modificar.");
 
         Proveedor recuperado = optProveedor.get();
 

@@ -3,7 +3,7 @@ package com.pos.pos.service;
 import com.pos.pos.TestService;
 import com.pos.pos.controller.Dto.ProveedorUpdatedRequestDTO;
 import com.pos.pos.controller.exception.ParametroIncorrecto;
-import com.pos.pos.controller.exception.ProveedorNoEncontrado;
+import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Proveedor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +69,7 @@ public class ProveedorServiceImplTest {
 
     @Test
     public void intentaActualizarUnProveedorInexistenteLanzaError(){
-        assertThrows(ProveedorNoEncontrado.class,()->{proveedorService.update(-1L,updatedDTO);});
+        assertThrows(ElementoNoEncontrado.class,()->{proveedorService.update(-1L,updatedDTO);});
     }
 
     @Test

@@ -20,7 +20,7 @@ export default function proveedorTable({proveedores}: props){
             <div className={tableStyles.emptyContainer}><p className={tableStyles.empty}>No se encontraron proveedores</p></div>
         );
     };
-
+//TODO:modificar para que muestre proveedores recibidos
     return(
         <table className={tableStyles.proveedorTable}>
             <thead>
