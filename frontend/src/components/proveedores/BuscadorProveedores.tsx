@@ -1,5 +1,4 @@
 import type { ProveedorResponse } from "../../types/proveedor"
-import buscadorStyles from "../../styles/proveedoresPage/BuscadorProveedores.module.css"
 
 type Props = {
     busqueda: string;
@@ -17,26 +16,34 @@ export default function BuscadorProveedores({
     onSelect,
 }:Props){
     return(
-        <div className={buscadorStyles.searchContainer}>
-            <input className={buscadorStyles.search}
-            type="text" placeholder="Buscar proveedor"
-            value={busqueda}
-            onChange={e => onChange(e.target.value)}
-            onKeyDown={e =>{
-                if(e.key==="Enter")onConfirm();}}/>
+        <div style={{display:"flex", gap:"10px",flexGrow:"2"}}>
+            <div style={{position:"relative",flex:"1",maxWidth:"400px"}}>
+                <input style={{borderRadius:"10px",width:"100%",height:"100%",left:"0"}}
+                type="text" placeholder="Buscar proveedor"
+                value={busqueda}
+                onChange={e => onChange(e.target.value)}
+                onKeyDown={e =>{
+                    if(e.key==="Enter")onConfirm();}}/>
 
-            <button 
-            onClick={onConfirm}>Buscar</button>
-            {sugerencias.length>0 && (
-                <ul>
+                {sugerencias.length>0 && (
+                <ul style={{position:"absolute",width:"100%",margin:"0",padding:"0 10px",listStyle:"none",top:"100%",
+                background:"#f8f8f8ff",borderRadius:"8px",maxWidth:"400px"}}>
                     {sugerencias.map(p => (
-                        <li key={p.id}>
+                        <li key={p.id}
+                        onClick={() => onSelect(p)}
+                        style={{cursor:"pointer",textAlign:"left",padding:"2px 0"}}>
 
-                            <strong>{p.code}</strong>- {p.nombre}
+                            <strong>{p.code}</strong> - {p.nombre}
                         </li>
                     ))}
                 </ul>
             )}
+            </div>
+            
+
+            <button 
+            onClick={onConfirm}>Buscar</button>
+            
         </div>
     );
 }

@@ -11,7 +11,7 @@ export default function DetallesProveedor ({proveedor,onEdit}:props){
 
     if(!proveedor){
         return(
-            <div className={detailStyles.emptyContainer}><p className={detailStyles.empty}>El Proveedor ingresado no existe</p></div>
+            <div className={detailStyles.emptyContainer}><p className={detailStyles.empty}>Ingrese un proveedor existente</p></div>
         );
     }
 

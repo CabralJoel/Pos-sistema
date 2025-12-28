@@ -44,6 +44,7 @@
 }
 .emptyContainer{
     display: flex;
+    min-width: 500px;
     flex-direction: column;
     border: 2px solid black;
     border-radius: 8px;

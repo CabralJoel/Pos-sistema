@@ -6,7 +6,7 @@ const normalizar =(texto:string) => texto.toLocaleLowerCase().replace(/[^a-z0-9]
 
 type useBusquedaProps = {
     proveedores:ProveedorResponse[];
-    onSelect: (proveedor:ProveedorResponse)=>void;
+    onSelect: (proveedor?:ProveedorResponse)=>void;
 };
 
 export function useBusquedaProveedores({
@@ -35,10 +35,21 @@ export function useBusquedaProveedores({
     }
 
     const confirmarBusqueda = () => {
-        //TODO:completar
+        const resultados = filtrar(busqueda);
+
+        if(resultados.length===1){
+            seleccionar(resultados[0]);
+            return;
+        }
+        if(resultados.length===0){
+            seleccionar(undefined);
+            return;
+        }
+
+        toast.info("Seleccione un proveedor sugerido")
     }
 
-    const seleccionar = (proveedor:ProveedorResponse) => {
+    const seleccionar = (proveedor?:ProveedorResponse) => {
         onSelect(proveedor)
         setBusqueda("");
         setSugerencias([]);
