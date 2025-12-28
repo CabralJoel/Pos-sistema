@@ -9,18 +9,15 @@ interface props {
 export default function proveedorTable({proveedores}: props){
     const sinDatos= !proveedores || proveedores?.length===0;
 
-    const emptyRows=15;
-    const filasVacias = emptyRows;
-    if(proveedores){
-        const filasVacias = emptyRows - proveedores.length;
-    };
-
     if(sinDatos){
         return(
             <div className={tableStyles.emptyContainer}><p className={tableStyles.empty}>No se encontraron proveedores</p></div>
         );
     };
-//TODO:modificar para que muestre proveedores recibidos
+
+    const emptyRows=16;
+    const filasVacias = Math.max(emptyRows - proveedores.length, 0);
+
     return(
         <table className={tableStyles.proveedorTable}>
             <thead>
@@ -33,13 +30,15 @@ export default function proveedorTable({proveedores}: props){
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>alfa</td>
-                    <td>razon anonima</td>
-                    <td>20 4113250 0</td>
-                    <td>florencio varela</td>
-                    <td>11 1234-1234</td>
-                </tr>
+                {proveedores.map((p)=>(
+                    <tr key={p.id}>
+                        <td>{p.code}</td>
+                        <td>{p.nombre}</td>
+                        <td>{p.cuit}</td>
+                        <td>{p.localidad}</td>
+                        <td>{p.telefono}</td>
+                    </tr>
+                ))}
                 {/*filas vacias */}
                 {Array.from({ length: filasVacias }).map((_, index) => (
                     <tr key={`empty-${index}`}>
