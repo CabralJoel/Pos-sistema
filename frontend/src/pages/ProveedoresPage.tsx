@@ -61,8 +61,8 @@ export default function ProveedorDTOesPage(){
                 body: JSON.stringify(proveedorDTO)
             });
             if(!response.ok){
-                const errorMsg = await response.text();
-                toast.error(errorMsg);
+                const errorMsg = await response.json();
+                toast.error(errorMsg.error);
                 return
             }
             const proveedorCreado = await response.json();
@@ -92,8 +92,8 @@ export default function ProveedorDTOesPage(){
             });
 
             if(!response.ok){
-                const errorMsg = await response.text();
-                toast.error(errorMsg);
+                const errorMsg = await response.json();
+                toast.error(errorMsg.error);
                 return
             }
 

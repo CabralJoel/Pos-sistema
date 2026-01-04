@@ -47,7 +47,7 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
                 ...prev,[name]:value
             }));
         };
-
+//TODO: agregar validaciones
         const handleSubmit = (e:React.FormEvent)=>{
             e.preventDefault();
             onSubmit(formData);

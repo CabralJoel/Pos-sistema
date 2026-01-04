@@ -13,13 +13,23 @@ public record ProductoRequestDTO(
         Double costo
 ) {
 
-
-
     public Producto aModelo(){
-        if(nombre==null || code==null||precio==null||stock==null)throw new ParametroIncorrecto("faltan ingresar datos");
-        if(precio<=0)throw new ParametroIncorrecto("El precio debe ser mayor a 0");
-        if(stock<=0)throw new ParametroIncorrecto("El stock debe ser mayor a 0");
+        validarNotNull(proveedor,"Proveedor");
+        validarNotNull(nombre,"Proveedor");
+        validarNotNull(code,"Proveedor");
+        validarNotNullD(precio,"Proveedor");
+        if(stock==null || stock<=0){throw new ParametroIncorrecto("Ingrese un stock mayor a 0");}
+        validarNotNullD(ganancia,"Proveedor");
+        validarNotNullD(costo,"Proveedor");
 
         return new Producto(code,nombre,precio,stock,proveedor);
+    }
+
+    private void validarNotNull(String valor, String campo){
+        if(valor==null || valor.isBlank()) throw new ParametroIncorrecto("El campo " + campo + " es obligatorio");
+    }
+
+    private void validarNotNullD(Double valor, String campo){
+        if(valor==null || valor<=0) throw new ParametroIncorrecto("Ingrese un " + campo + " mayor a 0");
     }
 }
