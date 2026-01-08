@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import formStyles from "../../styles/proveedoresPage/FormProveedor.module.css";
 import type { ProveedorDTO,ProveedorResponse } from "../../types/proveedor";
 
+import { useValidator } from "../../hooks/useValidator";
+import { isNotEmpty,maxLength } from "../../utils/validaciones";
+import {toast} from "react-toastify";
+
 interface formProv{
     mode:"nuevo"|"edicion",
     proveedor?:ProveedorResponse,
@@ -20,8 +24,21 @@ const emptyForm: ProveedorDTO = {
                 descripcion:"",
             };
 
+
+const validaciones = {
+    code:[isNotEmpty("Codigo"),maxLength("Codigo",20)],
+    cuit:[isNotEmpty("Cuit"),maxLength("Cuit",15)],
+    nombre:[isNotEmpty("Nombre"),maxLength("Nombre",50)],
+    localidad:[isNotEmpty("Localidad"),maxLength("Localidad",40)],
+    direccion:[isNotEmpty("Direccion"),maxLength("Direccion",70)],
+    email:[isNotEmpty("Email"),maxLength("Email",50)],
+    telefono:[isNotEmpty("Telefono"),maxLength("Telefono",20)],
+    descripcion:[maxLength("Descripcion",255)],
+}
+
 export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formProv){
         const [formData,setFormData] = useState<ProveedorDTO>(emptyForm);
+        const { validate } = useValidator<any>();
 
         useEffect(()=>{
             if(mode === "edicion"&& proveedor){
@@ -50,6 +67,19 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
 //TODO: agregar validaciones
         const handleSubmit = (e:React.FormEvent)=>{
             e.preventDefault();
+
+            for(const campo in validaciones){
+                const validators = validaciones[campo as keyof ProveedorDTO];
+                const value = formData[campo as keyof ProveedorDTO];
+
+                const result = validate(value, validators);
+
+                if (!result.ok) {
+                    toast.error(result.errors[0]);
+                    return;
+                }
+            }
+
             onSubmit(formData);
         }
 //TODO:cambiar diseño del front, colores

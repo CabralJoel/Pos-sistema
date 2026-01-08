@@ -13,7 +13,7 @@ import lombok.ToString;
 
 @Entity
 public class Producto {
-    @Id
+    @Id//TODO: cambiar por Long y tener el code aparte para buscar
     private String code;
 
     @Column(nullable = false)
@@ -40,4 +40,10 @@ public class Producto {
     public void sumarStock(Integer cantidad){
         this.stock = stock + cantidad;
     }
+
+    public void restarStock(Integer cantidad){
+        if(cantidad<=0) return;
+        stock = Math.max(0,stock-cantidad);
+    }
+
 }

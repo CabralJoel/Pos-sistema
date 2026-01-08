@@ -30,3 +30,13 @@ export const maxLength = (field: string, max: number): Validator<string> => {
         return null;
     };
 };
+
+export const minLength = (field: string, min: number): Validator<string> => {
+    return (value) => {
+        if(!value) return null;
+        if(value.length < min){
+            return `${field} debe tener al menos ${min} caracteres`;
+        }
+        return null;
+    }
+}
