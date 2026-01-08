@@ -1,7 +1,11 @@
 package com.pos.pos.service.impl;
 
+import com.pos.pos.controller.Dto.ProductoRequestDTO;
+import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.Proveedor;
 import com.pos.pos.persistencia.interfaces.ProductoRepository;
+import com.pos.pos.persistencia.interfaces.ProveedorRepository;
 import com.pos.pos.service.ProductoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.logging.log4j.ThreadContext.isEmpty;
-import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
 @Service
 @Transactional
@@ -18,9 +20,11 @@ import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
+    private final ProveedorRepository proveedorRepository;
 
-    public ProductoServiceImpl (ProductoRepository productoRepository){
+    public ProductoServiceImpl (ProductoRepository productoRepository,ProveedorRepository proveedorRepository){
         this.productoRepository = productoRepository;
+        this.proveedorRepository = proveedorRepository;
     }
 
     @Override
@@ -29,10 +33,14 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public Optional<Producto> findById(String code) {
-        return productoRepository.findById(code);
+    public Optional<Producto> findById(Long id) {
+        return productoRepository.findById(id);
     }
 
+    @Override
+    public Optional<Producto> findByCode(String code) {
+        return productoRepository.findByCode(code);
+    }
 
     @Override
     public List<Producto> findAll() {
@@ -45,26 +53,34 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public void delete(String code) {
-        productoRepository.deleteById(code);
+    public void delete(Long id) {
+        productoRepository.deleteById(id);
     }
 
     @Override
-    public List<Producto> cargarProductos(List<Producto> productos){
-        return productos.stream().map(this::cargarProducto).toList();
+    public List<Producto> cargarProductos(List<ProductoRequestDTO> productosDtos){
+        return productosDtos.stream().map(this::cargarProducto).toList();
     }
 
-    private Producto cargarProducto(Producto producto){
+    public Producto cargarProducto(ProductoRequestDTO productoDto){
 
-        Optional<Producto> optionalProducto = productoRepository.findById(producto.getCode());
+        Proveedor proveedor = proveedorRepository.findById(productoDto.proveedor())
+                .orElseThrow(() ->new ElementoNoEncontrado("No existe el proveedor seleccionado"));
+
+        Producto productoNuevo = productoDto.aModelo(proveedor);
+
+        Optional<Producto> optionalProducto = productoRepository.findByCode(productoNuevo.getCode());
+
         if(optionalProducto.isEmpty()){
-            return productoRepository.save(producto);
+            return productoRepository.save(productoNuevo);
         }
+
         Producto existente = optionalProducto.get();
-        existente.setPrecio(producto.getPrecio());
-        existente.sumarStock(producto.getStock());
-        existente.setNombre(producto.getNombre());
-        existente.setProveedor(producto.getProveedor());
+
+        existente.setPrecio(productoNuevo.getPrecio());
+        existente.sumarStock(productoNuevo.getStock());
+        existente.setNombre(productoNuevo.getNombre());
+        existente.setProveedor(productoNuevo.getProveedor());
 
         return productoRepository.save(existente);
     }

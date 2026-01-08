@@ -1,7 +1,9 @@
 package com.pos.pos.service;
 
 import com.pos.pos.TestService;
+import com.pos.pos.controller.Dto.ProductoRequestDTO;
 import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.Proveedor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,20 +22,32 @@ public class ProductoServiceImplTest {
     private TestService testService;
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private ProveedorService proveedorService;
 
-    private Producto producto1;
-    private Producto producto2;
-    private Producto producto3;
+    private ProductoRequestDTO productoDto1;
+    private ProductoRequestDTO productoDto2;
+    private ProductoRequestDTO productoDto3;
+    private ProductoRequestDTO productoDto4;
 
-    private List<Producto> listaP;
+    private Proveedor proveedor1;
+
+    private List<ProductoRequestDTO> listaP;
+    private List<ProductoRequestDTO> listaP2;
 
     @BeforeEach
     public void setUp(){
-        producto1 = new Producto("a1b2","shampoo",1000d,10,"Dove");
-        producto2 = new Producto("a1b3","jabon",500d,15,"Dove");
-        producto3 = new Producto("a1b4","perfume",500d,5,"Carancho");
+        proveedor1 = new Proveedor("Dove","20123412340","Dovi","Bernal","Calle al 123","dove@gmail.com","1112341234");
 
-        listaP = new ArrayList<>(List.of(producto1,producto2));
+        proveedorService.create(proveedor1);
+
+        productoDto1 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a1b2",100d,10,100d,50d);
+        productoDto2 = new ProductoRequestDTO(proveedor1.getId(),"jabon","a1b3",75d,15,50d,50d);
+        productoDto3 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a1b2",800d,10,100d,50d);
+        productoDto4 = new ProductoRequestDTO(proveedor1.getId(),"jabon blanco","a1b3",75d,15,50d,50d);
+
+        listaP = new ArrayList<>(List.of(productoDto1,productoDto2));
+        listaP2 = new ArrayList<>(List.of(productoDto3,productoDto4));
     }
 
     @Test
@@ -47,13 +61,13 @@ public class ProductoServiceImplTest {
 
     @Test
     public void ingresarListaDeProductosConUnProductoNuevoYDosExistentes(){
-        productoService.cargarProductos(List.of(producto1));
+        productoService.cargarProducto(productoDto1);
         productoService.cargarProductos(listaP);
 
         List<Producto> listaC = productoService.findAll();
 
-        Producto p1 = productoService.findById("a1b2").get();
-        Producto p2 = productoService.findById("a1b3").get();
+        Producto p1 = productoService.findByCode("a1b2").get();
+        Producto p2 = productoService.findByCode("a1b3").get();
 
         assertEquals(2,listaC.size());
 
@@ -65,13 +79,10 @@ public class ProductoServiceImplTest {
     public void ingresarListaDeProductosExistentesConDatosCambiados(){
         productoService.cargarProductos(listaP);
 
-        producto1.setPrecio(800d);
-        producto2.setNombre("jabon blanco");
+        productoService.cargarProductos(listaP2);
 
-        productoService.cargarProductos(listaP);
-
-        Producto p1 = productoService.findById("a1b2").get();
-        Producto p2 = productoService.findById("a1b3").get();
+        Producto p1 = productoService.findByCode("a1b2").get();
+        Producto p2 = productoService.findByCode("a1b3").get();
 
         assertEquals(800,p1.getPrecio());
         assertEquals("jabon blanco",p2.getNombre());
@@ -80,5 +91,6 @@ public class ProductoServiceImplTest {
     @AfterEach
     void cleanDB(){
         testService.eliminarProductos();
+        testService.eliminarProveedores();
     }
 }

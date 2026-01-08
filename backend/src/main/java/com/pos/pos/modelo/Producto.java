@@ -13,7 +13,11 @@ import lombok.ToString;
 
 @Entity
 public class Producto {
-    @Id//TODO: cambiar por Long y tener el code aparte para buscar
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false,unique = true)
     private String code;
 
     @Column(nullable = false)
@@ -25,10 +29,10 @@ public class Producto {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(nullable = false)
-    private String proveedor;//TODO:cambiar por la clase proveedor
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Proveedor proveedor;//TODO:cambiar por la clase proveedor
 
-    public Producto(String codigo,String nombre, Double precio, Integer stock, String proveedor){
+    public Producto(String codigo,String nombre, Double precio, Integer stock, Proveedor proveedor){
         this.code = codigo;
         this.nombre = nombre;
         this.precio = precio;

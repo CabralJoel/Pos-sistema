@@ -2,9 +2,10 @@ package com.pos.pos.controller.Dto;
 
 import com.pos.pos.controller.exception.ParametroIncorrecto;
 import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.Proveedor;
 
 public record ProductoRequestDTO(
-        String proveedor,
+        Long proveedor,
         String nombre,
         String code,
         Double precio,
@@ -13,8 +14,7 @@ public record ProductoRequestDTO(
         Double costo
 ) {
 
-    public Producto aModelo(){
-        validarNotNull(proveedor,"Proveedor");
+    public Producto aModelo(Proveedor prov){
         validarNotNull(nombre,"Proveedor");
         validarNotNull(code,"Proveedor");
         validarNotNullD(precio,"Proveedor");
@@ -22,7 +22,7 @@ public record ProductoRequestDTO(
         validarNotNullD(ganancia,"Proveedor");
         validarNotNullD(costo,"Proveedor");
 
-        return new Producto(code,nombre,precio,stock,proveedor);
+        return new Producto(code,nombre,precio,stock,prov);
     }
 
     private void validarNotNull(String valor, String campo){
