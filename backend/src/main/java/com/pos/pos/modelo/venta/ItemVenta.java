@@ -24,6 +24,9 @@ public class ItemVenta {
     private Producto producto;
 
     @Column(nullable = false)
+    private String codeProducto;
+
+    @Column(nullable = false)
     private String nombreProducto;
 
     @Column(nullable = false)
@@ -37,6 +40,7 @@ public class ItemVenta {
 
     public ItemVenta(Producto producto,Integer cantidad){
         this.producto = producto;
+        this.codeProducto = producto.getCode();
         this.nombreProducto = producto.getNombre();
         this.precioUnitario = producto.getPrecio();
         this.cantidad = cantidad;
@@ -56,4 +60,5 @@ public class ItemVenta {
     private void calcularSubtotal(){
         this.subtotal = cantidad*precioUnitario;
     }
+
 }

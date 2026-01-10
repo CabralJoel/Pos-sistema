@@ -11,6 +11,8 @@ public interface VentaService {
     Venta upgrade(Venta venta);
     List<Venta> findAll();
     void delete(Long id);
-    Venta registrarProductoEnVenta(Long ventaId,String productoCode,Integer cantidad);
+    Venta registrarProductoEnVenta(String productoCode,int cantidad);
+    Venta reducirProducto(String code,int cantidad);
+    Venta eliminarProducto(String code);
 
 }
