@@ -6,6 +6,7 @@ export default function Home(){
         <div >
             <h1>Home</h1>
             <NavButton text="Carga Productos" to="/carga"/>
+            <NavButton text="Caja" to="/caja"/>
         </div>
     )
     

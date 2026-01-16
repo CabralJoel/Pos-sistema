@@ -1,0 +1,66 @@
+.cardContainer{
+    display: flex;
+    min-width: 420px;
+    padding: 7px 10px;
+    justify-content: space-between;
+    border: 1px solid white;
+    border-radius: 6px;
+    color: white;
+}
+
+.cardContainer p{
+    margin: 0;
+    text-wrap:nowrap;
+}
+
+.cardContainer button:active{
+    box-shadow: none;
+}
+
+.basicInfoContainer{
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.buttonContainer{
+    display: flex;
+    gap: 5px;
+}
+
+.buttonContainer button{
+    padding: 0.2em 0.5em;
+}
+.icon {
+    width: 14px;
+    height: 14px;
+    stroke: white;
+    stroke-width: 2;
+    fill: none;
+}
+
+.deleteButton{
+    background-color: red;
+    width: 24px;
+    height: 26px;
+    padding: 0;
+    text-align: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.cantContainer{
+    font-size:large;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    max-width: 100px;
+}
+.subtotalContainer{
+    font-size: large;
+    display: flex;
+    flex-direction: column;
+    max-width: 70px;
+    overflow: hidden;
+}

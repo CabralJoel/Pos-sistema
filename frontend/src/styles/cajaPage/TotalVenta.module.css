@@ -1,0 +1,47 @@
+.totalContainer{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+.totalContainer p{
+    margin: 0;
+}
+
+.pagoButtonsContainer{
+    padding: 0 10px;
+    display: grid;
+    grid-template-columns:repeat(2,1fr);
+    gap: 8px;
+}
+
+.pagoButtonsContainer button:last-child:nth-child(odd){
+    grid-column: 1 / -1;
+}
+
+.totalContainer button:active{
+    box-shadow: inset 0 -3px 5px #00000099;
+    transform: translateY(1px);
+    background-clip: padding-box;
+}
+
+.montoContainer{
+    font-family:Inter;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    font-size: 35px;
+    min-height: 100px;
+    background-color: #3AB621;
+    color: white;
+    border-radius: 5px;
+}
+
+.simbolo{
+    width: 18px;
+    text-align: right;
+}
+.value{
+    margin-left: 6px;
+    text-align: left;
+}

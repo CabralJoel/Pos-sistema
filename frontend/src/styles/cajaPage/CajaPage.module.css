@@ -1,0 +1,19 @@
+.pageContainer{
+    background-color:#1e1d1d;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.infoContainer{
+    background-color: transparent;
+    display: flex;
+    flex: 1;
+    padding: 10px;
+    gap: 10px;
+}
+
+.pageContainer button{
+    outline: none;
+}
+
