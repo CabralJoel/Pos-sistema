@@ -1,15 +1,23 @@
 package com.pos.pos.service.impl;
 
+import com.pos.pos.controller.Dto.venta.ItemVentaRequestDTO;
+import com.pos.pos.controller.Dto.venta.VentaRequestDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.venta.ItemVenta;
 import com.pos.pos.modelo.venta.Venta;
 import com.pos.pos.persistencia.interfaces.ProductoRepository;
 import com.pos.pos.persistencia.interfaces.VentaRepository;
 import com.pos.pos.service.VentaService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class VentaServiceImpl implements VentaService {
     VentaRepository ventaRepository;
     ProductoRepository productoRepository;
@@ -21,7 +29,17 @@ public class VentaServiceImpl implements VentaService {
     }
 
     @Override
-    public Venta create(Venta venta){
+    public Venta create(VentaRequestDTO ventaDTO){
+        List<ItemVentaRequestDTO> itemsDtos = ventaDTO.items();
+        List<ItemVenta> items = new ArrayList<>();
+
+        for(ItemVentaRequestDTO item : itemsDtos){
+            ItemVenta itemCreado = crearItemVenta(item);
+            items.add(itemCreado);
+        }
+
+        Venta venta = new Venta(ventaDTO.medioPago(),items);
+
         return ventaRepository.save(venta);
     }
 
@@ -45,47 +63,10 @@ public class VentaServiceImpl implements VentaService {
         ventaRepository.deleteById(id);
     }
 
-    @Override
-    public Venta registrarProductoEnVenta(String productoCode, int cantidad){
-        Producto producto = productoRepository.findByCode(productoCode)
-                .orElseThrow(()->new ElementoNoEncontrado("No se encontro el producto ingresado"));
+    private ItemVenta crearItemVenta(ItemVentaRequestDTO itemDto){
+        Producto producto = productoRepository.findById(itemDto.idProducto()).
+                orElseThrow(()->new ElementoNoEncontrado("El producto ingresado no existe"));
 
-        Optional<Venta> optionalVenta = ventaRepository.findByAbierta();
-        if(optionalVenta.isEmpty()){
-            Venta nuevaVenta = new Venta();
-            nuevaVenta.agregarProducto(producto,cantidad);
-            return ventaRepository.save(nuevaVenta);
-        }
-
-        Venta ventaAbierta = optionalVenta.get();
-        ventaAbierta.agregarProducto(producto,cantidad);
-
-        return ventaAbierta;
-    }
-
-    @Override
-    public Venta reducirProducto(String productoCode,int cantidad){
-        Producto producto = productoRepository.findByCode(productoCode)
-                .orElseThrow(()->new ElementoNoEncontrado("No se encontro el producto ingresado"));
-
-        Venta ventaAbierta = ventaRepository.findByAbierta().
-                orElseThrow(()->new ElementoNoEncontrado("No hay ninguna venta abierta"));
-
-        ventaAbierta.reducirProducto(productoCode,cantidad);
-
-        return ventaAbierta;
-    }
-
-    @Override
-    public Venta eliminarProducto(String productoCode){
-        Producto producto = productoRepository.findByCode(productoCode)
-                .orElseThrow(()->new ElementoNoEncontrado("No se encontro el producto ingresado"));
-
-        Venta ventaAbierta = ventaRepository.findByAbierta().
-                orElseThrow(()->new ElementoNoEncontrado("No hay ninguna venta abierta"));
-
-        ventaAbierta.eliminarProducto(productoCode);
-
-        return ventaAbierta;
+        return new ItemVenta(producto, itemDto.cantidad());
     }
 }

@@ -22,7 +22,7 @@ public class ItemVenta {
 
     @ManyToOne(fetch = FetchType.LAZY)//TODO: revisar lazy
     private Producto producto;
-
+//TODO: agregar la venta
     @Column(nullable = false)
     private String codeProducto;
 
@@ -33,12 +33,12 @@ public class ItemVenta {
     private Double precioUnitario;
     //TODO: revisar si conviene usar BigDecimal para los precios
     @Column(nullable = false)
-    private Integer cantidad;
+    private int cantidad;
 
     @Column(nullable = false)
     private Double subtotal;
 
-    public ItemVenta(Producto producto,Integer cantidad){
+    public ItemVenta(Producto producto,int cantidad){
         this.producto = producto;
         this.codeProducto = producto.getCode();
         this.nombreProducto = producto.getNombre();

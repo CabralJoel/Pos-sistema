@@ -1,6 +1,6 @@
 package com.pos.pos.controller;
 
-import com.pos.pos.controller.Dto.venta.RegistrarProductoRequestDTO;
+import com.pos.pos.controller.Dto.venta.VentaRequestDTO;
 import com.pos.pos.controller.Dto.venta.VentaResponseDTO;
 import com.pos.pos.controller.Dto.venta.VentaResponseResumenDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
@@ -40,25 +40,12 @@ public class VentaController {
         return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaRecuperada));
     }
 
-    @PostMapping("/registrar")
-    public ResponseEntity<VentaResponseDTO> registrarVenta(@RequestBody RegistrarProductoRequestDTO dto){
-
-        Venta ventaRegistrada = ventaService.registrarProductoEnVenta(dto.code(), dto.cantidad());
+    @PostMapping("/registrarVenta")
+    public ResponseEntity<VentaResponseDTO> registrarVenta(@RequestBody VentaRequestDTO dto){
+        Venta ventaRegistrada = ventaService.create(dto);
 
         return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaRegistrada));
     }
 
-    @PatchMapping("/reducirProducto")
-    public ResponseEntity<VentaResponseDTO> reducirProductoDeVenta(@RequestBody RegistrarProductoRequestDTO dto){
-        Venta ventaEditada = this.ventaService.reducirProducto(dto.code(),dto.cantidad());
 
-        return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaEditada));
-    }
-
-    @DeleteMapping("/eliminarProducto/{code}")
-    public ResponseEntity<VentaResponseDTO> eliminarProductoDeVenta(@PathVariable String code){
-        Venta ventaEditada = this.ventaService.eliminarProducto(code);
-
-        return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaEditada));
-    }
 }
