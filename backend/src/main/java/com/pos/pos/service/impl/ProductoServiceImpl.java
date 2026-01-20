@@ -62,6 +62,12 @@ public class ProductoServiceImpl implements ProductoService {
         return productosDtos.stream().map(this::cargarProducto).toList();
     }
 
+    @Override
+    public List<Producto> buscarProductosFiltrados(String filtro){
+        List<Producto> busqueda = productoRepository.buscarPorNombreOCode(filtro);
+        return busqueda;
+    }
+
     public Producto cargarProducto(ProductoRequestDTO productoDto){
 
         Proveedor proveedor = proveedorRepository.findById(productoDto.proveedor())

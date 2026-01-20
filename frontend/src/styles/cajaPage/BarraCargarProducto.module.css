@@ -49,3 +49,25 @@ input{
     width: 160px;
     opacity: 1;
 }
+
+.sugerencias{
+    position: absolute;
+    margin: 2px 0;
+    width: 100%;
+    padding: 0;
+    border-radius: 5px;
+    list-style: none;
+    background-color: rgb(207, 201, 201);
+}
+/*TODO: revisar colores de las sugerencias y resultados*/
+.sugerencias li:hover{
+    background-color:rgb(185, 179, 179) ;
+}
+
+.result{
+    cursor: pointer;
+    text-align: left;
+    padding:5px 10px;
+    border-bottom: 1px solid white;
+    border-radius: 5px;
+}

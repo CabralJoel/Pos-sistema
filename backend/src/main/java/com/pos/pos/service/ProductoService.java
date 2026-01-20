@@ -15,4 +15,5 @@ public interface ProductoService {
     void delete (Long id);
     List<Producto> cargarProductos(List<ProductoRequestDTO> productosDtos);
     Producto cargarProducto(ProductoRequestDTO productoDto);
+    List<Producto> buscarProductosFiltrados(String filtro);
 }

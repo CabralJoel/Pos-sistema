@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
@@ -43,8 +44,8 @@ public class ProductoServiceImplTest {
 
         productoDto1 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a1b2",100d,10,100d,50d);
         productoDto2 = new ProductoRequestDTO(proveedor1.getId(),"jabon","a1b3",75d,15,50d,50d);
-        productoDto3 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a1b2",800d,10,100d,50d);
-        productoDto4 = new ProductoRequestDTO(proveedor1.getId(),"jabon blanco","a1b3",75d,15,50d,50d);
+        productoDto3 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a2b2",800d,10,100d,50d);
+        productoDto4 = new ProductoRequestDTO(proveedor1.getId(),"jabon blanco","a2b3",75d,15,50d,50d);
 
         listaP = new ArrayList<>(List.of(productoDto1,productoDto2));
         listaP2 = new ArrayList<>(List.of(productoDto3,productoDto4));
@@ -67,7 +68,7 @@ public class ProductoServiceImplTest {
         List<Producto> listaC = productoService.findAll();
 
         Producto p1 = productoService.findByCode("a1b2").get();
-        Producto p2 = productoService.findByCode("a1b3").get();
+        Producto p2 = productoService.findByCode("a2b3").get();
 
         assertEquals(2,listaC.size());
 
@@ -78,14 +79,45 @@ public class ProductoServiceImplTest {
     @Test
     public void ingresarListaDeProductosExistentesConDatosCambiados(){
         productoService.cargarProductos(listaP);
-
         productoService.cargarProductos(listaP2);
 
         Producto p1 = productoService.findByCode("a1b2").get();
-        Producto p2 = productoService.findByCode("a1b3").get();
+        Producto p2 = productoService.findByCode("a2b3").get();
 
         assertEquals(800,p1.getPrecio());
         assertEquals("jabon blanco",p2.getNombre());
+    }
+    @Test
+    public  void seBuscanProductosPorNombreParcial(){
+        productoService.cargarProductos(listaP);
+        productoService.cargarProductos(listaP2);
+
+        List<Producto> busqueda = productoService.buscarProductosFiltrados("ja");
+
+        assertEquals(2,busqueda.size());
+
+    }
+
+    @Test
+    public  void seBuscanProductosPorCodeParcial(){
+        productoService.cargarProductos(listaP);
+        productoService.cargarProductos(listaP2);
+
+        List<Producto> busqueda = productoService.buscarProductosFiltrados("a2");
+
+        assertEquals(2,busqueda.size());
+
+    }
+
+
+    @Test
+    public void  seBuscanProductosDondeElInicioNombreOCodeNoCoincidenParcialmetenConElTextoIngresado(){
+        productoService.cargarProductos(listaP);
+        productoService.cargarProductos(listaP2);
+
+        List<Producto> busqueda = productoService.buscarProductosFiltrados("b");
+
+        assertTrue(busqueda.isEmpty());
     }
 
     @AfterEach

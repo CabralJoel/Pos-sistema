@@ -1,5 +1,5 @@
 export interface ItemVentaDTO{
-    id:number,
+    idProd:number,
     nombre:string,
     precioUnitario:number,
     cantidad:number,
@@ -10,8 +10,7 @@ export interface VentaLocal{//se puede agregar uuid para cuando haya varias vent
     items:ItemVentaDTO[],
     total:number,
     medioPago:MedioPago|null, //cambiar por un tipo propio?
-    estado:EstadoVenta,
-    fechaCreacion:Date
+    estado:EstadoVenta
 }
 
 export interface ItemVentaRequest{

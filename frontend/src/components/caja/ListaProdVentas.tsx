@@ -11,8 +11,6 @@ export default function ListaProdVenta({items}:ListaItemsProps ){
             {items.map(item =>(
                 <ItemCard/>
             ))}
-            <ItemCard/>
-            <ItemCard/>
         </div>
     )
 }

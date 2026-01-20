@@ -31,4 +31,11 @@ public class ProductoControllerRest {
         List<ProductoResponseDTO> savedDto = saved.stream().map(ProductoResponseDTO::desdeModelo).toList();
         return ResponseEntity.ok(savedDto);
     }
+    @GetMapping("/buscar/{filtro}")
+    public ResponseEntity<List<ProductoResponseDTO>> buscarProductos(@PathVariable String filtro){
+        List<Producto> resultados = productoService.buscarProductosFiltrados(filtro);
+
+        List<ProductoResponseDTO> resultadosDto = resultados.stream().map(ProductoResponseDTO::desdeModelo).toList();
+        return ResponseEntity.ok((resultadosDto));
+    }
 }

@@ -7,9 +7,9 @@ export interface ProductoRequestDTO{
     proveedor:string;
 }
 export interface ProductoResponseDTO{
+    idProducto:number,
     code:string;
     nombre:string;
     precio:number;
     stock:number;
-    proveedor:string;
 }
