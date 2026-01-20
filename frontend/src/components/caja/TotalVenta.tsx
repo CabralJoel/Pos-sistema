@@ -3,10 +3,12 @@ import { useState } from "react"
 import styles from "../../styles/cajaPage/TotalVenta.module.css"
 import { NumberInput } from "../NumberInput"
 
+interface Props{
+    total:number;
+}
 
-export default function TotalVenta(){
+export default function TotalVenta({total}:Props){
     const [efectivo,setEfectivo] = useState("");
-    const total = 1250;
 
     const efectivoNum = parseFloat(efectivo)||0
     const cambio = Math.max(0,efectivoNum - total);

@@ -4,7 +4,7 @@ import TotalVenta from "../components/caja/TotalVenta"
 import OpcionesCaja from "../components/caja/OpcionesCaja"
 import PanelConsulta from "../components/caja/PanelConsulta"
 import type { ProductoResponseDTO } from "../types/producto"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import {toast } from "react-toastify";
 
 import { EstadoVenta, type ItemVentaDTO, type VentaLocal } from "../types/ventas"
@@ -15,12 +15,15 @@ import styles from "../styles/cajaPage/CajaPage.module.css"
 export default function CajaPage(){
     const ventaInicial = (): VentaLocal => ({
         items:[],
-        total : 0,
-        medioPago: null,
-        estado: EstadoVenta.EN_CURSO
+        medioPago: null
     })
 
     const [VentaLocal,setVentaLocal] = useState<VentaLocal>(ventaInicial());
+
+    const total = useMemo(() => {
+        return VentaLocal.items.reduce((suma,item) =>
+            suma + item.subtotal,0);
+    },[VentaLocal.items]);
 
     const buscarProducto = async(texto:string):Promise<ProductoResponseDTO[]> => {
         const response = await fetch(`http://localhost:8080/productos/buscar/${encodeURIComponent(texto)}`);
@@ -64,14 +67,26 @@ export default function CajaPage(){
             }
         })
     };
-    
+
+    const actualizarCantItem = (itemId:number,nuevaCantidad:number) => {
+        setVentaLocal(venta => ({
+            ...venta,
+            items: venta.items.map(item => item.idProd === itemId? {
+                ...item,
+                cantidad: nuevaCantidad,
+                subtotal:nuevaCantidad * item.precioUnitario
+            }: item).filter(item => item.cantidad > 0 )
+        }));
+    };
+
     return(
         <div className={styles.pageContainer}>
             <div></div>
             <BarraCargarProducto buscarProducto={buscarProducto} onProductoSeleccionado={handleAgregarProducto}/>
             <div className={styles.infoContainer}>
-                <ListaProdVenta items={VentaLocal.items}/>
-                <TotalVenta/>
+                <ListaProdVenta items={VentaLocal.items} onSumar={actualizarCantItem} 
+                onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
+                <TotalVenta total={total}/>
             </div>
             <OpcionesCaja/>
         </div>
