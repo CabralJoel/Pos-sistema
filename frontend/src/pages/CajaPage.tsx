@@ -4,6 +4,7 @@ import TotalVenta from "../components/caja/TotalVenta"
 import OpcionesCaja from "../components/caja/OpcionesCaja"
 import PanelConsulta from "../components/caja/PanelConsulta"
 import type { ProductoResponseDTO } from "../types/producto"
+import { crearItemManual } from "../hooks/useCrearItemVenta"
 import { useMemo, useState } from "react"
 import {toast } from "react-toastify";
 
@@ -19,6 +20,7 @@ export default function CajaPage(){
     })
 
     const [VentaLocal,setVentaLocal] = useState<VentaLocal>(ventaInicial());
+    const [ventasRealizadas,setVentasRealizadas] = useState(0);
 
     const total = useMemo(() => {
         return VentaLocal.items.reduce((suma,item) =>
@@ -51,6 +53,7 @@ export default function CajaPage(){
             }
             else{
                 items.push({
+                        idItem: crypto.randomUUID(),
                         idProd: producto.idProducto,
                         nombre: producto.nombre,
                         precioUnitario: producto.precio,
@@ -68,10 +71,17 @@ export default function CajaPage(){
         })
     };
 
-    const actualizarCantItem = (itemId:number,nuevaCantidad:number) => {
+    const handleProductoManual = (monto:number) => {
         setVentaLocal(venta => ({
             ...venta,
-            items: venta.items.map(item => item.idProd === itemId? {
+            items: [...venta.items,crearItemManual(monto)]
+        }))
+    }
+
+    const actualizarCantItem = (itemId:string,nuevaCantidad:number) => {
+        setVentaLocal(venta => ({
+            ...venta,
+            items: venta.items.map(item => item.idItem === itemId? {
                 ...item,
                 cantidad: nuevaCantidad,
                 subtotal:nuevaCantidad * item.precioUnitario
@@ -79,16 +89,48 @@ export default function CajaPage(){
         }));
     };
 
+    const finalizarVenta = async() => {
+        if(VentaLocal.items.length === 0){
+            toast.error("No hay productos cargados");
+            return;
+        }
+
+        try{
+            
+
+            const response = await fetch("http://localhost:8080/productos/registrarVenta",{
+                method: "POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(VentaLocal)
+            });
+            if(!response.ok){
+                const errorMsg = await response.json();
+                console.log(errorMsg)
+                return
+            }
+            const ventaGuardada = await response.json();
+
+            setVentaLocal(ventaInicial);
+            setVentasRealizadas(prev => prev + 1);
+
+            console.log("Venta guardada:", ventaGuardada);//para futuro ticket
+        }
+        catch(error){
+            toast.error("No se pudo concretar la venta");
+        }
+    }
+
     return(
         <div className={styles.pageContainer}>
             <div></div>
-            <BarraCargarProducto buscarProducto={buscarProducto} onProductoSeleccionado={handleAgregarProducto}/>
+            <BarraCargarProducto buscarProducto={buscarProducto} onProductoSeleccionado={handleAgregarProducto}
+                resetSignal={ventasRealizadas} onProductoManual={handleProductoManual}/>
             <div className={styles.infoContainer}>
                 <ListaProdVenta items={VentaLocal.items} onSumar={actualizarCantItem} 
                 onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
-                <TotalVenta total={total}/>
+                <TotalVenta total={total} resetSignal={ventasRealizadas}/>
             </div>
-            <OpcionesCaja/>
+            <OpcionesCaja onFinalizarVenta={finalizarVenta}/>
         </div>
     )
 }

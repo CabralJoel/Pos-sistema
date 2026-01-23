@@ -15,7 +15,7 @@ public record VentaResponseDTO(Long id, LocalDateTime fechaCreacion, Double tota
                 venta.getFechaCreacion(),
                 venta.getTotal(),
                 venta.getEstado(),
-                venta.getProductos().stream().map(ItemVentaResponseDTO :: desdeModelo).toList()
+                venta.getItems().stream().map(ItemVentaResponseDTO :: desdeModelo).toList()
         );
     }
 }

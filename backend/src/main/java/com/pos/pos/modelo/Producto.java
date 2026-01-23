@@ -21,7 +21,7 @@ public class Producto {
     private String code;
 
     @Column(nullable = false)
-    private Double precio;
+    private Double precio;//TODO rebisar el topo para los precios por un tema de precision
 
     @Column(nullable = false)
     private String nombre;

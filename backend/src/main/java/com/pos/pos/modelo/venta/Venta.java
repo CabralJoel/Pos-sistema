@@ -2,6 +2,7 @@ package com.pos.pos.modelo.venta;
 
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.controller.exception.ParametroIncorrecto;
+import com.pos.pos.controller.exception.VentaEstadoException;
 import com.pos.pos.modelo.Producto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,30 +37,40 @@ public class Venta {
     @Enumerated(EnumType.STRING)
     private EstadoVenta estado;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<ItemVenta> productos = new ArrayList<>();
+    @OneToMany(mappedBy = "venta",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<ItemVenta> items = new ArrayList<>();
 
     //se puede agregar la caja a la que pertenece la venta en el construcor
     public Venta (MedioPago medioPago,List<ItemVenta> items){
         if(items.isEmpty())new ParametroIncorrecto("No hay productos en la venta");
 
-        this.estado = EstadoVenta.FINALIZADA;
+        this.estado = EstadoVenta.ABIERTA;
         this.medioPago = medioPago;
         this.fechaCreacion = LocalDateTime.now();
 
-        productos.forEach(this::agregarProducto);
+        items.forEach(this::agregarProducto);
 
         this.calcularTotal();
     }
 
     public void agregarProducto(ItemVenta item){
-
-        productos.add(item);
+        item.setVenta(this);
+        items.add(item);
         this.calcularTotal();
     }
 
     private void calcularTotal(){
-        this.total = productos.stream().mapToDouble(ItemVenta::getSubtotal).sum();
+        this.total = items.stream().mapToDouble(ItemVenta::getSubtotal).sum();
+    }
+
+    public void concretarVenta(){
+        if(this.estado == EstadoVenta.FINALIZADA){
+            throw new VentaEstadoException("La venta ya fue concretada");
+        }
+        for(ItemVenta item : items){
+            item.reducirStock();
+        }
+        this.estado = EstadoVenta.FINALIZADA;
     }
 
 }

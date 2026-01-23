@@ -3,9 +3,9 @@ import ItemCard from "./ItemCard";
 
 interface ListaItemsProps {
     items:ItemVentaDTO[];
-    onSumar:(id:number,cantidad:number) => void;
-    onRestar:(id:number,cantidad:number) =>void;
-    onEliminar:(id:number,cantidad:number) => void;
+    onSumar:(id:string,cantidad:number) => void;
+    onRestar:(id:string,cantidad:number) =>void;
+    onEliminar:(id:string,cantidad:number) => void;
 }
 
 export default function ListaProdVenta({items,onSumar,onRestar,onEliminar}:ListaItemsProps ){

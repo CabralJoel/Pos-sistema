@@ -55,9 +55,9 @@ public class VentaServiceImplTest {
         productoService.create(producto1);
         productoService.create(producto2);
 
-        item1dto = new ItemVentaRequestDTO(producto1.getId(), 1);
-        item2dto = new ItemVentaRequestDTO(producto2.getId(), 3);
-        item3dto = new ItemVentaRequestDTO(producto1.getId(),5);
+        item1dto = new ItemVentaRequestDTO(producto1.getId(), 1,100d);
+        item2dto = new ItemVentaRequestDTO(producto2.getId(), 3,50d);
+        item3dto = new ItemVentaRequestDTO(producto1.getId(),5,100d);
 
         List<ItemVentaRequestDTO> itemsdtoList = new ArrayList<>(List.of(item1dto,item2dto));
         List<ItemVentaRequestDTO> itemsdtoList1 = new ArrayList<>(List.of(item3dto));
@@ -76,7 +76,7 @@ public class VentaServiceImplTest {
         assertEquals(2,ventas.size());
     }
 
-    @AfterEach
+    //@AfterEach
     void cleanDB(){
         testService.eliminarVentas();
         testService.eliminarProductos();

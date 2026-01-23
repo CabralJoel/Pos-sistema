@@ -39,6 +39,7 @@ public class VentaServiceImpl implements VentaService {
         }
 
         Venta venta = new Venta(ventaDTO.medioPago(),items);
+        venta.concretarVenta();
 
         return ventaRepository.save(venta);
     }
@@ -64,9 +65,14 @@ public class VentaServiceImpl implements VentaService {
     }
 
     private ItemVenta crearItemVenta(ItemVentaRequestDTO itemDto){
-        Producto producto = productoRepository.findById(itemDto.idProducto()).
-                orElseThrow(()->new ElementoNoEncontrado("El producto ingresado no existe"));
+        if(itemDto.idProducto() == null){
+            return new ItemVenta(itemDto.precioUnitario());
+        }
+        else{
+            Producto producto = productoRepository.findById(itemDto.idProducto()).
+                    orElseThrow(() -> new ElementoNoEncontrado("El producto ingresado no existe"));
 
-        return new ItemVenta(producto, itemDto.cantidad());
+            return new ItemVenta(producto, itemDto.cantidad());
+        }
     }
 }

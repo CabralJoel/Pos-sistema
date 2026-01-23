@@ -1,5 +1,6 @@
 export interface ItemVentaDTO{
-    idProd:number,
+    idItem:string,
+    idProd:number|null,
     nombre:string,
     precioUnitario:number,
     cantidad:number,
@@ -14,6 +15,7 @@ export interface VentaLocal{//se puede agregar uuid para cuando haya varias vent
 export interface ItemVentaRequest{
     idProducto:number,
     cantidad:number
+    precioUnitario:number
 }
 
 export const MedioPago = {

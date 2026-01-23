@@ -1,6 +1,10 @@
 import opsCajaStyle from "../../styles/cajaPage/OpcionesCaja.module.css";
 
-export default function OpcionesCaja(){
+interface Props{
+    onFinalizarVenta: () => void
+}
+
+export default function OpcionesCaja(onFinalizarVenta:Props){
     return(
         <div className={opsCajaStyle.optionsButtonContainer}>
             <div style={{display:"flex",gap:"12px"}}>
@@ -9,7 +13,7 @@ export default function OpcionesCaja(){
                 <button style={{minWidth:"12em"}}>Ventas realizadas</button>
             </div>
             <div>
-                <button style={{minWidth:"12em"}}>Finalizar venta</button>
+                <button style={{minWidth:"12em"}} onClick={() => onFinalizarVenta}>Finalizar venta</button>
             </div>
         </div>
     )

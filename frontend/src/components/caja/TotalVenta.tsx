@@ -1,17 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import styles from "../../styles/cajaPage/TotalVenta.module.css"
 import { NumberInput } from "../NumberInput"
 
 interface Props{
     total:number;
+    resetSignal: number;
 }
 
-export default function TotalVenta({total}:Props){
+export default function TotalVenta({total,resetSignal}:Props){
     const [efectivo,setEfectivo] = useState("");
 
     const efectivoNum = parseFloat(efectivo)||0
     const cambio = Math.max(0,efectivoNum - total);
+
+    useEffect(() => {
+        setEfectivo("")
+    },[resetSignal])
 
     return(
         <div className={styles.totalContainer}>
