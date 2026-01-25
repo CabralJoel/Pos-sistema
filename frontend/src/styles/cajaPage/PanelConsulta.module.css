@@ -1,0 +1,45 @@
+.panel{
+    display: flex;
+    flex-direction: column;
+
+
+    position: absolute;
+    background-color: rgb(185, 180, 180);
+    top: 110%;
+    width: 32vw;
+    min-height: 150px;
+    min-width: 310px;
+    max-width: 500px;
+    border-radius: 5px;
+    padding: 15px 10px;
+
+    transform: translateY(-250px);
+
+    transition:
+    transform 300ms ease,
+    opacity 300ms ease;
+}
+
+.panelVisible{
+    transform: translateY(0px);
+}
+
+.panelHidden{
+    transform: translateY(-250px);
+}
+
+.inputPanel{
+    font-size: 24px;
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    width: 100%;
+    color: rgb(61, 50, 50);
+}
+
+.panel p{
+    flex:1;
+    margin: 0;
+    padding: 2px;
+    font-size: 24px;
+}

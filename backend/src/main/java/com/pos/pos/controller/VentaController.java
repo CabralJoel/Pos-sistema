@@ -47,5 +47,4 @@ public class VentaController {
         return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaRegistrada));
     }
 
-
 }

@@ -1,21 +1,26 @@
 import barraStyles from "../../styles/cajaPage/BarraCargarProducto.module.css"
 
 import type { ProductoResponseDTO } from "../../types/producto";
-import React, { useState,useEffect,useRef, use } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { useBusquedaProducto } from "../../hooks/useBusquedaProducto";
+import PanelConsulta from "./PanelConsulta";
 import { NumberInput } from "../NumberInput";
 
 interface Props{
     onProductoSeleccionado: (p:ProductoResponseDTO,cant:number) => void;
-    buscarProducto:(texto:string) => Promise<ProductoResponseDTO[]>;
+    filtrarProductos:(texto:string) => Promise<ProductoResponseDTO[]>;
+    consultaProducto:(texto:string) => Promise<ProductoResponseDTO>;
     onProductoManual:(monto:number) => void;
     resetSignal: number;
 }
 
-export default function BarraCargarProducto({onProductoSeleccionado,buscarProducto,onProductoManual,resetSignal}:Props){
+export default function BarraCargarProducto({onProductoSeleccionado,filtrarProductos,consultaProducto,onProductoManual,resetSignal}:Props){
     const [open,setOpen] = useState(false);
     const [value, setValue] = useState("");
     const [focused,setFocused] = useState(false);
+
+    const [panel,setPanel] = useState(false);
+    const [mostrarPanel,setMostrarPanel] = useState(false);
 
     const [montoManual,setMontoManual] = useState("");
     const cantidad = Math.max(1,Number(value||1))
@@ -28,7 +33,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,buscarProduc
         resultados,
         selectProduct,
         clear
-    } = useBusquedaProducto(buscarProducto, producto=>{
+    } = useBusquedaProducto(filtrarProductos, producto=>{
         onProductoSeleccionado(producto,cantidad);
         setValue("");
         clear();
@@ -39,6 +44,20 @@ export default function BarraCargarProducto({onProductoSeleccionado,buscarProduc
     const closeTeclado = () => {
         setOpen(false);
         setMontoManual("");
+    }
+
+    const estadoPanel = () => {
+        if(!panel){
+            setPanel(true);
+            requestAnimationFrame(() => {
+                setMostrarPanel(true)
+            });
+        }else{
+            setMostrarPanel(false);
+            setTimeout(()=>{
+                setPanel(false)
+            },300)
+        }
     }
 
     const reinicioCompponente = () => {
@@ -86,7 +105,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,buscarProduc
                 closeTeclado();
                 break;
 
-                case "Enter":
+            case "Enter":
                 e.preventDefault();
 
                 if (!open) return;
@@ -142,21 +161,28 @@ export default function BarraCargarProducto({onProductoSeleccionado,buscarProduc
                 </div>
 
                 
-                
-                <button onClick={()=>{
-                    if(open){closeTeclado()}
-                    else{setOpen(true)}
-                    }}>Teclado</button>
-                
-                <div ref={wrapperRef} className={`${barraStyles.inputWrapper} ${open ? barraStyles.open : ""}`}>
-                    <NumberInput value={montoManual} onChange={e => setMontoManual(e.target.value)}
-                    onKeyDown={handleMontoKeyDown}
-                    style={{width:"150px",fontSize:"18px",padding:"0 10px"}}  placeholder="Monto manual"/>
+                <div ref={wrapperRef} style={{display:"flex",gap:"2px"}}>
+                    <button onClick={()=>{
+                        if(open){closeTeclado()}
+                        else{setOpen(true)}
+                        }}>Teclado</button>
+                    
+                    <div className={`${barraStyles.inputWrapper} ${open ? barraStyles.open : ""}`}>
+                        <NumberInput value={montoManual} onChange={e => setMontoManual(e.target.value)}
+                        onKeyDown={handleMontoKeyDown}
+                        style={{width:"150px",fontSize:"18px",padding:"0 10px"}}  placeholder="Monto manual"/>
+                    </div>
                 </div>
                 
             </div>
             
-            <button>Consultar precio</button>
+            <div className={barraStyles.consultaWrapper}>
+                <button onClick={()=>estadoPanel()}>Consultar precio</button>
+                
+                {panel && (<PanelConsulta visible={mostrarPanel} consultaProducto={consultaProducto} resetSignal={resetSignal}/>)}
+                
+            </div>
+            
 
         </div>
     )

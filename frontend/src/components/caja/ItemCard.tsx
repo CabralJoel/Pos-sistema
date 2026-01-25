@@ -11,29 +11,33 @@ interface ItemProps{
 export default function ItemCard({item,onSumar,onRestar,onEliminar}:ItemProps){
     return(
         <div className={itemStyle.cardContainer}>
-            <div style={{display:"flex",width:"60%",justifyContent:"space-between"}}>
-                <div className={itemStyle.basicInfoContainer}>
-                    <p>{item.nombre}</p>
-                    <p style={{marginRight:"auto"}}>${item.precioUnitario} c/u</p>
-                </div>
 
-                <div className={itemStyle.cantContainer}>
-                    <p>{item.cantidad}</p>
-                    <div className={itemStyle.buttonContainer}>
-                        <button style={{backgroundColor:"#06B50E"}} onClick={() => onSumar(item.idItem,item.cantidad+1)}>
-                            <svg viewBox="0 0 24 24" className={itemStyle.icon}>
-                                <path d="M12 5v14M5 12h14" />
-                            </svg>
-                        </button>
-                        <button style={{backgroundColor:"#546e7a"}} onClick={() => onRestar(item.idItem,item.cantidad-1)}>
-                            <svg viewBox="0 0 24 24" className={itemStyle.icon}>
-                                <path d="M5 12h14" />
-                            </svg>
-                        </button>
-                    </div>
-                    
-                </div>
+            <div className={itemStyle.basicInfoContainer}>
+                <p>{item.nombre}</p>
+                <p style={{marginRight:"auto"}}>${item.precioUnitario} c/u</p>
             </div>
+
+            <div className={itemStyle.cantContainer}>
+                {item.idProd !== null && (
+                    <button style={{backgroundColor:"#06B50E",padding:" 0.2em 0.5em"}} onClick={() => onSumar(item.idItem,item.cantidad+1)}>
+                        <svg viewBox="0 0 24 24" className={itemStyle.icon}>
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                    </button>
+                )}
+
+                <p style={{gridColumn:"2"}}>{item.cantidad}</p>
+
+                {item.idProd !== null && (
+                    <button style={{backgroundColor:"#546e7a",padding:" 0.2em 0.5em"}} onClick={() => onRestar(item.idItem,item.cantidad-1)}>
+                        <svg viewBox="0 0 24 24" className={itemStyle.icon}>
+                            <path d="M5 12h14" />
+                        </svg>
+                    </button>
+                )}
+
+            </div>
+            
             <div className={itemStyle.subtotalContainer}>
                 <p>$ {item.subtotal}</p>
                 <button className={itemStyle.deleteButton} onClick={()=> onEliminar(item.idItem,0)}>
