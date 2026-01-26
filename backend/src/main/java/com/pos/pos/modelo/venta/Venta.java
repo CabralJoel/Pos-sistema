@@ -1,9 +1,8 @@
 package com.pos.pos.modelo.venta;
 
-import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.controller.exception.ParametroIncorrecto;
 import com.pos.pos.controller.exception.VentaEstadoException;
-import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.turno.Turno;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +24,17 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "turno_id",nullable = false)
+    private Turno turno;
+
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
 
     @Column(nullable = false)
     private Double total;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MedioPago medioPago;
 
     @Enumerated(EnumType.STRING)
@@ -39,6 +42,9 @@ public class Venta {
 
     @OneToMany(mappedBy = "venta",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ItemVenta> items = new ArrayList<>();
+
+    @Column
+    private String motivoAnulacion;
 
     //se puede agregar la caja a la que pertenece la venta en el construcor
     public Venta (MedioPago medioPago,List<ItemVenta> items){
@@ -73,4 +79,8 @@ public class Venta {
         this.estado = EstadoVenta.FINALIZADA;
     }
 
+    public void anularVenta(String motivo){
+        this.motivoAnulacion = motivo;
+        this.estado = EstadoVenta.ANULADA;
+    }
 }

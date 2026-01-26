@@ -1,0 +1,58 @@
+package com.pos.pos.service.impl;
+
+import com.pos.pos.controller.Dto.TurnoRequestDto;
+import com.pos.pos.controller.exception.ElementoNoEncontrado;
+import com.pos.pos.controller.exception.RolInvalidoException;
+import com.pos.pos.modelo.turno.Turno;
+import com.pos.pos.modelo.Usuario;
+import com.pos.pos.modelo.UsuarioRol;
+import com.pos.pos.persistencia.interfaces.TurnoRepository;
+import com.pos.pos.service.TurnoService;
+import com.pos.pos.service.UsuarioService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@Service
+@Transactional
+public class TurnoServiceImpl implements TurnoService {
+
+    private TurnoRepository turnoRepository;
+    private UsuarioService usuarioService;
+
+    public TurnoServiceImpl(TurnoRepository turnoRepository){
+        this.turnoRepository = turnoRepository;
+    }
+
+    @Override
+    public Turno create(TurnoRequestDto turnoDto){
+        if(!usuarioService.validarUsuarioRol(turnoDto.idCajero(), UsuarioRol.CAJERO)){
+            throw new RolInvalidoException("Un cajero debe iniciar el turno");
+        }
+        Usuario cajero = usuarioService.findById(turnoDto.idCajero()).get();
+        Turno turno = turnoDto.aModelo(cajero);
+
+        return turnoRepository.save(turno);
+    }
+
+    @Override
+    public Turno update(Turno turno){
+        return turnoRepository.save(turno);
+    }
+
+    @Override
+    public Optional<Turno> findById(Long idTurno){
+        return turnoRepository.findById(idTurno);
+    }
+
+    @Override
+    public Turno cerrarTurno(Long idTurno, Double efectivoEnCaja){
+        Turno turnoRecuperdado = turnoRepository.findById(idTurno)
+                .orElseThrow(()->new ElementoNoEncontrado("El turno buscado no existe"));
+
+        turnoRecuperdado.cerrarTurno(efectivoEnCaja);
+
+        return turnoRepository.save(turnoRecuperdado);
+    }
+}
