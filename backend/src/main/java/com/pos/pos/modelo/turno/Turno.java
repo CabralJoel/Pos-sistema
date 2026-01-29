@@ -41,6 +41,7 @@ public class Turno {
     @Column
     private Double diferencia;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private EstadoTurno estado;
 

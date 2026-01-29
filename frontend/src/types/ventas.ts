@@ -9,12 +9,12 @@ export interface ItemVentaDTO{
 
 export interface VentaLocal{//se puede agregar uuid para cuando haya varias ventas al mismo tiempo
     items:ItemVentaDTO[],
-    medioPago:MedioPago|null,
+    mediosDePago:PagoDTO[],
 }
 
 export interface VentaRequestDTO{
     items:ItemVentaRequestDTO[],
-    medioPago:MedioPago
+    mediosDePago:PagoDTO[]
 }
 
 export interface ItemVentaRequestDTO{
@@ -32,6 +32,13 @@ export const MedioPago = {
 } as const;
 
 export type MedioPago = typeof MedioPago[keyof typeof MedioPago];
+
+export type ModoPago = "SIMPLE" | "MIXTO";
+
+export interface PagoDTO {
+    tipoPago: MedioPago;
+    monto: number;
+}
 
 export const EstadoVenta = {
     EN_CURSO : "EN_CURSO",

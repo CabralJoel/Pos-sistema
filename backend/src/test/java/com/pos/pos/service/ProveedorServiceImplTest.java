@@ -28,13 +28,13 @@ public class ProveedorServiceImplTest {
 
     @BeforeEach
     public void setUp(){
-        proveedor1 = new Proveedor("Alfa","20-12345678-9","Lavanderia SA","Bernal",
-                "Belgrano 123","lavanderia@gmail.com","11-1234-1234","detergentes y cloro");
-        proveedor2 = new Proveedor("Beta","20-98765432-1","Jabones Varios","Quilmes",
-                "15 de mayo 321","jabones@gmail.com","11-1234-5678");
+        proveedor1 = new Proveedor("Alfa","20123456789","Lavanderia SA","Bernal",
+                "Belgrano 123","lavanderia@gmail.com","1112341234","detergentes y cloro");
+        proveedor2 = new Proveedor("Beta","20987654321","Jabones Varios","Quilmes",
+                "15 de mayo 321","jabones@gmail.com","1112345678");
 
-        updatedDTO = new ProveedorUpdatedRequestDTO("Beta","20-12345678-9","Lavanderia SA","Bernal",
-                "Belgrano 321","lavanderia@gmail.com","11-1234-1234","detergentes,desodorantes y cloro");
+        updatedDTO = new ProveedorUpdatedRequestDTO("Beta","20123456789","Lavanderia SA","Bernal",
+                "Belgrano 321","lavanderia@gmail.com","1112341234","detergentes,desodorantes y cloro");
     }
     //TODO realizar tests
 
@@ -49,7 +49,7 @@ public class ProveedorServiceImplTest {
     @Test
     public void crearDosProveedorMismoCUITLanzaError(){
         proveedorService.create(proveedor1);
-        proveedor2.setCuit("20-12345678-9");
+        proveedor2.setCuit("20123456789");
 
         assertThrows(ParametroIncorrecto.class,()->{proveedorService.create(proveedor2);});
     }

@@ -24,9 +24,9 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "turno_id",nullable = false)
-    private Turno turno;
+//    @ManyToOne
+//    @JoinColumn(name = "turno_id",nullable = false)
+//    private Turno turno;
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
@@ -34,8 +34,8 @@ public class Venta {
     @Column(nullable = false)
     private Double total;
 
-    @Enumerated(EnumType.STRING)
-    private MedioPago medioPago;
+    @OneToMany(mappedBy = "venta",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<MedioPago> mediosDePago = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private EstadoVenta estado;
@@ -47,16 +47,22 @@ public class Venta {
     private String motivoAnulacion;
 
     //se puede agregar la caja a la que pertenece la venta en el construcor
-    public Venta (MedioPago medioPago,List<ItemVenta> items){
+    public Venta (List<MedioPago> mediosDePago,List<ItemVenta> items){
         if(items.isEmpty())new ParametroIncorrecto("No hay productos en la venta");
+        this.validarMedioPago(mediosDePago);
 
         this.estado = EstadoVenta.ABIERTA;
-        this.medioPago = medioPago;
         this.fechaCreacion = LocalDateTime.now();
 
         items.forEach(this::agregarProducto);
+        mediosDePago.forEach(this::agregarMedioPago);
 
         this.calcularTotal();
+    }
+
+    public void agregarMedioPago(MedioPago medioPago){
+        medioPago.setVenta(this);
+        mediosDePago.add(medioPago);
     }
 
     public void agregarProducto(ItemVenta item){
@@ -82,5 +88,14 @@ public class Venta {
     public void anularVenta(String motivo){
         this.motivoAnulacion = motivo;
         this.estado = EstadoVenta.ANULADA;
+    }
+
+    private void validarMedioPago(List<MedioPago> mediosDePago){
+        if(mediosDePago.isEmpty())new ParametroIncorrecto(("Seleccione un medio de pago"));
+
+        Double suma = mediosDePago.stream().mapToDouble(MedioPago::getMonto).sum();
+
+        if(suma != this.total)new ParametroIncorrecto(("Faltan pagos por realizar en la venta"));
+
     }
 }

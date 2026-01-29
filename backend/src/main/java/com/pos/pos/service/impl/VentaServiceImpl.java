@@ -1,10 +1,14 @@
 package com.pos.pos.service.impl;
 
 import com.pos.pos.controller.Dto.venta.ItemVentaRequestDTO;
+import com.pos.pos.controller.Dto.venta.MedioPagoDTO;
 import com.pos.pos.controller.Dto.venta.VentaRequestDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
+import com.pos.pos.controller.exception.VentaEstadoException;
 import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.venta.EstadoVenta;
 import com.pos.pos.modelo.venta.ItemVenta;
+import com.pos.pos.modelo.venta.MedioPago;
 import com.pos.pos.modelo.venta.Venta;
 import com.pos.pos.persistencia.interfaces.ProductoRepository;
 import com.pos.pos.persistencia.interfaces.VentaRepository;
@@ -31,6 +35,9 @@ public class VentaServiceImpl implements VentaService {
     @Override
     public Venta create(VentaRequestDTO ventaDTO){
         List<ItemVentaRequestDTO> itemsDtos = ventaDTO.items();
+        List<MedioPagoDTO> mediosDePagoDtos = ventaDTO.mediosDePago();
+
+        List<MedioPago> mediosDePago = new ArrayList<>();
         List<ItemVenta> items = new ArrayList<>();
 
         for(ItemVentaRequestDTO item : itemsDtos){
@@ -38,7 +45,12 @@ public class VentaServiceImpl implements VentaService {
             items.add(itemCreado);
         }
 
-        Venta venta = new Venta(ventaDTO.medioPago(),items);
+        for(MedioPagoDTO medioPago : mediosDePagoDtos){
+            MedioPago medioPagoCreado = new MedioPago(medioPago.tipoPago(),medioPago.monto());
+            mediosDePago.add(medioPagoCreado);
+        }
+
+        Venta venta = new Venta(mediosDePago,items);
         venta.concretarVenta();
 
         return ventaRepository.save(venta);
@@ -62,6 +74,18 @@ public class VentaServiceImpl implements VentaService {
     @Override
     public void delete(Long id){
         ventaRepository.deleteById(id);
+    }
+
+    @Override
+    public Venta anularVenta(Long idVenta,String motivo){
+        Venta ventaRecuperada = ventaRepository.findById(idVenta)
+                .orElseThrow(()->new ElementoNoEncontrado("La venta a anular no existe"));
+
+        if(ventaRecuperada.getEstado() == EstadoVenta.ANULADA) throw new VentaEstadoException("La venta ya fue anulada anteriormente");
+
+        ventaRecuperada.anularVenta(motivo);
+
+        return ventaRepository.save(ventaRecuperada);
     }
 
     private ItemVenta crearItemVenta(ItemVentaRequestDTO itemDto){

@@ -16,6 +16,6 @@ public class TurnoController {
         this.turnoService = turnoService;
     }
 
-    @PostMapping()
-    public ResponseEntity<TurnoResponseDto> createTurno(@RequestBody TurnoRequestDto dto){}
+//    @PostMapping()
+//    public ResponseEntity<TurnoResponseDto> createTurno(@RequestBody TurnoRequestDto dto){}
 }

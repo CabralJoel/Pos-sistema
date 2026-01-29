@@ -12,5 +12,6 @@ public interface VentaService {
     Venta upgrade(Venta venta);
     List<Venta> findAll();
     void delete(Long id);
+    Venta anularVenta(Long id,String motivo);
 
 }

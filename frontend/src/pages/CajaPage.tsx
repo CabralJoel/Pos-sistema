@@ -10,7 +10,7 @@ import { buscarProductos} from "../service/producto.service";
 import { useEffect, useMemo, useState } from "react"
 
 import type { ProductoResponseDTO } from "../types/producto"
-import { MedioPago, type VentaLocal } from "../types/ventas"
+import { MedioPago, type VentaLocal,type VentaRequestDTO } from "../types/ventas"
 
 import styles from "../styles/cajaPage/CajaPage.module.css"
 
@@ -18,11 +18,13 @@ import styles from "../styles/cajaPage/CajaPage.module.css"
 export default function CajaPage(){
     const ventaInicial = (): VentaLocal => ({
         items:[],
-        medioPago: MedioPago.EFECTIVO
+        mediosDePago: []
     })
 
+    const [formaPago,setFormaPago] = useState<MedioPago>("EFECTIVO");
     const [VentaLocal,setVentaLocal] = useState<VentaLocal>(ventaInicial());
     const [ventasRealizadas,setVentasRealizadas] = useState(0);
+    const [mostrarModal,setMostrarModal] = useState(false);
 
     const total = useMemo(() => {
         return VentaLocal.items.reduce((suma,item) =>
@@ -102,14 +104,27 @@ export default function CajaPage(){
             toast.error("No hay productos cargados");
             return;
         }
-        if(VentaLocal.medioPago === null){
-            toast.error("Seleccione un medio de pago");
+
+        if(formaPago === "MIXTO"){
+            setMostrarModal(true);
             return;
         }
-        
 
-        const ventaRequest = mapVentaRequest(VentaLocal);
+        const ventaSimple: VentaLocal = {
+            ...VentaLocal,
+            mediosDePago:[{
+                tipoPago: formaPago,
+                monto: total
+            }]
+        }
+console.log(ventaSimple)
+        const ventaRequest = mapVentaRequest(ventaSimple);
 
+        console.log(ventaRequest)
+        enviarVenta(ventaRequest);
+    }
+
+    const enviarVenta = async(ventaRequest: VentaRequestDTO) => {
         try{
             const response = await fetch("http://localhost:8080/ventas/registrarVenta",{
                 method: "POST",
@@ -133,13 +148,6 @@ export default function CajaPage(){
         }
     }
 
-    const handleMedioPago = (medioPagoUsado:MedioPago) =>{
-        setVentaLocal(venta => ({
-                ...venta,
-                medioPago:medioPagoUsado
-        })) 
-    }
-
 
     return(
         <div className={styles.pageContainer}>
@@ -149,7 +157,7 @@ export default function CajaPage(){
             <div className={styles.infoContainer}>
                 <ListaProdVenta items={VentaLocal.items} onSumar={actualizarCantItem} 
                 onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
-                <TotalVenta total={total} onMedioPago={handleMedioPago} resetSignal={ventasRealizadas}/>
+                <TotalVenta total={total} onMedioPago={setFormaPago} resetSignal={ventasRealizadas}/>
             </div>
             <OpcionesCaja onFinalizarVenta={finalizarVenta}/>
         </div>

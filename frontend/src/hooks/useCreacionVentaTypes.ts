@@ -14,7 +14,7 @@ export function crearItemManual(monto:number):ItemVentaDTO{
 
 export function mapVentaRequest(ventaLocal:VentaLocal):VentaRequestDTO{
     return{
-        medioPago:ventaLocal.medioPago,
+        mediosDePago:ventaLocal.mediosDePago,
         items:ventaLocal.items.map(item => ({
             idProducto:item.idProd,
             cantidad:item.cantidad,

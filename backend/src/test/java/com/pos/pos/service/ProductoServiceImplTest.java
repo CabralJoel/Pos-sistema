@@ -31,10 +31,14 @@ public class ProductoServiceImplTest {
     private ProductoRequestDTO productoDto3;
     private ProductoRequestDTO productoDto4;
 
+    private ProductoRequestDTO updateProducto1;
+    private ProductoRequestDTO updateProducto2;
+
     private Proveedor proveedor1;
 
     private List<ProductoRequestDTO> listaP;
     private List<ProductoRequestDTO> listaP2;
+    private List<ProductoRequestDTO> updatedList;
 
     @BeforeEach
     public void setUp(){
@@ -47,8 +51,12 @@ public class ProductoServiceImplTest {
         productoDto3 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a2b2",800d,10,100d,50d);
         productoDto4 = new ProductoRequestDTO(proveedor1.getId(),"jabon blanco","a2b3",75d,15,50d,50d);
 
+        updateProducto1 = new ProductoRequestDTO(proveedor1.getId(),"shampoo","a1b2",500d,10,100d,50d);
+        updateProducto2 = new ProductoRequestDTO(proveedor1.getId(),"jabon ariel","a1b3",75d,15,50d,50d);
+
         listaP = new ArrayList<>(List.of(productoDto1,productoDto2));
         listaP2 = new ArrayList<>(List.of(productoDto3,productoDto4));
+        updatedList = new ArrayList<>(List.of(updateProducto1,updateProducto2));
     }
 
     @Test
@@ -68,7 +76,7 @@ public class ProductoServiceImplTest {
         List<Producto> listaC = productoService.findAll();
 
         Producto p1 = productoService.findByCode("a1b2").get();
-        Producto p2 = productoService.findByCode("a2b3").get();
+        Producto p2 = productoService.findByCode("a1b3").get();
 
         assertEquals(2,listaC.size());
 
@@ -79,13 +87,13 @@ public class ProductoServiceImplTest {
     @Test
     public void ingresarListaDeProductosExistentesConDatosCambiados(){
         productoService.cargarProductos(listaP);
-        productoService.cargarProductos(listaP2);
+        productoService.cargarProductos(updatedList);
 
         Producto p1 = productoService.findByCode("a1b2").get();
-        Producto p2 = productoService.findByCode("a2b3").get();
+        Producto p2 = productoService.findByCode("a1b3").get();
 
-        assertEquals(800,p1.getPrecio());
-        assertEquals("jabon blanco",p2.getNombre());
+        assertEquals(500,p1.getPrecio());
+        assertEquals("jabon ariel",p2.getNombre());
     }
     @Test
     public  void seBuscanProductosPorNombreParcial(){
