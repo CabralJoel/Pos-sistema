@@ -46,6 +46,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
+    public  Usuario autenticar(String nombre,String password){
+        Usuario usuario = usuarioRepository.autenticar(nombre,password)
+                .orElseThrow(()->new ElementoNoEncontrado("El nombre de usuario o la contraseña son incorrectos"));
+
+        return(usuario);
+    }
+
+    @Override
     public boolean validarUsuarioRol(Long idUsuario,UsuarioRol rol){
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(()->new ElementoNoEncontrado("El usuario a validar no existe"));

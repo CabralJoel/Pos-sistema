@@ -12,5 +12,6 @@ public interface UsuarioService {
     Optional<Usuario> findById(Long id);
     List<Usuario> findAll();
     void delete(Long id);
+    Usuario autenticar(String nombre,String password);
     boolean validarUsuarioRol(Long idUsuario,UsuarioRol rol);
 }
