@@ -11,7 +11,7 @@ export default function NavLayout() {
 
         <NavButton 
           icon="/icons/home.png" 
-          to="/" 
+          to="/caja" 
           text="Caja" 
         />
 
@@ -23,14 +23,14 @@ export default function NavLayout() {
 
         <NavButton 
           icon="/icons/inventario.png" 
-          to="/inventario" 
+          to="/" 
           text="Inventario" 
         />
 
         <NavButton 
           icon="/icons/proveedores.png" 
           to="/proveedores" 
-          text="Proveedores" 
+          text="Proveedores"
         />
 
       </nav>

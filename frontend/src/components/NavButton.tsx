@@ -1,24 +1,24 @@
+import { useLocation } from "react-router-dom";
 
-type NavButton = {
+type NavButtonProps = {
     icon?:string;
-    text : string;
+    text: string;
     to: string;
 };
 
-export default function NavButton({text, to}: NavButton){
+export default function NavButton({text, to = "single"}: NavButtonProps){
 
-    const openNew = () => {
-  console.log("Botón clickeado:", to);
-  window.electronAPI.openWindow(to);
-};
+    const location = useLocation();
+
+    const handleClick = () => {
+        window.electronAPI.navigate({
+            route: to,
+            from: location.pathname,
+        });
+    };
 
 
     return(
-        <button
-        style={{background: "#3996f3ff"}}//cambiar color de botones
-        onClick={openNew}
-        >
-            {text}
-        </button>
+        <button style={{background: "#3996f3ff"}} onClick={handleClick}>{text}</button>
     );
 } 
