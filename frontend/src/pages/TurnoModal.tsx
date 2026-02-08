@@ -50,7 +50,7 @@ export default function(){
             return;
         }
         try{
-            const response = await fetch("http://localhost:8080/usuario/findCajero",
+            const response = await fetch("http://localhost:8080/usuario/login/turno",
                 {
                 method: "POST",
                 headers:{"Content-Type":"application/json"},

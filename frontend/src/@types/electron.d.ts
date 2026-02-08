@@ -1,3 +1,5 @@
+import type { TurnoLocal } from "../types/ventas";
+
 export {};
 
 declare global {
@@ -15,7 +17,7 @@ declare global {
       onTurnoIniciado: (callback: (turno: any) => void) => void;
       offTurnoIniciado: (callback: (turno: any) => void) => void;
 
-      getTurnoActual: () => Promise<any>;
+      getTurnoActual: () => Promise<TurnoLocal|null>;
 
       openPagoMixto: (total: number) => Promise<void>;
       confirmarPagoMixto: (pagos: PagoDTO[]) => Promise<void>;

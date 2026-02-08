@@ -10,7 +10,7 @@ import { buscarProductos} from "../service/producto.service";
 import { useEffect, useMemo, useState } from "react"
 
 import type { ProductoResponseDTO } from "../types/producto"
-import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO } from "../types/ventas"
+import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal } from "../types/ventas"
 
 import styles from "../styles/cajaPage/CajaPage.module.css"
 
@@ -24,6 +24,7 @@ export default function CajaPage(){
     const [formaPago,setFormaPago] = useState<MedioPago>("EFECTIVO");
     const [VentaLocal,setVentaLocal] = useState<VentaLocal>(ventaInicial());
     const [ventasRealizadas,setVentasRealizadas] = useState(0);
+    const [turno,setTurno] = useState<TurnoLocal|null>(null);
     //const [mostrarModal,setMostrarModal] = useState(false);
 
     const total = useMemo(() => {
@@ -100,6 +101,7 @@ export default function CajaPage(){
     };
 
     const finalizarVenta = async() => {
+        console.log(turno);
         if(VentaLocal.items.length === 0){
             toast.error("No hay productos cargados");
             return;
@@ -170,6 +172,25 @@ export default function CajaPage(){
             window.electronAPI.offPagoMixtoConfirmado(handler);
         };
     }, []);
+
+    useEffect(() => {
+        //lee el turno cuando abre el componente
+        window.electronAPI.getTurnoActual().then((turno) => {
+            if (turno) setTurno(turno);
+        });
+
+        const handler = (turno: TurnoLocal) => {
+            setTurno(turno);
+        };
+
+        //listener de turnoModal
+        window.electronAPI.onTurnoIniciado(handler);
+
+        return () => {
+            window.electronAPI.offTurnoIniciado(handler);
+        };
+        }, []);
+
 
 
 

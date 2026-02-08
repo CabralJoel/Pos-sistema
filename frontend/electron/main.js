@@ -132,7 +132,9 @@ app.whenReady().then(() => {
 
     // abrir caja
     const cajaRule = navigationRules["/caja"];
-    const caja = createWindow("/caja", cajaRule);
+    const caja = createWindow("/caja", {
+      ...cajaRule,
+      windowKey:"caja"});
 
     // abrir TurnoModal
     createWindow("/turno", {

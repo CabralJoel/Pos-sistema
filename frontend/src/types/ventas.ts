@@ -62,7 +62,7 @@ export interface TurnoDTO{
 export interface TurnoLocal{
     idTurno:number,
     cajero:usuarioLocal,
-    fechaInicio:Date,
+    fechaInicio:string,
     efectivoInicial:number,
 }
 
