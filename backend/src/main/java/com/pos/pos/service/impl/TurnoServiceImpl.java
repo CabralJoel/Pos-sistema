@@ -1,6 +1,6 @@
 package com.pos.pos.service.impl;
 
-import com.pos.pos.controller.Dto.TurnoRequestDto;
+import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.controller.exception.RolInvalidoException;
 import com.pos.pos.modelo.turno.Turno;
@@ -21,16 +21,19 @@ public class TurnoServiceImpl implements TurnoService {
     private TurnoRepository turnoRepository;
     private UsuarioService usuarioService;
 
-    public TurnoServiceImpl(TurnoRepository turnoRepository){
+    public TurnoServiceImpl(TurnoRepository turnoRepository,UsuarioService usuarioService){
         this.turnoRepository = turnoRepository;
+        this.usuarioService = usuarioService;
     }
 
     @Override
     public Turno create(TurnoRequestDto turnoDto){
+        Usuario cajero = usuarioService.findById(turnoDto.idCajero())
+                .orElseThrow(() -> new ElementoNoEncontrado("El Cajero asignado no existe"));
+        /*
         if(!usuarioService.validarUsuarioRol(turnoDto.idCajero(), UsuarioRol.CAJERO)){
             throw new RolInvalidoException("Un cajero debe iniciar el turno");
-        }
-        Usuario cajero = usuarioService.findById(turnoDto.idCajero()).get();
+        }*/
         Turno turno = turnoDto.aModelo(cajero);
 
         return turnoRepository.save(turno);

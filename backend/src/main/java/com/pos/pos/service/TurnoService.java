@@ -1,6 +1,6 @@
 package com.pos.pos.service;
 
-import com.pos.pos.controller.Dto.TurnoRequestDto;
+import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
 import com.pos.pos.modelo.turno.Turno;
 
 import java.util.Optional;

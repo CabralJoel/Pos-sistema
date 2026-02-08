@@ -24,7 +24,7 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioDTOResponse.desdeModelo(usuario));
     }
 
-    @GetMapping
+    @PostMapping("/login/turno")
     public ResponseEntity<UsuarioDTOResponse> findCajero(@RequestBody UsuarioRequestDTO dto){
         Usuario usuario = usuarioService.autenticar(dto.nombre(),dto.password());
 

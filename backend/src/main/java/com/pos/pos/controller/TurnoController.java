@@ -1,6 +1,8 @@
 package com.pos.pos.controller;
 
-import com.pos.pos.controller.Dto.TurnoRequestDto;
+import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
+import com.pos.pos.controller.Dto.turno.TurnoResponseDTO;
+import com.pos.pos.modelo.turno.Turno;
 import com.pos.pos.service.TurnoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,10 @@ public class TurnoController {
         this.turnoService = turnoService;
     }
 
-//    @PostMapping()
-//    public ResponseEntity<TurnoResponseDto> createTurno(@RequestBody TurnoRequestDto dto){}
+    @PostMapping
+    public ResponseEntity<TurnoResponseDTO> createTurno(@RequestBody TurnoRequestDto dto){
+        Turno turnoNuevo = turnoService.create(dto);
+
+        return ResponseEntity.ok(TurnoResponseDTO.desdeModelo(turnoNuevo));
+    }
 }
