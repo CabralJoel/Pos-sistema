@@ -47,3 +47,26 @@ export const EstadoVenta = {
 }as const;
 
 export type EstadoVenta = typeof EstadoVenta[keyof typeof EstadoVenta];
+
+export interface usuarioLocal{
+    idUsuario:number,
+    nombre:string,
+    rol:"ADMIN"|"CAJERO"
+}
+
+export interface TurnoDTO{
+    idCajero: number;
+    efectivoInicial:number;
+}
+
+export interface TurnoLocal{
+    idTurno:number,
+    cajero:usuarioLocal,
+    fechaInicio:Date,
+    efectivoInicial:number,
+}
+
+export interface TurnoDetalle{
+    idTurno:number,
+    cajero:usuarioLocal
+}

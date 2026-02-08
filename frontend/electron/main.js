@@ -9,6 +9,10 @@ const __dirname = path.dirname(__filename);
 
 const windows = new Map();
 
+const session = {
+  usuario: null,
+  turno: null,
+};
 
 const windowTypes = {
   full: () => screen.getPrimaryDisplay().workAreaSize,
@@ -38,14 +42,17 @@ function createWindow(route, { windowKey, windowType, parent, modal } = {}) {
     win.loadFile(path.join(__dirname, "../dist/index.html"));
   }
 
-  windowState.set(rule.windowKey, {
-    win,
-    pageKey: route,
-  });
+  if(windowKey){
+    windows.set(windowKey, {
+      win,
+      pageKey: route,
+    });
 
-  win.on("closed", () => {
-    windowState.delete(rule.windowKey);
-  });
+    win.on("closed", () => {
+      windows.delete(windowKey);
+    });
+  }
+  
 
   return win;
 }
@@ -63,7 +70,7 @@ function navigate({ route, sender }) {
 
   const currentKey = currentEntry?.[0];
 
-
+  
   const shouldOpenWindow =
     rule.alwaysOpenInWindow ||
     rule.openInWindowFrom?.includes(currentKey);
@@ -73,7 +80,7 @@ function navigate({ route, sender }) {
     const existing = windows.get(rule.windowKey);
 
     if (rule.singleton && existing && !existing.isDestroyed()) {
-      existing.focus();
+      existing.win.focus();
     } else {
       createWindow(route, rule);
     }
@@ -109,13 +116,41 @@ app.whenReady().then(() => {
     //actualizar pageKey
   ipcMain.on("set-current-page", (e, pageKey) => {
     const win = BrowserWindow.fromWebContents(e.sender);
-    const entry = [...windowState.values()]
-      .find(v => v.win === win);
+    const entry = [...windows.values()].find(v => v.win === win);
 
-    if (entry) {
-      entry.pageKey = pageKey;
-    }
+    if (entry) entry.pageKey = pageKey;
+    
   });
+
+    // login
+  ipcMain.handle("login-success", (_, usuario) => {
+    session.usuario = usuario;
+
+    // cerrar home
+    const home = windows.get("home");
+    home?.win.close();
+
+    // abrir caja
+    const cajaRule = navigationRules["/caja"];
+    const caja = createWindow("/caja", cajaRule);
+
+    // abrir TurnoModal
+    createWindow("/turno", {
+      windowKey: "turno-modal",
+      windowType: "modal",
+      parent: caja,
+      modal: true,
+    });
+  });
+
+    //confirmar turno
+  ipcMain.handle("confirmar-turno", (_, turno) => {
+    session.turno = turno;
+    const caja = windows.get("caja");
+    caja?.win.webContents.send("turno-iniciado", turno);
+  });
+
+  ipcMain.handle("get-turno-actual", () => session.turno);
 
   //MODAL PAGO MIXTO
   ipcMain.handle("open-pago-mixto", (_, total) => {
@@ -132,7 +167,7 @@ app.whenReady().then(() => {
 
 ipcMain.handle("pago-mixto-confirmado", (_, pagos) => {
   const caja = windows.get("caja");
-  if (caja && !caja.isDestroyed()) {
+  if (caja && !caja.win.isDestroyed()) {
     caja.webContents.send("pago-mixto-confirmado", pagos);
   }
 });

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import NavButton from "../components/NavButton";
 import { toast } from "react-toastify";
-import {type usuarioLocal} from "../types/usuario"
+import type { usuarioLocal } from "../types/ventas";
 
 interface UserForm{
     nombre:string,
@@ -44,6 +44,7 @@ export default function Home(){
 
             setUsuario(user);
             
+            window.electronAPI.loginSuccess(usuario)
             console.log(usuario);
 
         }

@@ -8,6 +8,26 @@ contextBridge.exposeInMainWorld("electronAPI", {
   
   navigate: (config) => ipcRenderer.invoke("navigate", config),
 
+  loginSuccess: (usuario) => ipcRenderer.invoke("login-success", usuario),
+
+  confirmarTurno: (turno) => ipcRenderer.invoke("confirmar-turno", turno),
+
+  onTurnoIniciado: (callback) => {
+    const handler = (_, turno) => callback(turno);
+    listeners.set(callback, handler);
+    ipcRenderer.on("turno-iniciado", handler);
+  },
+
+  offTurnoIniciado: (callback) => {
+    const handler = listeners.get(callback);
+    if (handler) {
+      ipcRenderer.removeListener("turno-iniciado", handler);
+      listeners.delete(callback);
+    }
+  },
+
+  getTurnoActual: () => ipcRenderer.invoke("get-turno-actual"),
+
   openPagoMixto: (total) => ipcRenderer.invoke("open-pago-mixto", total),
 
   confirmarPagoMixto: (pagos) => ipcRenderer.invoke("pago-mixto-confirmado", pagos),
