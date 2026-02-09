@@ -104,6 +104,22 @@ function navigate({ route, sender }) {
   currentWindow.loadURL(url);
 }
 
+function openTurnoModal(){
+  const caja = windows.get("caja");
+
+  const existing = windows.get("turno-modal");
+  if (existing && !existing.win.isDestroyed()) {
+    existing.win.focus();
+    return;
+  }
+
+  createWindow("/turno", {
+    windowKey: "turno-modal",
+    windowType: "modal",
+    parent: caja?.win,
+    modal: true,
+  });
+}
 
 // APP
 app.whenReady().then(() => {
@@ -136,14 +152,14 @@ app.whenReady().then(() => {
       ...cajaRule,
       windowKey:"caja"});
 
-    // abrir TurnoModal
-    createWindow("/turno", {
-      windowKey: "turno-modal",
-      windowType: "modal",
-      parent: caja,
-      modal: true,
-    });
+    
+    openTurnoModal();
   });
+  
+  // abrir TurnoModal
+  ipcMain.handle("open-turno-modal",() => {
+    openTurnoModal();
+  })
 
     //confirmar turno
   ipcMain.handle("confirmar-turno", (_, turno) => {

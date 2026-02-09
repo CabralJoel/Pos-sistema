@@ -12,6 +12,8 @@ declare global {
 
       loginSuccess: (usuario: any) => Promise<void>;
 
+      openTurnoModal:() => Promise<void>;
+
       confirmarTurno: (turno: any) => Promise<void>;
 
       onTurnoIniciado: (callback: (turno: any) => void) => void;

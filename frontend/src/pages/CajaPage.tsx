@@ -161,6 +161,15 @@ export default function CajaPage(){
         }
     }
 
+    const cerrarTurno = () => {
+        if(VentaLocal.items.length > 0){
+            toast.error("Termine la venta para cerrar el turno");
+            return;
+        }
+
+        window.electronAPI.openTurnoModal();
+    }
+
     useEffect(() => {
         const handler = (pagos: PagoDTO[]) => {
             confirmarPagoMixto(pagos);
@@ -175,12 +184,12 @@ export default function CajaPage(){
 
     useEffect(() => {
         //lee el turno cuando abre el componente
-        window.electronAPI.getTurnoActual().then((turno) => {
-            if (turno) setTurno(turno);
+        window.electronAPI.getTurnoActual().then((t) => {
+            if (t) setTurno(t);
         });
 
-        const handler = (turno: TurnoLocal) => {
-            setTurno(turno);
+        const handler = (t: TurnoLocal) => {
+            setTurno(t);
         };
 
         //listener de turnoModal
@@ -189,7 +198,7 @@ export default function CajaPage(){
         return () => {
             window.electronAPI.offTurnoIniciado(handler);
         };
-        }, []);
+    }, []);
 
 
 
@@ -205,7 +214,7 @@ export default function CajaPage(){
                 onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
                 <TotalVenta total={total} onMedioPago={setFormaPago} resetSignal={ventasRealizadas}/>
             </div>
-            <OpcionesCaja onFinalizarVenta={finalizarVenta}/>
+            <OpcionesCaja onFinalizarVenta={finalizarVenta} onCerrarTurno={cerrarTurno}/>
         </div>
     )
 }

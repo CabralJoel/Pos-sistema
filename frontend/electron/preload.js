@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   loginSuccess: (usuario) => ipcRenderer.invoke("login-success", usuario),
 
+  openTurnoModal: () => ipcRenderer.invoke("open-turno-modal"),
+
   confirmarTurno: (turno) => ipcRenderer.invoke("confirmar-turno", turno),
 
   onTurnoIniciado: (callback) => {
