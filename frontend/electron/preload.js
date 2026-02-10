@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   confirmarTurno: (turno) => ipcRenderer.invoke("confirmar-turno", turno),
 
+  cerrarTurno: () => ipcRenderer.invoke("cerrar-turno"),
+
   onTurnoIniciado: (callback) => {
     const handler = (_, turno) => callback(turno);
     listeners.set(callback, handler);

@@ -16,6 +16,8 @@ declare global {
 
       confirmarTurno: (turno: any) => Promise<void>;
 
+      cerrarTurno:() => Promise<void>;
+
       onTurnoIniciado: (callback: (turno: any) => void) => void;
       offTurnoIniciado: (callback: (turno: any) => void) => void;
 

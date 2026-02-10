@@ -66,7 +66,21 @@ export interface TurnoLocal{
     efectivoInicial:number,
 }
 
-export interface TurnoDetalle{
+export interface TurnoCierreDTO{
     idTurno:number,
-    cajero:usuarioLocal
+    efectivoFinal:number,
 }
+
+export interface TurnoDetalle{//TODO: descomentar
+    idTurno:number,
+    cajero:usuarioLocal,
+    //fechaInicio:string,
+    //fechaFin:string,
+    efectivoInicial:number,
+    efectivoFinal:number,
+    diferencia:number,
+    estado:EstadoTurno,
+    //movimientos:Movimientro[]
+}
+
+export type EstadoTurno = "ABIERTO" | "CERRADO";

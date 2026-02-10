@@ -11,14 +11,15 @@ interface UserForm{
 }
 
 interface Props{
+    usuario:usuarioLocal|null,
     onCrearTurno:(dto:TurnoDTO)=>Promise<void>
 }
 
-export default function TurnoInicio({onCrearTurno}:Props){
+export default function TurnoInicio({usuario,onCrearTurno}:Props){
     const [edit,setEdit] = useState<boolean>(true);
     const [efectivo,setEfectivo] = useState("");
     const efectivoNum = parseFloat(efectivo)||0;//pasamos efectivo a number
-    const [cajero,setCajero] = useState<usuarioLocal|null>(null);
+    const [cajero,setCajero] = useState<usuarioLocal|null>(usuario);
     const [formData,setFormData] = useState<UserForm>({
             nombre: "",
             password: ""
@@ -44,57 +45,57 @@ export default function TurnoInicio({onCrearTurno}:Props){
         })
     }
 
-        const handleLoguearCajero = async() => {
-            if(formData.nombre === "" || formData.password === ""){
-                toast.error("Ingrese usuario y contraseña");
+    const handleLoguearCajero = async() => {
+        if(formData.nombre === "" || formData.password === ""){
+            toast.error("Ingrese usuario y contraseña");
+            return;
+        }
+        try{
+            const response = await fetch("http://localhost:8080/usuario/login/turno",
+                {
+                method: "POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(formData)
+            })
+            if(!response.ok){
+                const errorMsg = await response.text();
+                toast.error(errorMsg);
                 return;
             }
-            try{
-                const response = await fetch("http://localhost:8080/usuario/login/turno",
-                    {
-                    method: "POST",
-                    headers:{"Content-Type":"application/json"},
-                    body:JSON.stringify(formData)
-                })
-                if(!response.ok){
-                    const errorMsg = await response.text();
-                    toast.error(errorMsg);
-                    return;
-                }
-                const user = await response.json();
-                setCajero(user);
-    
-                handleEditMode();
-            }
-            catch(error){
-                toast.error("Error al buscar usuario")
-            }
-        }
+            const user = await response.json();
+            setCajero(user);
 
-        const InicioTurno = async() => {
-                if(cajero===null){
-                    toast.error("Seleccione un usuario para el turno");
-                    return;
-                }
-                if(efectivo === ""){
-                    toast.error("Ingrese efectivo inicial");
-                    return
-                }
-                const turnoDto: TurnoDTO = {
-                    idCajero:cajero.idUsuario,
-                    efectivoInicial:efectivoNum
-                };
-        
-                try{
-                    await onCrearTurno(turnoDto);
-                }
-                catch(error){
-                    toast.error("Error al iniciar el Turno")
-                }
-            }
+            handleEditMode();
+        }
+        catch(error){
+            toast.error("Error al buscar usuario")
+        }
+    }
+
+    const InicioTurno = async() => {
+        if(cajero===null){
+            toast.error("Seleccione un usuario para el turno");
+            return;
+        }
+        if(efectivo === ""){
+            toast.error("Ingrese efectivo inicial");
+            return
+        }
+        const turnoDto: TurnoDTO = {
+            idCajero:cajero.idUsuario,
+            efectivoInicial:efectivoNum
+        };
+    
+        try{
+            await onCrearTurno(turnoDto);
+        }
+        catch(error){
+            toast.error("Error al iniciar el Turno")
+        }
+    }
 
     return(
-            <div className={turnoStyle.modalTurnoContainer}>
+        <div className={turnoStyle.modalTurnoContainer}>
             <span style={{backgroundColor:"rgb(173, 167, 167)",padding:"0.3em"}}>Cajero del Turno</span>
             {edit && (
                 <div className={turnoStyle.usuarioContainer}>

@@ -170,6 +170,8 @@ app.whenReady().then(() => {
 
   ipcMain.handle("get-turno-actual", () => session.turno);
 
+  ipcMain.handle("cerrar-turno",() => session.turno = null);
+
   //MODAL PAGO MIXTO
   ipcMain.handle("open-pago-mixto", (_, total) => {
     const caja = windows.get("caja");
