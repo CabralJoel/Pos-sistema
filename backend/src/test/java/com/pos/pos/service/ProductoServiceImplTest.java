@@ -1,7 +1,7 @@
 package com.pos.pos.service;
 
 import com.pos.pos.TestService;
-import com.pos.pos.controller.Dto.ProductoRequestDTO;
+import com.pos.pos.controller.Dto.producto.ProductoRequestDTO;
 import com.pos.pos.modelo.Producto;
 import com.pos.pos.modelo.Proveedor;
 import org.junit.jupiter.api.AfterEach;

@@ -1,6 +1,6 @@
 package com.pos.pos.service;
 
-import com.pos.pos.controller.Dto.ProveedorUpdatedRequestDTO;
+import com.pos.pos.controller.Dto.producto.ProveedorUpdatedRequestDTO;
 import com.pos.pos.modelo.Proveedor;
 
 import java.util.List;

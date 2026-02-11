@@ -5,6 +5,7 @@ import com.pos.pos.modelo.venta.MedioPago;
 import com.pos.pos.modelo.venta.Venta;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Getter
 @ToString
-
+@NoArgsConstructor
 @Entity
 public class Turno {
     @Id
@@ -69,6 +70,11 @@ public class Turno {
 
         this.fechaFin = LocalDateTime.now();
         this.estado = EstadoTurno.CERRADO;
+    }
+
+    public void agregarVenta(Venta venta){
+        venta.setTurno(this);
+        ventas.add(venta);
     }
 
     public void agregarMovimiento(MovimientoCaja movimiento){

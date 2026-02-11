@@ -1,10 +1,9 @@
 package com.pos.pos.controller;
 
-import com.pos.pos.controller.Dto.ProductoRequestDTO;
-import com.pos.pos.controller.Dto.ProductoResponseDTO;
+import com.pos.pos.controller.Dto.producto.ProductoRequestDTO;
+import com.pos.pos.controller.Dto.producto.ProductoResponseDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Producto;
-import com.pos.pos.modelo.Proveedor;
 import com.pos.pos.service.ProductoService;
 import com.pos.pos.service.ProveedorService;
 import org.springframework.http.ResponseEntity;

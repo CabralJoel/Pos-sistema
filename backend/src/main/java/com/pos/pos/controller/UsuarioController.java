@@ -24,15 +24,15 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioDTOResponse.desdeModelo(usuario));
     }
 
-    @PostMapping("/login/turno")
-    public ResponseEntity<UsuarioDTOResponse> findCajero(@RequestBody UsuarioRequestDTO dto){
+    @GetMapping("/login")
+    public ResponseEntity<UsuarioDTOResponse> loginAdmin(@RequestBody UsuarioRequestDTO dto){
         Usuario usuario = usuarioService.autenticar(dto.nombre(),dto.password());
 
         return ResponseEntity.ok(UsuarioDTOResponse.desdeModelo(usuario));
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<UsuarioDTOResponse> loginAdmin(@RequestBody UsuarioRequestDTO dto){
+    @PostMapping("/login/turno")
+    public ResponseEntity<UsuarioDTOResponse> findCajero(@RequestBody UsuarioRequestDTO dto){
         Usuario usuario = usuarioService.autenticar(dto.nombre(),dto.password());
 
         return ResponseEntity.ok(UsuarioDTOResponse.desdeModelo(usuario));

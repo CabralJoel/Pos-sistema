@@ -1,4 +1,4 @@
-package com.pos.pos.controller.Dto;
+package com.pos.pos.controller.Dto.producto;
 
 import com.pos.pos.controller.exception.ParametroIncorrecto;
 import com.pos.pos.modelo.Proveedor;

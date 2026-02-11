@@ -1,7 +1,7 @@
 package com.pos.pos.service;
 
 import com.pos.pos.TestService;
-import com.pos.pos.controller.Dto.ProveedorUpdatedRequestDTO;
+import com.pos.pos.controller.Dto.producto.ProveedorUpdatedRequestDTO;
 import com.pos.pos.controller.exception.ParametroIncorrecto;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Proveedor;

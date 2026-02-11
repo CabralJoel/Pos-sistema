@@ -24,9 +24,9 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "turno_id",nullable = false)
-//    private Turno turno;
+    @ManyToOne
+    @JoinColumn(name = "turno_id",nullable = false)
+    private Turno turno;
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;

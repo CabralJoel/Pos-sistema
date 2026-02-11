@@ -1,5 +1,6 @@
 package com.pos.pos.controller.Dto.turno;
 
+import com.pos.pos.controller.Dto.usuario.UsuarioDTOResponse;
 import com.pos.pos.modelo.Usuario;
 import com.pos.pos.modelo.turno.EstadoTurno;
 import com.pos.pos.modelo.turno.Turno;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 
 public record TurnoDetalleResponseDTO(
         Long idTurno,
-        Usuario cajero,
+        UsuarioDTOResponse cajero,
         LocalDateTime fechaInicio,
         LocalDateTime  fechaFin,
         Double efectivoInicial,
@@ -20,7 +21,7 @@ public record TurnoDetalleResponseDTO(
     public static TurnoDetalleResponseDTO desdeModelo(Turno turno){//TODO: terminar y revisar diseño de dto
         return new TurnoDetalleResponseDTO(
                 turno.getId(),
-                turno.getCajero(),
+                UsuarioDTOResponse.desdeModelo(turno.getCajero()),
                 turno.getFechaInicio(),
                 turno.getFechaFin(),
                 turno.getEfectivoInicial(),

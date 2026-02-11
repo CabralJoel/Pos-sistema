@@ -16,7 +16,7 @@ interface Props{
 }
 
 export default function TurnoInicio({usuario,onCrearTurno}:Props){
-    const [edit,setEdit] = useState<boolean>(true);
+    const [edit,setEdit] = useState<boolean>(usuario===null);
     const [efectivo,setEfectivo] = useState("");
     const efectivoNum = parseFloat(efectivo)||0;//pasamos efectivo a number
     const [cajero,setCajero] = useState<usuarioLocal|null>(usuario);

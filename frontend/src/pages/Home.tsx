@@ -6,16 +6,13 @@ import type { usuarioLocal } from "../types/ventas";
 interface UserForm{
     nombre:string,
     password:string
-    rol:"ADMIN"
 }
 
 export default function Home(){
     const [formData,setFormData] = useState<UserForm>({
         nombre: "",
         password: "",
-        rol: "ADMIN"
     });
-    const [usuario,setUsuario] = useState<usuarioLocal>();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -30,7 +27,7 @@ export default function Home(){
         if(formData.nombre === "" || formData.password === ""){return;}
 
         try{
-            const response = await fetch("http://localhost:8080/usuario/create",{
+            const response = await fetch("http://localhost:8080/usuario/login/turno",{
                 method: "POST",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify(formData)
@@ -41,11 +38,9 @@ export default function Home(){
                 return;
             }
             const user = await response.json();
-
-            setUsuario(user);
             
-            window.electronAPI.loginSuccess(usuario)
-            console.log(usuario);
+            window.electronAPI.loginSuccess(user)
+            console.log(user);//temporal
 
         }
         catch(error){
@@ -64,7 +59,7 @@ export default function Home(){
             <div>
                 <input style={{backgroundColor:"yellow"}} name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="nombre usuario"/>
                 <input style={{backgroundColor:"yellow"}} name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="contraseña"/>
-                <button onClick={crearUser}>crear usuario</button>
+                <button onClick={crearUser}>Loguear Admin</button>
             </div>
 
         </div>

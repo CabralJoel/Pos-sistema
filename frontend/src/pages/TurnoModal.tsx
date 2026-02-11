@@ -1,7 +1,5 @@
-import React, { useEffect, useState, type ReactElement } from "react"
+import { useEffect, useState } from "react"
 
-import turnoStyle from "../styles/turnoModal/TurnoModal.module.css"
-import { NumberInput } from "../components/NumberInput";
 import { toast } from "react-toastify";
 import {type TurnoLocal, type TurnoDTO, type usuarioLocal, type TurnoCierreDTO, type TurnoDetalle } from "../types/ventas";
 import TurnoInicio from "../components/turno/TurnoInicio";

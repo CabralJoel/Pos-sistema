@@ -1,8 +1,8 @@
 package com.pos.pos.controller;
 
-import com.pos.pos.controller.Dto.ProveedorRequestDTO;
-import com.pos.pos.controller.Dto.ProveedorResponseDTO;
-import com.pos.pos.controller.Dto.ProveedorUpdatedRequestDTO;
+import com.pos.pos.controller.Dto.producto.ProveedorRequestDTO;
+import com.pos.pos.controller.Dto.producto.ProveedorResponseDTO;
+import com.pos.pos.controller.Dto.producto.ProveedorUpdatedRequestDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Proveedor;
 import com.pos.pos.service.ProveedorService;
