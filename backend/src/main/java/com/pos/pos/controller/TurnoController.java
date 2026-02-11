@@ -1,5 +1,7 @@
 package com.pos.pos.controller;
 
+import com.pos.pos.controller.Dto.turno.TurnoCierreRequestDTO;
+import com.pos.pos.controller.Dto.turno.TurnoDetalleResponseDTO;
 import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
 import com.pos.pos.controller.Dto.turno.TurnoResponseDTO;
 import com.pos.pos.modelo.turno.Turno;
@@ -23,5 +25,12 @@ public class TurnoController {
         Turno turnoNuevo = turnoService.create(dto);
 
         return ResponseEntity.ok(TurnoResponseDTO.desdeModelo(turnoNuevo));
+    }
+
+    @PatchMapping("/cierre")
+    public ResponseEntity<TurnoDetalleResponseDTO> cierreTurno(@RequestBody TurnoCierreRequestDTO dto){
+        Turno turnoCerrado = turnoService.cerrarTurno(dto.idTurno(), dto.efectivoFinal());
+
+        return ResponseEntity.ok(TurnoDetalleResponseDTO.desdeModelo(turnoCerrado));
     }
 }

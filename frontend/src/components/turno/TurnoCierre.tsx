@@ -16,14 +16,7 @@ interface Props{
 export default function TurnoCierre({turno,onCierreTurno,onFinalizarCierre}:Props){
     const [efectivo,setEfectivo] = useState("");
     const efectivoNum = parseFloat(efectivo)||0;//pasamos efectivo a number
-    const [turnoDetalle,setTurnoDetalle] = useState<TurnoDetalle|null>({
-        idTurno:1,
-        cajero:turno.cajero,
-        efectivoInicial:100,
-        efectivoFinal:200,
-        diferencia:100,
-        estado:"CERRADO"
-    }); 
+    const [turnoDetalle,setTurnoDetalle] = useState<TurnoDetalle|null>(null); 
 
     const handleReset = ()=>{
         setTurnoDetalle(null);
@@ -47,8 +40,9 @@ export default function TurnoCierre({turno,onCierreTurno,onFinalizarCierre}:Prop
             };
 
         try{
-            const turnoCerrado = onCierreTurno(turnoDto);
+            const turnoCerrado = await onCierreTurno(turnoDto);
             if(!turnoCerrado)return;
+            setTurnoDetalle(turnoCerrado);
         }
         catch(error){
             toast.error("Hubo un error al cerrar el turno");

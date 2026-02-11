@@ -2,6 +2,7 @@ package com.pos.pos.service.impl;
 
 import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
+import com.pos.pos.controller.exception.ParametroIncorrecto;
 import com.pos.pos.controller.exception.RolInvalidoException;
 import com.pos.pos.modelo.turno.Turno;
 import com.pos.pos.modelo.Usuario;
@@ -51,6 +52,8 @@ public class TurnoServiceImpl implements TurnoService {
 
     @Override
     public Turno cerrarTurno(Long idTurno, Double efectivoEnCaja){
+        if(efectivoEnCaja<0){new ParametroIncorrecto("El monto no puede ser negativo");}
+
         Turno turnoRecuperdado = turnoRepository.findById(idTurno)
                 .orElseThrow(()->new ElementoNoEncontrado("El turno buscado no existe"));
 

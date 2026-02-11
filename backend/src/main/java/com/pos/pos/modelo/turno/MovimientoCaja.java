@@ -1,10 +1,12 @@
 package com.pos.pos.modelo.turno;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Getter
 @Setter
 @ToString
 @NoArgsConstructor
@@ -22,6 +24,7 @@ public class MovimientoCaja {
         private final Tipo tipo;
 
         Concepto(Tipo tipo){this.tipo = tipo;}
+        public Tipo getTipo(){return tipo;}
     }
 
     @Id

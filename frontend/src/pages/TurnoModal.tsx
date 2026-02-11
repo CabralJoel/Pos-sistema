@@ -33,7 +33,7 @@ export default function TurnoModal(){
     }
 
     const cierreTurno = async(dto:TurnoCierreDTO):Promise<TurnoDetalle|null> => {
-        const response = await fetch("http://localhost:8080/turno/cierreTurno",{
+        const response = await fetch("http://localhost:8080/turno/cierre",{
                 method: "PATCH",
                 headers: {"Content-Type":"application/json"},
                 body:JSON.stringify(dto)

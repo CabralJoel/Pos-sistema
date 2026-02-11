@@ -80,7 +80,6 @@ export interface TurnoDetalle{//TODO: descomentar
     efectivoFinal:number,
     diferencia:number,
     estado:EstadoTurno,
-    //movimientos:Movimientro[]
 }
 
 export type EstadoTurno = "ABIERTO" | "CERRADO";

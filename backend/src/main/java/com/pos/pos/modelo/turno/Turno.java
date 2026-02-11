@@ -1,6 +1,8 @@
 package com.pos.pos.modelo.turno;
 
 import com.pos.pos.modelo.Usuario;
+import com.pos.pos.modelo.venta.MedioPago;
+import com.pos.pos.modelo.venta.Venta;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.ToString;
@@ -46,6 +48,9 @@ public class Turno {
     private EstadoTurno estado;
 
     @OneToMany(mappedBy = "turno",cascade = CascadeType.ALL)
+    private List<Venta> ventas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "turno",cascade = CascadeType.ALL)
     private List<MovimientoCaja> movimientos = new ArrayList<>();
 
     public Turno(Usuario cajero,Double efectivoInicial){
@@ -57,9 +62,10 @@ public class Turno {
     }
 
     public void cerrarTurno(Double efectivoFisico){
-        //TODO:calcular efectivo esperado
+        Double efectivoEsperado = this.calcularEfectivoEsperado() + efectivoInicial;
+
         this.efectivoFinal = efectivoFisico;
-        this.diferencia = efectivoInicial - efectivoFisico;
+        this.diferencia = efectivoEsperado - efectivoFisico;
 
         this.fechaFin = LocalDateTime.now();
         this.estado = EstadoTurno.CERRADO;
@@ -70,4 +76,19 @@ public class Turno {
         movimientos.add(movimiento);
     }
 
+    private Double calcularEfectivoEsperado(){
+        Double efectivoVentas = ventas.stream().flatMap(v->v.getMediosDePago().stream())
+                .filter(mp->mp.getTipoPago() == MedioPago.TipoPago.EFECTIVO)
+                .mapToDouble(MedioPago::getMonto).sum();
+
+        Double ingresosMovimientos = movimientos.stream()
+                .filter(m->m.getConcepto().getTipo() == MovimientoCaja.Tipo.INGRESO)
+                .mapToDouble(MovimientoCaja::getMonto).sum();
+
+        Double egresosMovimientos = movimientos.stream()
+                .filter(m->m.getConcepto().getTipo() == MovimientoCaja.Tipo.EGRESO)
+                .mapToDouble(MovimientoCaja::getMonto).sum();
+
+        return efectivoVentas + ingresosMovimientos - egresosMovimientos;
+    }
 }
