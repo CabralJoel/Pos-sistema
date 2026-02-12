@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VentaService {
-    Venta create(VentaRequestDTO ventaDTO);
+    Venta create(Long idTurno,VentaRequestDTO ventaDTO);
     Optional<Venta> findById(Long id);
     Venta upgrade(Venta venta);
     List<Venta> findAll();

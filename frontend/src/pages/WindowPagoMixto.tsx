@@ -5,7 +5,7 @@ import { MedioPago, type PagoDTO } from "../types/ventas";
 import { toast } from "react-toastify";
 import { NumberInput } from "../components/NumberInput";
 
-
+//TODO: revisar que los montos de los medios de pago aparecen desalineados
 export default function WindowPagoMixto(){
     const [total, setTotal] = useState<number>(0);
     const [pagos,setPagos] = useState<PagoDTO[]>([]);
@@ -36,7 +36,7 @@ export default function WindowPagoMixto(){
         const monto = Number(montoActual);
         
         if(!monto||monto <= 0){return;}
-        if(montoFaltante-monto <0){return;}
+        if(montoFaltante-monto <0){return;}//agregar mensaje de error
 
         setPagos(prev => [
             ...prev,

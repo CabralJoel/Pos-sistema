@@ -65,8 +65,7 @@ function navigate({ route, sender }) {
   const currentWindow = BrowserWindow.fromWebContents(sender);
 
   //se ve desde donde viene la navegacion
-  const currentEntry = [...windows.entries()]
-    .find(([, win]) => win === currentWindow);
+  const currentEntry = [...windows.entries()].find(([, value]) => value.win === currentWindow);
 
   const currentKey = currentEntry?.[0];
 
@@ -79,7 +78,7 @@ function navigate({ route, sender }) {
   if (shouldOpenWindow) {
     const existing = windows.get(rule.windowKey);
 
-    if (rule.singleton && existing && !existing.isDestroyed()) {
+    if (rule.singleton && existing && !existing.win.isDestroyed()) {
       existing.win.focus();
     } else {
       createWindow(route, rule);
@@ -178,8 +177,9 @@ app.whenReady().then(() => {
     if (!caja) return;
 
     createWindow(`/pago-mixto?total=${total}`, {
+      windowKey: "pago-mixto",
       windowType: "modal",
-      parent: caja,
+      parent: caja.win,
       modal: true,
     });
   });
@@ -188,7 +188,7 @@ app.whenReady().then(() => {
 ipcMain.handle("pago-mixto-confirmado", (_, pagos) => {
   const caja = windows.get("caja");
   if (caja && !caja.win.isDestroyed()) {
-    caja.webContents.send("pago-mixto-confirmado", pagos);
+    caja.win.webContents.send("pago-mixto-confirmado", pagos);
   }
 });
 

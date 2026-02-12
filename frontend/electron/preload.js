@@ -39,7 +39,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onPagoMixtoConfirmado: (callback) => {
     const handler = (_, pagos) => callback(pagos);
     listeners.set(callback, handler);
-    ipcRenderer.on("pago-mixto-confirmado", handler);
+    ipcRenderer.once("pago-mixto-confirmado", handler);
   },
 
   offPagoMixtoConfirmado: (callback) => {

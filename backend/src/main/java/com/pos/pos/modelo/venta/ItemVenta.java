@@ -39,7 +39,8 @@ public class ItemVenta {
     @Column(nullable = false)
     private int cantidad;
 
-    public ItemVenta(Producto producto,int cantidad){
+    public ItemVenta(Venta venta,Producto producto,int cantidad){
+        this.venta = venta;
         this.producto = producto;
         this.codeProducto = producto.getCode();
         this.nombreProducto = producto.getNombre();
@@ -47,7 +48,8 @@ public class ItemVenta {
         this.cantidad = cantidad;
     }
 
-    public ItemVenta (Double precio){
+    public ItemVenta (Venta venta,Double precio){
+        this.venta = venta;
         this.nombreProducto = "Varios";
         this.precioUnitario = precio;
         this.cantidad = 1;

@@ -4,7 +4,7 @@ import com.pos.pos.TestService;
 import com.pos.pos.controller.Dto.venta.ItemVentaRequestDTO;
 import com.pos.pos.controller.Dto.venta.MedioPagoDTO;
 import com.pos.pos.controller.Dto.venta.VentaRequestDTO;
-import com.pos.pos.controller.exception.VentaEstadoException;
+import com.pos.pos.controller.exception.EstadoInvalidoException;
 import com.pos.pos.modelo.Producto;
 import com.pos.pos.modelo.Proveedor;
 import com.pos.pos.modelo.Usuario;
@@ -142,7 +142,7 @@ public class VentaServiceImplTest {
 
         ventaService.anularVenta(ventaCreada.getId(),"Devolucion completa");
 
-        assertThrows(VentaEstadoException.class,
+        assertThrows(EstadoInvalidoException.class,
                 ()->{ventaService.anularVenta(ventaCreada.getId(),"cambio de producto");});
     }
 

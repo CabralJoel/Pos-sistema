@@ -7,7 +7,7 @@ import {toast } from "react-toastify";
 import { crearItemManual, mapVentaRequest } from "../hooks/useCreacionVentaTypes"
 import { buscarProductos} from "../service/producto.service";
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState,useRef } from "react"
 
 import type { ProductoResponseDTO } from "../types/producto"
 import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal } from "../types/ventas"
@@ -22,15 +22,24 @@ export default function CajaPage(){
     })
 
     const [formaPago,setFormaPago] = useState<MedioPago>("EFECTIVO");
-    const [VentaLocal,setVentaLocal] = useState<VentaLocal>(ventaInicial());
+    const [ventaLocal,setVentaLocal] = useState<VentaLocal>(ventaInicial());
     const [ventasRealizadas,setVentasRealizadas] = useState(0);
     const [turno,setTurno] = useState<TurnoLocal|null>(null);
-    //const [mostrarModal,setMostrarModal] = useState(false);
+
+    const ventaRef = useRef<VentaLocal>(ventaInicial());
+    useEffect(() => {
+        ventaRef.current = ventaLocal;
+    }, [ventaLocal]);
+    
+    const turnoRef = useRef<TurnoLocal | null>(null);
+    useEffect(() => {
+        turnoRef.current = turno;
+    }, [turno]);
 
     const total = useMemo(() => {
-        return VentaLocal.items.reduce((suma,item) =>
+        return ventaLocal.items.reduce((suma,item) =>
             suma + item.subtotal,0);
-    },[VentaLocal.items]);
+    },[ventaLocal.items]);
 
     const handleAgregarProducto = (producto: ProductoResponseDTO,cant:number) => {
         setVentaLocal(prevVenta => {
@@ -101,8 +110,7 @@ export default function CajaPage(){
     };
 
     const finalizarVenta = async() => {
-        console.log(turno);
-        if(VentaLocal.items.length === 0){
+        if(ventaLocal.items.length === 0){
             toast.error("No hay productos cargados");
             return;
         }
@@ -113,7 +121,7 @@ export default function CajaPage(){
         }
 
         const ventaSimple: VentaLocal = {
-            ...VentaLocal,
+            ...ventaLocal,
             mediosDePago:[{
                 tipoPago: formaPago,
                 monto: total
@@ -127,26 +135,38 @@ export default function CajaPage(){
 
     const confirmarPagoMixto = async(pagos:PagoDTO[]) => {
 
-        const ventaMixta: VentaLocal = {
-            ...VentaLocal,
-            mediosDePago:pagos
+        const turnoActual = turnoRef.current;
+
+        if (!turnoActual) {
+            toast.error("No hay turno activo");
+            return;
         }
 
-        const ventaRequest = mapVentaRequest(ventaMixta);
+        const ventaMixta: VentaLocal = {
+            ...ventaRef.current,
+            mediosDePago:pagos
+        }
         
-        enviarVenta(ventaRequest);
+        const ventaRequest = mapVentaRequest(ventaMixta);
+        enviarVenta(ventaRequest, turnoActual);
     }
 
-    const enviarVenta = async(ventaRequest: VentaRequestDTO) => {
+    const enviarVenta = async(ventaRequest: VentaRequestDTO, turnoActual?: TurnoLocal) => {
+        const turnoAUsar = turnoActual ?? turnoRef.current;
+        
+        if(!turnoAUsar){
+            toast.error("no hay turno activo");
+            return
+        }
         try{
-            const response = await fetch("http://localhost:8080/ventas/registrarVenta",{
+            const response = await fetch(`http://localhost:8080/ventas/${turnoAUsar.idTurno}/registrarVenta`,{
                 method: "POST",
                 headers:{"Content-Type":"application/json"},
                 body: JSON.stringify(ventaRequest)
             });
             if(!response.ok){
-                const errorMsg = await response.json();
-                console.log(errorMsg)
+                const errorMsg = await response.text();
+                toast.error(errorMsg)
                 return
             }
             const ventaGuardada = await response.json();
@@ -162,7 +182,7 @@ export default function CajaPage(){
     }
 
     const cerrarTurno = () => {
-        if(VentaLocal.items.length > 0){
+        if(ventaLocal.items.length > 0){
             toast.error("Termine la venta para cerrar el turno");
             return;
         }
@@ -200,9 +220,6 @@ export default function CajaPage(){
         };
     }, []);
 
-
-
-
     return(
         <div className={styles.pageContainer}>
             <div></div>
@@ -210,7 +227,7 @@ export default function CajaPage(){
                 resetSignal={ventasRealizadas} onProductoManual={handleProductoManual}/>
             <div className={styles.infoContainer}>
 
-                <ListaProdVenta items={VentaLocal.items} onSumar={actualizarCantItem} 
+                <ListaProdVenta items={ventaLocal.items} onSumar={actualizarCantItem} 
                 onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
                 <TotalVenta total={total} onMedioPago={setFormaPago} resetSignal={ventasRealizadas}/>
             </div>

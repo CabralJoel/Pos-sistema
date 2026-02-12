@@ -1,7 +1,8 @@
 import { useState } from "react";
 import NavButton from "../components/NavButton";
 import { toast } from "react-toastify";
-import type { usuarioLocal } from "../types/ventas";
+
+import homeStyle from "../styles/Home.module.css"
 
 interface UserForm{
     nombre:string,
@@ -23,7 +24,7 @@ export default function Home(){
         }));
     };
 
-    const crearUser = async() => {
+    const loginEncargado = async() => {
         if(formData.nombre === "" || formData.password === ""){return;}
 
         try{
@@ -50,16 +51,12 @@ export default function Home(){
 
 
     return(
-        <div >
-            <div>
-                <h1>Home</h1>
-                <NavButton text="Carga Productos" to="/carga"/>
-                <NavButton text="Caja" to="/caja"/>
-            </div>
-            <div>
-                <input style={{backgroundColor:"yellow"}} name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="nombre usuario"/>
-                <input style={{backgroundColor:"yellow"}} name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="contraseña"/>
-                <button onClick={crearUser}>Loguear Admin</button>
+        <div className={homeStyle.homeContainer}>
+            <h1>Inicio de sesion de caja</h1>
+            <div className={homeStyle.loginContainer}>
+                <input name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="Usuario"/>
+                <input name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="Contraseña"/>
+                <button onClick={loginEncargado}>Loguear Admin</button>
             </div>
 
         </div>

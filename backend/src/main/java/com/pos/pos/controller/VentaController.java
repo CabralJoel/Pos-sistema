@@ -40,9 +40,10 @@ public class VentaController {
         return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaRecuperada));
     }
 
-    @PostMapping("/registrarVenta")
-    public ResponseEntity<VentaResponseDTO> registrarVenta(@RequestBody VentaRequestDTO dto){
-        Venta ventaRegistrada = ventaService.create(dto);
+    @PostMapping("/{idTurno}/registrarVenta")
+    public ResponseEntity<VentaResponseDTO> registrarVenta(@PathVariable Long idTurno,
+                                                               @RequestBody VentaRequestDTO dto){
+        Venta ventaRegistrada = ventaService.create(idTurno,dto);
 
         return ResponseEntity.ok(VentaResponseDTO.desdeModelo(ventaRegistrada));
     }

@@ -36,7 +36,8 @@ public class MedioPago{
     @Column(nullable = false)
     private TipoPago tipoPago;
 
-    public MedioPago(TipoPago tipoPago,Double monto){
+    public MedioPago(Venta venta,TipoPago tipoPago,Double monto){
+        this.venta = venta;
         this.tipoPago = tipoPago;
         this.monto = monto;
     }

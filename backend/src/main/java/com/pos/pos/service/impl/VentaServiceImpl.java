@@ -4,13 +4,16 @@ import com.pos.pos.controller.Dto.venta.ItemVentaRequestDTO;
 import com.pos.pos.controller.Dto.venta.MedioPagoDTO;
 import com.pos.pos.controller.Dto.venta.VentaRequestDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
-import com.pos.pos.controller.exception.VentaEstadoException;
+import com.pos.pos.controller.exception.EstadoInvalidoException;
 import com.pos.pos.modelo.Producto;
+import com.pos.pos.modelo.turno.EstadoTurno;
+import com.pos.pos.modelo.turno.Turno;
 import com.pos.pos.modelo.venta.EstadoVenta;
 import com.pos.pos.modelo.venta.ItemVenta;
 import com.pos.pos.modelo.venta.MedioPago;
 import com.pos.pos.modelo.venta.Venta;
 import com.pos.pos.persistencia.interfaces.ProductoRepository;
+import com.pos.pos.persistencia.interfaces.TurnoRepository;
 import com.pos.pos.persistencia.interfaces.VentaRepository;
 import com.pos.pos.service.VentaService;
 import org.springframework.stereotype.Service;
@@ -25,15 +28,24 @@ import java.util.Optional;
 public class VentaServiceImpl implements VentaService {
     VentaRepository ventaRepository;
     ProductoRepository productoRepository;
+    TurnoRepository turnoRepository;
 
-    public VentaServiceImpl(VentaRepository ventaRepository,ProductoRepository productoRepository){
+    public VentaServiceImpl(VentaRepository ventaRepository,ProductoRepository productoRepository,TurnoRepository turnoRepository){
         this.ventaRepository = ventaRepository;
         this.productoRepository = productoRepository;
+        this.turnoRepository = turnoRepository;
 
     }
 
     @Override
-    public Venta create(VentaRequestDTO ventaDTO){
+    public Venta create(Long idTurno,VentaRequestDTO ventaDTO){
+        Turno turno = turnoRepository.findById(idTurno)
+                .orElseThrow(()->new ElementoNoEncontrado("El turno de la venta no existe"));
+        if(turno.getEstado()== EstadoTurno.CERRADO){
+            throw  new EstadoInvalidoException("El turno ya termino, inicie un nuevo turno");}
+
+        Venta venta = new Venta(turno);
+
         List<ItemVentaRequestDTO> itemsDtos = ventaDTO.items();
         List<MedioPagoDTO> mediosDePagoDtos = ventaDTO.mediosDePago();
 
@@ -41,16 +53,18 @@ public class VentaServiceImpl implements VentaService {
         List<ItemVenta> items = new ArrayList<>();
 
         for(ItemVentaRequestDTO item : itemsDtos){
-            ItemVenta itemCreado = crearItemVenta(item);
+            ItemVenta itemCreado = crearItemVenta(venta,item);
             items.add(itemCreado);
         }
 
         for(MedioPagoDTO medioPago : mediosDePagoDtos){
-            MedioPago medioPagoCreado = new MedioPago(medioPago.tipoPago(),medioPago.monto());
+            MedioPago medioPagoCreado = new MedioPago(venta,medioPago.tipoPago(),medioPago.monto());
             mediosDePago.add(medioPagoCreado);
         }
 
-        Venta venta = new Venta(mediosDePago,items);
+        venta.agregarProductos(items);
+        venta.agregarMediosDePago(mediosDePago);
+
         venta.concretarVenta();
 
         return ventaRepository.save(venta);
@@ -81,22 +95,22 @@ public class VentaServiceImpl implements VentaService {
         Venta ventaRecuperada = ventaRepository.findById(idVenta)
                 .orElseThrow(()->new ElementoNoEncontrado("La venta a anular no existe"));
 
-        if(ventaRecuperada.getEstado() == EstadoVenta.ANULADA) throw new VentaEstadoException("La venta ya fue anulada anteriormente");
+        if(ventaRecuperada.getEstado() == EstadoVenta.ANULADA) throw new EstadoInvalidoException("La venta ya fue anulada anteriormente");
 
         ventaRecuperada.anularVenta(motivo);
 
         return ventaRepository.save(ventaRecuperada);
     }
 
-    private ItemVenta crearItemVenta(ItemVentaRequestDTO itemDto){
+    private ItemVenta crearItemVenta(Venta venta,ItemVentaRequestDTO itemDto){
         if(itemDto.idProducto() == null){
-            return new ItemVenta(itemDto.precioUnitario());
+            return new ItemVenta(venta,itemDto.precioUnitario());
         }
         else{
             Producto producto = productoRepository.findById(itemDto.idProducto()).
                     orElseThrow(() -> new ElementoNoEncontrado("El producto ingresado no existe"));
 
-            return new ItemVenta(producto, itemDto.cantidad());
+            return new ItemVenta(venta,producto, itemDto.cantidad());
         }
     }
 }
