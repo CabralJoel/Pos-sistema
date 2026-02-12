@@ -29,7 +29,10 @@ declare global {
       onPagoMixtoConfirmado: (callback: (pagos: PagoDTO[]) => void) => void;
       offPagoMixtoConfirmado: (callcallback: (pagos: PagoDTO[]) => void) => void;
 
-      //onPagoMixtoTotal: (callback: (event: any, total: number) => void) => void;
+      ventaMixtaResultado:(resultado:{ok:boolean}) =>Promise<void>;
+
+      onVentaMixtaResultado:(callback: (resultado: { ok: boolean }) => void) => void;
+      offVentaMixtaResultado:(callback: (resultado: { ok: boolean }) => void) => void;
 
       setCurrentPage: (pageKey: string) => void;
     };

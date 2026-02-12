@@ -185,12 +185,23 @@ app.whenReady().then(() => {
   });
 });
 
-ipcMain.handle("pago-mixto-confirmado", (_, pagos) => {
-  const caja = windows.get("caja");
-  if (caja && !caja.win.isDestroyed()) {
-    caja.win.webContents.send("pago-mixto-confirmado", pagos);
-  }
-});
+  ipcMain.handle("pago-mixto-confirmado", (_, pagos) => {
+    const caja = windows.get("caja");
+    if (caja && !caja.win.isDestroyed()) {
+      caja.win.webContents.send("pago-mixto-confirmado", pagos);
+    }
+  });
+
+  ipcMain.handle("venta-mixta-resultado",(_,resultado) =>{
+    const modal = windows.get("pago-mixto");
+    if(modal && !modal.win.isDestroyed()){
+      modal.win.webContents.send("venta-mixta-resultado",resultado);
+
+      if(resultado.ok){
+        modal.win.close();
+      }
+    }
+  })
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();

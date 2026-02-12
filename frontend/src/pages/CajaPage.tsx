@@ -35,6 +35,8 @@ export default function CajaPage(){
     useEffect(() => {
         turnoRef.current = turno;
     }, [turno]);
+    const enviandoVentaRef = useRef(false);
+
 
     const total = useMemo(() => {
         return ventaLocal.items.reduce((suma,item) =>
@@ -134,11 +136,14 @@ export default function CajaPage(){
     }
 
     const confirmarPagoMixto = async(pagos:PagoDTO[]) => {
+        if (enviandoVentaRef.current) return;
+        enviandoVentaRef.current = true;
 
         const turnoActual = turnoRef.current;
 
         if (!turnoActual) {
             toast.error("No hay turno activo");
+            enviandoVentaRef.current = false;
             return;
         }
 
@@ -148,15 +153,18 @@ export default function CajaPage(){
         }
         
         const ventaRequest = mapVentaRequest(ventaMixta);
-        enviarVenta(ventaRequest, turnoActual);
+        const ok = await enviarVenta(ventaRequest, turnoActual);
+
+        window.electronAPI.ventaMixtaResultado({ ok });
+        enviandoVentaRef.current = false;
     }
 
-    const enviarVenta = async(ventaRequest: VentaRequestDTO, turnoActual?: TurnoLocal) => {
+    const enviarVenta = async(ventaRequest: VentaRequestDTO, turnoActual?: TurnoLocal): Promise<boolean> => {
         const turnoAUsar = turnoActual ?? turnoRef.current;
         
         if(!turnoAUsar){
             toast.error("no hay turno activo");
-            return
+            return false;
         }
         try{
             const response = await fetch(`http://localhost:8080/ventas/${turnoAUsar.idTurno}/registrarVenta`,{
@@ -167,7 +175,7 @@ export default function CajaPage(){
             if(!response.ok){
                 const errorMsg = await response.text();
                 toast.error(errorMsg)
-                return
+                return false;
             }
             const ventaGuardada = await response.json();
 
@@ -175,9 +183,11 @@ export default function CajaPage(){
             setVentasRealizadas(prev => prev + 1);
 
             console.log("Venta guardada:", ventaGuardada);//para futuro ticket
+            return true;
         }
         catch(error){
             toast.error("No se pudo concretar la venta");
+            return false;
         }
     }
 

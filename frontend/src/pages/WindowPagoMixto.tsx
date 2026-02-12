@@ -60,15 +60,27 @@ export default function WindowPagoMixto(){
             return;
         }
         window.electronAPI.confirmarPagoMixto(pagos);
-        reinicioComponente();
-        window.close();
+        
     }
 
-    
     const cancelar = () => {
         reinicioComponente();
         window.close();
     }
+
+    useEffect(() => {
+        const handler = (resultado:{ok:boolean}) =>{
+            if(resultado.ok){
+                window.close();
+            }else{toast.error("Hubo un error de conexion al guardar la venta")}
+        };
+
+        window.electronAPI.onVentaMixtaResultado(handler);
+
+        return () => {
+            window.electronAPI.offVentaMixtaResultado(handler);
+        };
+    },[]);
 
     return(
         <div className={modalStyle.modalContainer}>

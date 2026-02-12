@@ -39,7 +39,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onPagoMixtoConfirmado: (callback) => {
     const handler = (_, pagos) => callback(pagos);
     listeners.set(callback, handler);
-    ipcRenderer.once("pago-mixto-confirmado", handler);
+    ipcRenderer.on("pago-mixto-confirmado", handler);
   },
 
   offPagoMixtoConfirmado: (callback) => {
@@ -49,6 +49,23 @@ contextBridge.exposeInMainWorld("electronAPI", {
       listeners.delete(callback);
     }
   },
+
+  ventaMixtaResultado: (resultado) => ipcRenderer.invoke("venta-mixta-resultado", resultado),
+
+  onVentaMixtaResultado: (callback) => {
+    const handler = (_, resultado) => callback(resultado);
+    listeners.set(callback, handler);
+    ipcRenderer.on("venta-mixta-resultado", handler);
+  },
+
+  offVentaMixtaResultado: (callback) => {
+    const handler = listeners.get(callback);
+    if (handler) {
+      ipcRenderer.removeListener("venta-mixta-resultado", handler);
+      listeners.delete(callback);
+    }
+  },
+
 
   setCurrentPage: (pageKey) => ipcRenderer.send("set-current-page", pageKey),
 
