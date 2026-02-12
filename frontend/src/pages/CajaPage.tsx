@@ -13,6 +13,7 @@ import type { ProductoResponseDTO } from "../types/producto"
 import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal } from "../types/ventas"
 
 import styles from "../styles/cajaPage/CajaPage.module.css"
+import BarraUsuario from "../components/caja/BarraUsuario";
 
 
 export default function CajaPage(){
@@ -232,7 +233,7 @@ export default function CajaPage(){
 
     return(
         <div className={styles.pageContainer}>
-            <div></div>
+            <BarraUsuario usuario={turno?.cajero}/>
             <BarraCargarProducto filtrarProductos={buscarProductos} consultaProducto={consultaProducto} onProductoSeleccionado={handleAgregarProducto}
                 resetSignal={ventasRealizadas} onProductoManual={handleProductoManual}/>
             <div className={styles.infoContainer}>

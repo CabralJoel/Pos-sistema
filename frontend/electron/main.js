@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, screen } from "electron";
+import { app, BrowserWindow, ipcMain, screen,Menu } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import { navigationRules } from "./navigationRules.js";
@@ -28,6 +28,12 @@ function createWindow(route, { windowKey, windowType, parent, modal } = {}) {
     parent,
     modal,
     resizable: !modal,
+    minimizable:!modal,
+    maximizable:!modal,
+    fullscreenable:!modal,
+    closable:!modal,
+    autoHideMenuBar: true,//esconde el menu
+    //frame:!modal,//borra la barra de ventana completa
     center: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -122,6 +128,8 @@ function openTurnoModal(){
 
 // APP
 app.whenReady().then(() => {
+  //Menu.setApplicationMenu(null);//descomentar para mostrar el mentu superior
+  
   createWindow("/", navigationRules["/"]);
 
   ipcMain.handle("navigate", (e, payload) =>
