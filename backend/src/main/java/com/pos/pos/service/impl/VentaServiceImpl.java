@@ -66,6 +66,7 @@ public class VentaServiceImpl implements VentaService {
         venta.agregarMediosDePago(mediosDePago);
 
         venta.concretarVenta();
+        turno.agregarVenta(venta);
 
         return ventaRepository.save(venta);
     }

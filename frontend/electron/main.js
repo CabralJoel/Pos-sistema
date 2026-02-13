@@ -32,7 +32,7 @@ function createWindow(route, { windowKey, windowType, parent, modal } = {}) {
     maximizable:!modal,
     fullscreenable:!modal,
     closable:!modal,
-    autoHideMenuBar: true,//esconde el menu
+    autoHideMenuBar: modal,//esconde el menu
     //frame:!modal,//borra la barra de ventana completa
     center: true,
     webPreferences: {

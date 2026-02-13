@@ -132,7 +132,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
                 break;
             }
     }
-//TODO: agregar componente para consultar precio
+
     return(
         <div className={barraStyles.barraContainer}>
             <div className={barraStyles.inputContainer}>

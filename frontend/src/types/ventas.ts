@@ -16,6 +16,13 @@ export interface VentaRequestDTO{
     items:ItemVentaRequestDTO[],
     mediosDePago:PagoDTO[]
 }
+export interface VentaResponseDTO{
+    id:number,
+    fechaCreacion:string,
+    total:number,
+    estado:EstadoVenta,
+    productos:ItemVentaDTO[]
+}
 
 export interface ItemVentaRequestDTO{
     idProducto:number|null,
@@ -83,3 +90,18 @@ export interface TurnoDetalle{//TODO: descomentar
 }
 
 export type EstadoTurno = "ABIERTO" | "CERRADO";
+
+export interface ResumenVentaLocal{
+    idVenta:number,
+    fecha:string,
+    total:number
+}
+export interface ResumenVentaTurnoLocal{
+    idTurno:number,
+    fechaInicio:string,
+    nombreCajero:string,
+    cantVentasConfirmadas:number,
+    cantVentasAnuladas:number,
+    total:number,
+    ventas:ResumenVentaLocal[],
+}

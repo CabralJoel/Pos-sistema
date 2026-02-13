@@ -31,10 +31,7 @@ public class TurnoServiceImpl implements TurnoService {
     public Turno create(TurnoRequestDto turnoDto){
         Usuario cajero = usuarioService.findById(turnoDto.idCajero())
                 .orElseThrow(() -> new ElementoNoEncontrado("El Cajero asignado no existe"));
-        /*
-        if(!usuarioService.validarUsuarioRol(turnoDto.idCajero(), UsuarioRol.CAJERO)){
-            throw new RolInvalidoException("Un cajero debe iniciar el turno");
-        }*/
+
         Turno turno = turnoDto.aModelo(cajero);
 
         return turnoRepository.save(turno);

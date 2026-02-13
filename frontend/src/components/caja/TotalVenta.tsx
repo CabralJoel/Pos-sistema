@@ -2,15 +2,16 @@ import { useEffect, useState } from "react"
 
 import styles from "../../styles/cajaPage/TotalVenta.module.css"
 import { NumberInput } from "../NumberInput"
-import { MedioPago } from "../../types/ventas";
+import { MedioPago, type ResumenVentaTurnoLocal } from "../../types/ventas";
 
 interface Props{
     total:number;
     onMedioPago:(MedioPago:MedioPago) => void,
     resetSignal: number;
+    resumenTurno:ResumenVentaTurnoLocal|null;
 }
 
-export default function TotalVenta({total,onMedioPago,resetSignal}:Props){
+export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno}:Props){
     const [efectivo,setEfectivo] = useState("");
 
     const efectivoNum = parseFloat(efectivo)||0

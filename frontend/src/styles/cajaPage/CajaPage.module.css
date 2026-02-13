@@ -1,13 +1,28 @@
 .pageContainer{
     background-color:#1e1d1d;
     display: flex;
-    flex-direction: column;
     height: 100vh;
+
+}
+
+.cajaContainer{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.cobroContainer{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    min-width: 980px;
     position: relative;
 }
 
 .infoContainer{
-    background-color: transparent;
     display: flex;
     flex: 1;
     padding: 10px;
