@@ -1,16 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import resumenStyle from "../../styles/cajaPage/ResumenVentas.module.css"
 import type { ResumenVentaTurnoLocal } from "../../types/ventas"
 import { IoReceiptOutline } from "react-icons/io5";
+import { useClickOutside } from "../../hooks/useClicksOutside";
 
 interface resumenProps{
     resumenVentas:ResumenVentaTurnoLocal|null;
     visible:boolean;
+    onClose:()=>void;
 }
 
-export default function ResumenVentas({resumenVentas,visible}:resumenProps){
+export default function ResumenVentas({resumenVentas,visible,onClose}:resumenProps){
 
     const [animar,setAnimar] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useClickOutside(ref,onClose,{enabled:visible})
 
     useEffect(()=>{
         if(visible){
@@ -22,7 +27,7 @@ export default function ResumenVentas({resumenVentas,visible}:resumenProps){
     },[visible]);
 
     return(
-        <div className={`${resumenStyle.resumenContainer} ${animar ? resumenStyle.resumenVisible : resumenStyle.resumenHidden}`}>
+        <div ref={ref} className={`${resumenStyle.resumenContainer} ${animar ? resumenStyle.resumenVisible : resumenStyle.resumenHidden}`}>
             
             <div style={{display:"grid",width:"100%",gridTemplateColumns:"auto 1fr auto"}}>
                 <button style={{backgroundColor:"rgb(255, 255, 255)",padding:"0.2em 0.6em"}}>

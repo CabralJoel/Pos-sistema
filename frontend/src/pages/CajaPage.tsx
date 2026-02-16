@@ -10,7 +10,7 @@ import { buscarProductos} from "../service/producto.service";
 import { useEffect, useMemo, useState,useRef } from "react"
 
 import type { ProductoResponseDTO } from "../types/producto"
-import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal, type ResumenVentaTurnoLocal, type ResumenVentaLocal, type VentaResponseDTO, EstadoVenta } from "../types/ventas"
+import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal, type ResumenVentaTurnoLocal, type VentaResponseDTO } from "../types/ventas"
 
 import styles from "../styles/cajaPage/CajaPage.module.css"
 import BarraUsuario from "../components/caja/BarraUsuario";
@@ -299,7 +299,7 @@ export default function CajaPage(){
                         <ListaProdVenta items={ventaLocal.items} onSumar={actualizarCantItem} 
                         onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
                         <TotalVenta total={total} onMedioPago={setFormaPago} resetSignal={ventasRealizadas} resumenTurno={resumenTurno}
-                        mostrarResumen={mostratResumen} />
+                        mostrarResumen={mostratResumen} onCloseResumen={()=>setMostrarResumen(false)} />
                     </div>
                     <OpcionesCaja onFinalizarVenta={finalizarVenta} onCerrarTurno={cerrarTurno} 
                     onMostrarResumen={()=>setMostrarResumen(prev=>!prev)}/>

@@ -27,6 +27,9 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
 
     const submittingRef = useRef(false);
 
+    const tecladoRef = useRef<HTMLDivElement>(null);
+    const panelRef = useRef<HTMLDivElement>(null);
+
     const{
         texto,
         setTexto,
@@ -39,11 +42,18 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
         clear();
     });
 
-    const wrapperRef = useRef<HTMLDivElement>(null);
 
     const closeTeclado = () => {
         setOpen(false);
         setMontoManual("");
+    }
+
+    const cerrarPanel = () => {
+        setMostrarPanel(false);
+        
+        setTimeout(()=>{
+            setPanel(false)
+        },300)
     }
 
     const estadoPanel = () => {
@@ -53,10 +63,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
                 setMostrarPanel(true)
             });
         }else{
-            setMostrarPanel(false);
-            setTimeout(()=>{
-                setPanel(false)
-            },300)
+            cerrarPanel();
         }
     }
 
@@ -75,22 +82,31 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
 // focus en el input de monto manual
     useEffect(() => {
     if (open) {
-        const input = wrapperRef.current?.querySelector("input");
+        const input = tecladoRef.current?.querySelector("input");
         input?.focus();
     }
     }, [open]);
-//reinicio de input de monto manual al cluckear fuera de el
+//reinicio de input de monto manual y panel consulta al clickear fuera de el
     useEffect(() => {
-        if(!open) return;
+        if(!open && !panel) return;
 
         const handleClickOutside = (e:MouseEvent) => {
-            if(!wrapperRef.current?.contains(e.target as Node)){
+            const target = e.target as Node;
+
+            // cerrar teclado
+            if (open && !tecladoRef.current?.contains(target)) {
                 closeTeclado();
             }
-        }
+
+            // cerrar panel 
+            if (panel && !panelRef.current?.contains(target)) {
+                cerrarPanel();
+            }
+        };
         document.addEventListener("mousedown",handleClickOutside);
+
         return () => document.removeEventListener("mousedown",handleClickOutside);
-    },[open]);
+    },[open,panel]);
 
 
     const handleChangeCantidad = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +177,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
                 </div>
 
                 
-                <div ref={wrapperRef} style={{display:"flex",gap:"2px"}}>
+                <div ref={tecladoRef} style={{display:"flex",gap:"2px"}}>
                     <button onClick={()=>{
                         if(open){closeTeclado()}
                         else{setOpen(true)}
@@ -176,14 +192,12 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
                 
             </div>
             
-            <div className={barraStyles.consultaWrapper}>
+            <div ref={panelRef} className={barraStyles.consultaWrapper}>
                 <button onClick={()=>estadoPanel()}>Consultar precio</button>
                 
                 {panel && (<PanelConsulta visible={mostrarPanel} consultaProducto={consultaProducto} resetSignal={resetSignal}/>)}
                 
             </div>
-            
-
         </div>
     )
 }

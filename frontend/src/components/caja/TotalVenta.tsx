@@ -11,9 +11,10 @@ interface Props{
     resetSignal: number;
     resumenTurno:ResumenVentaTurnoLocal|null;
     mostrarResumen:boolean;
+    onCloseResumen:()=>void;
 }
 
-export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno,mostrarResumen}:Props){
+export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno,mostrarResumen,onCloseResumen}:Props){
     const [efectivo,setEfectivo] = useState("");
 
     const efectivoNum = parseFloat(efectivo)||0
@@ -41,7 +42,7 @@ export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno,m
 
     return(
         <div className={styles.totalContainer}>
-            {resumenVisible && (<ResumenVentas resumenVentas={resumenTurno} visible={mostrarResumen}/>)}
+            {resumenVisible && (<ResumenVentas resumenVentas={resumenTurno} visible={mostrarResumen} onClose={onCloseResumen}/>)}
             <div className={styles.pagoButtonsContainer}>
                 <button className={medioPago === MedioPago.EFECTIVO ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("EFECTIVO");
