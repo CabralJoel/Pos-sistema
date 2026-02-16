@@ -10,7 +10,7 @@ import { buscarProductos} from "../service/producto.service";
 import { useEffect, useMemo, useState,useRef } from "react"
 
 import type { ProductoResponseDTO } from "../types/producto"
-import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal, type ResumenVentaTurnoLocal, type ResumenVentaLocal, type VentaResponseDTO } from "../types/ventas"
+import { MedioPago, type VentaLocal,type VentaRequestDTO,type PagoDTO, type TurnoLocal, type ResumenVentaTurnoLocal, type ResumenVentaLocal, type VentaResponseDTO, EstadoVenta } from "../types/ventas"
 
 import styles from "../styles/cajaPage/CajaPage.module.css"
 import BarraUsuario from "../components/caja/BarraUsuario";
@@ -28,6 +28,7 @@ export default function CajaPage(){
     const [ventasRealizadas,setVentasRealizadas] = useState(0);
     const [turno,setTurno] = useState<TurnoLocal|null>(null);
     const [resumenTurno,setResumenTurno] = useState<ResumenVentaTurnoLocal|null>(null)
+    const [mostratResumen,setMostrarResumen] = useState(false);
 
     const ventaRef = useRef<VentaLocal>(ventaInicial());
     useEffect(() => {
@@ -58,8 +59,9 @@ export default function CajaPage(){
                     ...prev.ventas,
                     {
                         idVenta:venta.id,
-                        fecha:venta.fechaCreacion,
-                        total:venta.total
+                        fechaCreacion:venta.fechaCreacion,
+                        total:venta.total,
+                        estado:venta.estado
                     }
                 ]
             }
@@ -296,9 +298,11 @@ export default function CajaPage(){
 
                         <ListaProdVenta items={ventaLocal.items} onSumar={actualizarCantItem} 
                         onRestar={actualizarCantItem} onEliminar={actualizarCantItem}/>
-                        <TotalVenta total={total} onMedioPago={setFormaPago} resetSignal={ventasRealizadas} resumenTurno={resumenTurno}/>
+                        <TotalVenta total={total} onMedioPago={setFormaPago} resetSignal={ventasRealizadas} resumenTurno={resumenTurno}
+                        mostrarResumen={mostratResumen} />
                     </div>
-                    <OpcionesCaja onFinalizarVenta={finalizarVenta} onCerrarTurno={cerrarTurno}/>
+                    <OpcionesCaja onFinalizarVenta={finalizarVenta} onCerrarTurno={cerrarTurno} 
+                    onMostrarResumen={()=>setMostrarResumen(prev=>!prev)}/>
                 </div>
             </div>
         </div>

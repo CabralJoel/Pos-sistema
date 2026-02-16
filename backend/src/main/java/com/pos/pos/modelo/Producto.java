@@ -21,7 +21,7 @@ public class Producto {
     private String code;
 
     @Column(nullable = false)
-    private Double precio;//TODO rebisar el topo para los precios por un tema de precision
+    private Double precio;//TODO rebisar el tipo para los precios por un tema de precision
 
     @Column(nullable = false)
     private String nombre;
@@ -30,7 +30,7 @@ public class Producto {
     private Integer stock;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Proveedor proveedor;//TODO:cambiar por la clase proveedor
+    private Proveedor proveedor;
 
     public Producto(String codigo,String nombre, Double precio, Integer stock, Proveedor proveedor){
         this.code = codigo;

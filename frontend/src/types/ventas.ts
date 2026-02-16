@@ -93,8 +93,9 @@ export type EstadoTurno = "ABIERTO" | "CERRADO";
 
 export interface ResumenVentaLocal{
     idVenta:number,
-    fecha:string,
-    total:number
+    fechaCreacion:string,
+    total:number,
+    estado:EstadoVenta
 }
 export interface ResumenVentaTurnoLocal{
     idTurno:number,

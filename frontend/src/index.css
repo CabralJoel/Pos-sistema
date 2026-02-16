@@ -32,6 +32,7 @@ button {
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
+  outline: none;
 }
 
 button:focus,

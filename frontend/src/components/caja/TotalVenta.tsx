@@ -3,21 +3,36 @@ import { useEffect, useState } from "react"
 import styles from "../../styles/cajaPage/TotalVenta.module.css"
 import { NumberInput } from "../NumberInput"
 import { MedioPago, type ResumenVentaTurnoLocal } from "../../types/ventas";
+import ResumenVentas from "./ReumenVentas";
 
 interface Props{
     total:number;
     onMedioPago:(MedioPago:MedioPago) => void,
     resetSignal: number;
     resumenTurno:ResumenVentaTurnoLocal|null;
+    mostrarResumen:boolean;
 }
 
-export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno}:Props){
+export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno,mostrarResumen}:Props){
     const [efectivo,setEfectivo] = useState("");
 
     const efectivoNum = parseFloat(efectivo)||0
     const cambio = Math.max(0,efectivoNum - total);
 
     const [medioPago,setMedioPago] = useState<MedioPago>(MedioPago.EFECTIVO);
+    const [resumenVisible,setResumenVisible] = useState(false);
+
+    useEffect(()=>{
+        if(!mostrarResumen){
+            setTimeout(()=>{
+                setResumenVisible(false);
+            },300)
+            
+        }else{
+            setResumenVisible(true);
+        }
+        
+    },[mostrarResumen]);
 
     useEffect(() => {
         setEfectivo("");
@@ -26,6 +41,7 @@ export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno}:
 
     return(
         <div className={styles.totalContainer}>
+            {resumenVisible && (<ResumenVentas resumenVentas={resumenTurno} visible={mostrarResumen}/>)}
             <div className={styles.pagoButtonsContainer}>
                 <button className={medioPago === MedioPago.EFECTIVO ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("EFECTIVO");

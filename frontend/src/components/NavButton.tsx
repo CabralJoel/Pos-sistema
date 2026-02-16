@@ -1,12 +1,14 @@
+import type React from "react";
 import { useLocation } from "react-router-dom";
 
 type NavButtonProps = {
-    icon?:string;
-    text: string;
+    icon?:React.ReactNode;
+    text?: string;
+    tooltip?: string;
     to: string;
 };
 
-export default function NavButton({text, to = "single"}: NavButtonProps){
+export default function NavButton({icon,tooltip,text, to = "single"}: NavButtonProps){
 
     const location = useLocation();
 
@@ -19,6 +21,9 @@ export default function NavButton({text, to = "single"}: NavButtonProps){
 
 
     return(
-        <button style={{background: "#3996f3ff"}} onClick={handleClick}>{text}</button>
+        <button style={{background: "#3996f3ff"}} onClick={handleClick} title={tooltip}>
+            {icon}
+            {text && <span>{text}</span>}
+            </button>
     );
 } 

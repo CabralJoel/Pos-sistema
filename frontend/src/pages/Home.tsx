@@ -25,7 +25,9 @@ export default function Home(){
     };
 
     const loginEncargado = async() => {
-        if(formData.nombre === "" || formData.password === ""){return;}
+        if(formData.nombre === "" || formData.password === ""){
+            toast.error("Complete los campos faltantes");
+            return;}
 
         try{
             const response = await fetch("http://localhost:8080/usuario/login/turno",{
@@ -34,8 +36,8 @@ export default function Home(){
                 body:JSON.stringify(formData)
             });
             if(!response.ok){
-                const errorMsg = await response.text();
-                toast.error(errorMsg);
+                const errorMsg = await response.json();
+                toast.error(errorMsg.error);
                 return;
             }
             const user = await response.json();
@@ -53,11 +55,14 @@ export default function Home(){
     return(
         <div className={homeStyle.homeContainer}>
             <h1>Inicio de sesion de caja</h1>
-            <div className={homeStyle.loginContainer}>
-                <input name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="Usuario"/>
-                <input name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="Contraseña"/>
-                <button onClick={loginEncargado}>Loguear Admin</button>
-            </div>
+                <form className={homeStyle.loginContainer} onSubmit={(e)=>{
+                    e.preventDefault();
+                    loginEncargado();
+                }}>
+                    <input name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="Usuario"/>
+                    <input name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="Contraseña"/>
+                    <button type="submit">Loguear Admin</button>
+                </form>
 
         </div>
     )
