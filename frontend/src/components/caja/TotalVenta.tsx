@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react"
+import { FaMoneyBillTransfer } from "react-icons/fa6";
+import { BsCashCoin } from "react-icons/bs"
+import { FaRegCreditCard } from "react-icons/fa6";
+import { MdAddCard } from "react-icons/md";
 
 import styles from "../../styles/cajaPage/TotalVenta.module.css"
 import { NumberInput } from "../NumberInput"
@@ -46,23 +50,29 @@ export default function TotalVenta({total,onMedioPago,resetSignal,resumenTurno,m
             <div className={styles.pagoButtonsContainer}>
                 <button className={medioPago === MedioPago.EFECTIVO ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("EFECTIVO");
-                setMedioPago(MedioPago.EFECTIVO)}}>Efectivo</button>
+                setMedioPago(MedioPago.EFECTIVO)}}><BsCashCoin size={20}/>
+                    Efectivo</button>
 
                 <button className={medioPago === MedioPago.TRANSFERENCIA ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("TRANSFERENCIA");
-                setMedioPago(MedioPago.TRANSFERENCIA)}}>Transferencia</button>
+                setMedioPago(MedioPago.TRANSFERENCIA)}}><FaMoneyBillTransfer size={20}/>
+                    Transferencia</button>
 
                 <button className={medioPago === MedioPago.CREDITO ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("CREDITO");
-                setMedioPago(MedioPago.CREDITO)}}>Credito</button>
+                setMedioPago(MedioPago.CREDITO)}}><MdAddCard size={20}/>
+                    Credito</button>
 
                 <button className={medioPago === MedioPago.DEBITO ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("DEBITO");
-                setMedioPago(MedioPago.DEBITO)}}>Debito</button>
+                setMedioPago(MedioPago.DEBITO)}}><FaRegCreditCard size={20}/>
+                    Debito</button>
 
                 <button className={medioPago === MedioPago.MIXTO ? styles.botonPresionado: undefined} 
                 onClick={() => {onMedioPago("MIXTO");
-                setMedioPago(MedioPago.MIXTO)}}>Mixto</button>
+                setMedioPago(MedioPago.MIXTO)}}>
+                    <BsCashCoin size={20}/>+<FaRegCreditCard size={20}/>
+                    Mixto</button>
 
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:"6px"}} >

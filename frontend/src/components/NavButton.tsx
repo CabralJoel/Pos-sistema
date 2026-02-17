@@ -21,7 +21,7 @@ export default function NavButton({icon,tooltip,text, to = "single"}: NavButtonP
 
 
     return(
-        <button style={{background: "#3996f3ff"}} onClick={handleClick} title={tooltip}>
+        <button style={{display:"flex",alignItems:"center",justifyContent:"center",background: "#3996f3ff",padding:"0.5em",gap:"1em"}} onClick={handleClick} title={tooltip}>
             {icon}
             {text && <span>{text}</span>}
             </button>

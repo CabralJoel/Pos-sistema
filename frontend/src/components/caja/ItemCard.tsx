@@ -1,4 +1,5 @@
 import itemStyle from "../../styles/cajaPage/ItemCard.module.css"
+import { RxCross2 } from "react-icons/rx";
 import type { ItemVentaDTO } from "../../types/ventas"
 
 interface ItemProps{
@@ -41,9 +42,7 @@ export default function ItemCard({item,onSumar,onRestar,onEliminar}:ItemProps){
             <div className={itemStyle.subtotalContainer}>
                 <p>$ {item.subtotal}</p>
                 <button className={itemStyle.deleteButton} onClick={()=> onEliminar(item.idItem,0)}>
-                    <svg viewBox="0 0 24 24" className={itemStyle.icon}>
-                        <path d="M6 6l12 12M18 6l-12 12" />
-                    </svg>
+                    <RxCross2 style={{color:"#efefef"}}/>
                 </button>
             </div>
         </div>

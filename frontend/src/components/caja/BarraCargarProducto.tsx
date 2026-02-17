@@ -1,4 +1,5 @@
 import barraStyles from "../../styles/cajaPage/BarraCargarProducto.module.css"
+import { FaKeyboard } from "react-icons/fa";
 
 import type { ProductoResponseDTO } from "../../types/producto";
 import React, { useState,useEffect,useRef } from "react";
@@ -178,10 +179,12 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
 
                 
                 <div ref={tecladoRef} style={{display:"flex",gap:"2px"}}>
-                    <button onClick={()=>{
+                    <button style={{display:"flex",alignItems:"center",gap:"0.5em"}} onClick={()=>{
                         if(open){closeTeclado()}
                         else{setOpen(true)}
-                        }}>Teclado</button>
+                        }}>
+                            <FaKeyboard size={18}/>
+                            Varios</button>
                     
                     <div className={`${barraStyles.inputWrapper} ${open ? barraStyles.open : ""}`}>
                         <NumberInput value={montoManual} onChange={e => setMontoManual(e.target.value)}

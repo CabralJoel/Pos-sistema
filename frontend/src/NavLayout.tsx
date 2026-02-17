@@ -1,5 +1,9 @@
 import { Outlet } from "react-router-dom";
 import NavButton from "./components/NavButton";
+import { FaCashRegister } from "react-icons/fa";
+import { LuPackagePlus } from "react-icons/lu";
+import { BsBoxes } from "react-icons/bs";
+import { FaTruckLoading } from "react-icons/fa";
 
 import styles from "./NavLayout.module.css";
 
@@ -10,25 +14,25 @@ export default function NavLayout() {
       <nav className={styles.navbar}>
 
         <NavButton 
-          icon="/icons/home.png" 
+          icon={<FaCashRegister size={23}/>}
           to="/caja" 
           text="Caja" 
         />
 
         <NavButton 
-          icon="/icons/carga.png" 
+          icon={<LuPackagePlus size={23}/>}
           to="/carga" 
           text="Cargar productos" 
         />
 
         <NavButton 
-          icon="/icons/inventario.png" 
+          icon={<BsBoxes size={23}/>}
           to="/" 
           text="Inventario" 
         />
 
         <NavButton 
-          icon="/icons/proveedores.png" 
+          icon={<FaTruckLoading size={23}/>}
           to="/proveedores" 
           text="Proveedores"
         />

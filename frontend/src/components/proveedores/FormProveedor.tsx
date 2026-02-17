@@ -129,7 +129,7 @@ export default function FormProveedor({mode,proveedor,onSubmit,onCancel}:formPro
                             <button type="button" style={{background:"gray"}} onClick={onCancel}>Cancelar</button>
                         )}
 
-                        <button type="submit" style={{background:"red"}} >
+                        <button type="submit" style={{background:"#3996f3ff"}} >
                             {mode==="nuevo"? "Crear Proveedor" : "Guardar"}
                         </button>
                     </div>

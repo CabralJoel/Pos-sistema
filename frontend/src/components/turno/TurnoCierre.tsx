@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import turnoStyle from "../../styles/turnoModal/TurnoModal.module.css"
+import { FaUserCircle } from "react-icons/fa";
 
 import { NumberInput } from "../NumberInput";
 import { toast } from "react-toastify";
@@ -49,11 +50,23 @@ export default function TurnoCierre({turno,onCierreTurno,onFinalizarCierre}:Prop
         }
     }
 
+    useEffect(()=>{
+        const handleKeyDown = (e:KeyboardEvent)=>{
+            if(e.key === "Escape"){
+                window.close();
+            }
+        };
+            window.addEventListener("keydown",handleKeyDown);
+
+            return () => {window.removeEventListener("keydown",handleKeyDown);}
+        
+    },[]);
 
     return (
         <div className={turnoStyle.modalTurnoContainer}>
             <span style={{backgroundColor:"rgb(173, 167, 167)",padding:"0.3em"}}>Cierre de Turno</span>
             <div style={{display:"flex",flex:"0.5",justifyContent:"center",alignItems:"center",gap:"1em"}}>
+                <FaUserCircle size={30}/>
                 <span>Cajero:</span>
                 <span style={{textTransform:"uppercase"}}>{turno.cajero.nombre}</span>
             </div>
@@ -66,6 +79,7 @@ export default function TurnoCierre({turno,onCierreTurno,onFinalizarCierre}:Prop
                         </div>
                     </div>
                     <div className={turnoStyle.buttonContainer}>
+                        <button onClick={()=>window.close()}>Cancelar</button>
                         <button onClick={handleCerrarTurno}>Cerrar Turno</button>
                     </div>
                 </div>

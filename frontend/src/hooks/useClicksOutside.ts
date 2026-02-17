@@ -23,10 +23,10 @@ export function useClickOutside(
             }
         }
 
-        document.addEventListener("mousedown", handleClick);
+        document.addEventListener("click", handleClick);
 
         return () => {
-            document.removeEventListener("mousedown", handleClick);
+            document.removeEventListener("click", handleClick);
         };
     },[ref,onOutsideClick,enabled]);
 }

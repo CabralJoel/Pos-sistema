@@ -18,7 +18,7 @@ export default function BuscadorProveedores({
     return(
         <div style={{display:"flex", gap:"10px",flexGrow:"2"}}>
             <div style={{position:"relative",flex:"1",maxWidth:"400px"}}>
-                <input style={{borderRadius:"10px",width:"100%",height:"100%",left:"0"}}
+                <input style={{backgroundColor:"#ededed",borderRadius:"10px",width:"100%",height:"100%",left:"0",padding:"0 1em"}}
                 type="text" placeholder="Buscar proveedor"
                 value={busqueda}
                 onChange={e => onChange(e.target.value)}

@@ -16,6 +16,12 @@
     grid-template-columns:repeat(2,1fr);
     gap: 8px;
 }
+.pagoButtonsContainer button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6em;
+}
 
 .pagoButtonsContainer button:last-child:nth-child(odd){
     grid-column: 1 / -1;
