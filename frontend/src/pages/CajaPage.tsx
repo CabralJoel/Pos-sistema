@@ -30,17 +30,20 @@ export default function CajaPage(){
     const [resumenTurno,setResumenTurno] = useState<ResumenVentaTurnoLocal|null>(null)
     const [mostratResumen,setMostrarResumen] = useState(false);
 
+    const [abrirVarios,setAbrirVarios] = useState(false);
+    const [abrirConsulta,setAbrirConsulta] = useState(false);
+
+    //escucha a la venta local en tiempo real
     const ventaRef = useRef<VentaLocal>(ventaInicial());
     useEffect(() => {
         ventaRef.current = ventaLocal;
     }, [ventaLocal]);
-    
+    //escucha al turno local en tiempo real
     const turnoRef = useRef<TurnoLocal | null>(null);
     useEffect(() => {
         turnoRef.current = turno;
     }, [turno]);
     const enviandoVentaRef = useRef(false);
-
 
     const total = useMemo(() => {
         return ventaLocal.items.reduce((suma,item) =>
@@ -159,6 +162,11 @@ export default function CajaPage(){
 
         enviarVenta(ventaRequest);
     }
+
+    const finalizarVentaRef = useRef(finalizarVenta);
+    useEffect(() => {
+        finalizarVentaRef.current = finalizarVenta;
+    }, [finalizarVenta]);
 
     const confirmarPagoMixto = async(pagos:PagoDTO[]) => {
         if (enviandoVentaRef.current) return;
@@ -286,13 +294,45 @@ export default function CajaPage(){
         };
     }, []);
 
+    //ATAJOS DE TECLADO
+    useEffect(()=>{
+        const handleKeyDown = (e:KeyboardEvent)=>{
+            switch(e.key){
+                case "Escape":
+                    e.preventDefault();
+                    finalizarVentaRef.current();
+                    break;
+                case "Tab":
+                    e.preventDefault();
+                    setMostrarResumen(prev=>!prev);
+                    break;
+                case " ":
+                    e.preventDefault();
+                    setAbrirConsulta(prev=>!prev);
+                    break
+                case "F10":
+                    e.preventDefault();
+                    cerrarTurno();
+                    break
+                case "F8":
+                    e.preventDefault();
+                    setAbrirVarios(prev=>!prev);
+                    break;
+            }
+        }
+        window.addEventListener("keydown",handleKeyDown);
+        return()=>{window.removeEventListener("keydown",handleKeyDown);};
+    },[]);
+
     return(
         <div className={styles.pageContainer}>
             <BarraNavegacionCaja/>
             <div className={styles.cajaContainer}>
                 <BarraUsuario usuario={turno?.cajero}/>
                 <div className={styles.cobroContainer}>
-                    <BarraCargarProducto filtrarProductos={buscarProductos} consultaProducto={consultaProducto} onProductoSeleccionado={handleAgregarProducto}
+                    <BarraCargarProducto filtrarProductos={buscarProductos} consultaProducto={consultaProducto} abrirVarios={abrirVarios} 
+                    onAbrirVarios={()=>setAbrirVarios(prev=>!prev)} abrirConsulta={abrirConsulta} onAbrirConsulta={setAbrirConsulta}
+                    onProductoSeleccionado={handleAgregarProducto}
                         resetSignal={ventasRealizadas} onProductoManual={handleProductoManual}/>
                     <div className={styles.infoContainer}>
 

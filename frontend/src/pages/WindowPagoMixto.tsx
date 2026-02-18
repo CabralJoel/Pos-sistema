@@ -82,6 +82,18 @@ export default function WindowPagoMixto(){
         };
     },[]);
 
+    useEffect(()=>{
+        const handleKeyDown = (e:KeyboardEvent)=>{
+            if(e.key === "Escape"){
+                window.close();
+            }
+        };
+            window.addEventListener("keydown",handleKeyDown);
+
+            return () => {window.removeEventListener("keydown",handleKeyDown);}
+        
+    },[]);
+
     return(
         <div className={modalStyle.modalContainer}>
             <div className={modalStyle.selectContainer}>

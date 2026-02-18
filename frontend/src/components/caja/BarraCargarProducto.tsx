@@ -6,6 +6,7 @@ import React, { useState,useEffect,useRef } from "react";
 import { useBusquedaProducto } from "../../hooks/useBusquedaProducto";
 import PanelConsulta from "./PanelConsulta";
 import { NumberInput } from "../NumberInput";
+import { useLayoutEffect } from "react";
 
 interface Props{
     onProductoSeleccionado: (p:ProductoResponseDTO,cant:number) => void;
@@ -13,17 +14,24 @@ interface Props{
     consultaProducto:(texto:string) => Promise<ProductoResponseDTO>;
     onProductoManual:(monto:number) => void;
     resetSignal: number;
+    //parametros de atajos teclado padre
+    abrirVarios:boolean;
+    onAbrirVarios:()=>void;
+    abrirConsulta:boolean;
+    onAbrirConsulta:(b:boolean)=>void;
 }
 
-export default function BarraCargarProducto({onProductoSeleccionado,filtrarProductos,consultaProducto,onProductoManual,resetSignal}:Props){
-    const [open,setOpen] = useState(false);
-    const [value, setValue] = useState("");
-    const [focused,setFocused] = useState(false);
+export default function BarraCargarProducto({onProductoSeleccionado,filtrarProductos,consultaProducto,onProductoManual,resetSignal
+    ,abrirVarios,onAbrirVarios,abrirConsulta,onAbrirConsulta
+}:Props){
+    const [open,setOpen] = useState(false);//variable del input varios
+    const [montoManual,setMontoManual] = useState("");//valor input varios
+    const [focused,setFocused] = useState(false);//focus del input varios
 
+    const [mostrarPanel,setMostrarPanel] = useState(false);//avisa a PanelConsulta que debe de hacer la animacion
     const [panel,setPanel] = useState(false);
-    const [mostrarPanel,setMostrarPanel] = useState(false);
 
-    const [montoManual,setMontoManual] = useState("");
+    const [value, setValue] = useState("");//valor del input cantidad buscador
     const cantidad = Math.max(1,Number(value||1))
 
     const submittingRef = useRef(false);
@@ -32,7 +40,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
     const panelRef = useRef<HTMLDivElement>(null);
 
     const{
-        texto,
+        texto,//valor de input buscador
         setTexto,
         resultados,
         selectProduct,
@@ -43,8 +51,18 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
         clear();
     });
 
+    const reinicioCompponente = () => {
+        setValue("");
+        closeTeclado()
+        setFocused(false);
+        cerrarPanel();
+        clear();
+    }
 
     const closeTeclado = () => {
+        if(abrirVarios){
+            onAbrirVarios();//false
+        }
         setOpen(false);
         setMontoManual("");
     }
@@ -67,14 +85,18 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
             cerrarPanel();
         }
     }
+    //receptor de atajos teclado
+    useLayoutEffect(()=>{//receptor de atajo teclado panel consulta
+        if(abrirConsulta){
+            estadoPanel();
+        }else{cerrarPanel();}
+    },[abrirConsulta]);
 
-    const reinicioCompponente = () => {
-        setValue("");
-        setOpen(false);
-        setFocused(false);
-        setMontoManual("");
-        clear();
-    }
+    useEffect(()=>{//receptor de atajo teclado input varios
+        if (abrirVarios) setOpen(true);
+        else{closeTeclado()}
+    },[abrirVarios]); 
+
 //reinicio de componente al finalizar una venta
     useEffect(() =>{
         reinicioCompponente();
@@ -101,7 +123,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
 
             // cerrar panel 
             if (panel && !panelRef.current?.contains(target)) {
-                cerrarPanel();
+                onAbrirConsulta(!abrirConsulta);
             }
         };
         document.addEventListener("mousedown",handleClickOutside);
@@ -115,13 +137,8 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
         setValue(soloNumeros.slice(0, 2));
     };
 
-    const handleMontoKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleMontoKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {//atajo del input para crear item sin producto
         switch (e.key) {
-            case "Escape":
-                e.preventDefault();
-                closeTeclado();
-                break;
-
             case "Enter":
                 e.preventDefault();
 
@@ -179,10 +196,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
 
                 
                 <div ref={tecladoRef} style={{display:"flex",gap:"2px"}}>
-                    <button style={{display:"flex",alignItems:"center",gap:"0.5em"}} onClick={()=>{
-                        if(open){closeTeclado()}
-                        else{setOpen(true)}
-                        }}>
+                    <button style={{display:"flex",alignItems:"center",gap:"0.5em"}} onClick={()=>{onAbrirVarios()}}>
                             <FaKeyboard size={18}/>
                             Varios</button>
                     
@@ -196,7 +210,7 @@ export default function BarraCargarProducto({onProductoSeleccionado,filtrarProdu
             </div>
             
             <div ref={panelRef} className={barraStyles.consultaWrapper}>
-                <button onClick={()=>estadoPanel()}>Consultar precio</button>
+                <button onClick={()=>onAbrirConsulta(!abrirConsulta)}>Consultar precio</button>
                 
                 {panel && (<PanelConsulta visible={mostrarPanel} consultaProducto={consultaProducto} resetSignal={resetSignal}/>)}
                 
