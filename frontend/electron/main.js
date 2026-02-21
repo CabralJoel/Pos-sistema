@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, screen,Menu } from "electron";
+import { app, BrowserWindow, ipcMain, screen,globalShortcut } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import { navigationRules } from "./navigationRules.js";
@@ -13,6 +13,16 @@ const session = {
   usuario: null,
   turno: null,
 };
+
+function canUseShortcuts(){
+  if(!session.usuario)return false;//valida usuario no logueado
+  const modalOpen = [...windows.values()].some(entry=>{//validacion modal abierto
+    const win = entry.win;
+    return win && !win.isDestroyed() && win.isModal();
+  });
+  if(modalOpen) return false;
+  return true;
+}
 
 const windowTypes = {
   full: () => screen.getPrimaryDisplay().workAreaSize,
@@ -62,6 +72,31 @@ function createWindow(route, { windowKey, windowType, parent, modal } = {}) {
 
   return win;
 }
+function focusWindow(win){
+  if(!win || win.isDestroyed())return;
+  if(win.isMinimized()){
+    win.restore();
+  }
+  win.focus();
+}
+//navegacion global
+function openOrFocusWindow(route) {
+  const rule = navigationRules[route];
+  if (!rule) return;
+  const existing = windows.get(rule.windowKey);
+  if(existing?.win && !existing.win.isDestroyed()){
+    focusWindow(existing.win);
+    
+    if(existing.pageKey !==route){
+      const url = !app.isPackaged? `http://localhost:5173${route}`: `file://${path.join(__dirname, "../dist/index.html")}#${route}`;
+
+      existing.win.loadURL(url);
+      existing.pageKey = route;
+    }
+    return;
+  }
+  createWindow(route,rule);
+}
 
 // navigation
 function navigate({ route, sender }) {
@@ -76,19 +111,13 @@ function navigate({ route, sender }) {
   const currentKey = currentEntry?.[0];
 
   
-  const shouldOpenWindow =
-    rule.alwaysOpenInWindow ||
-    rule.openInWindowFrom?.includes(currentKey);
+  const shouldOpenWindow = rule.alwaysOpenInWindow || rule.openInWindowFrom?.includes(currentKey);
 
   // abrimos ventana nueva
   if (shouldOpenWindow) {
     const existing = windows.get(rule.windowKey);
 
-    if (rule.singleton && existing && !existing.win.isDestroyed()) {
-      existing.win.focus();
-    } else {
-      createWindow(route, rule);
-    }
+    openOrFocusWindow(route);
 
     //cierra la ventana si se indica
     const currentRule = Object.values(navigationRules)
@@ -109,6 +138,7 @@ function navigate({ route, sender }) {
   currentWindow.loadURL(url);
 }
 
+//turno modal
 function openTurnoModal(){
   const caja = windows.get("caja");
 
@@ -191,6 +221,31 @@ app.whenReady().then(() => {
       modal: true,
     });
   });
+  //ATAJOS DE TECLADO GLOBALES A RUTAS
+  globalShortcut.register("F2", () => {
+    if (!canUseShortcuts()) return;//bloqueos de logueo y modal 
+    openOrFocusWindow("/caja");
+  });
+
+  globalShortcut.register("F3", () => {
+    if (!canUseShortcuts()) return;
+    openOrFocusWindow("/carga");
+  });
+
+  globalShortcut.register("F4", () => {
+    if (!canUseShortcuts()) return;
+    openOrFocusWindow("/proveedores");
+  });
+
+  globalShortcut.register("F5", () => {
+    if (!canUseShortcuts()) return;
+    openOrFocusWindow("/inventario");
+  });
+
+  globalShortcut.register("F6", () => {
+    if (!canUseShortcuts()) return;
+    openOrFocusWindow("/administracion");
+  });
 });
 
   ipcMain.handle("pago-mixto-confirmado", (_, pagos) => {
@@ -209,7 +264,11 @@ app.whenReady().then(() => {
         modal.win.close();
       }
     }
-  })
+  });
+
+app.on("will-quit",()=>{
+  globalShortcut.unregisterAll();
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();

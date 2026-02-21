@@ -27,4 +27,18 @@ export const navigationRules = {
         openInWindowFrom: ["caja"],
     },
 
+    "/inventario": {
+        windowKey:"admin",
+        singleton:true,
+        windowType:"full",
+        openInWindowFrom:["caja"],
+    },
+
+    "/gestiones": {
+        windowKey: "gestiones",
+        singleton: true,
+        windowType: "full",
+        alwaysOpenInWindow:true,
+    },
+
 };
