@@ -3,12 +3,14 @@ const { contextBridge, ipcRenderer } = require("electron");
 const listeners = new Map();
 
 contextBridge.exposeInMainWorld("electronAPI", {
-
-  //openWindow: (config) => ipcRenderer.invoke("open-window", config),
   
   navigate: (config) => ipcRenderer.invoke("navigate", config),
 
   loginSuccess: (usuario) => ipcRenderer.invoke("login-success", usuario),
+
+  loginToAdmin: (usuario) => ipcRenderer.invoke("login-to-admin",usuario),
+
+  getUsuarioActual: () => ipcRenderer.invoke("get-usuario-actual"),
 
   openTurnoModal: () => ipcRenderer.invoke("open-turno-modal"),
 

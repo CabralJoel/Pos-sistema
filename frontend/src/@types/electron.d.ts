@@ -12,6 +12,10 @@ declare global {
 
       loginSuccess: (usuario: any) => Promise<void>;
 
+      loginToAdmin: (usuario: any) => Promise<void>;
+
+      getUsuarioActual: () => Promise<any>;
+
       openTurnoModal:() => Promise<void>;
 
       confirmarTurno: (turno: any) => Promise<void>;

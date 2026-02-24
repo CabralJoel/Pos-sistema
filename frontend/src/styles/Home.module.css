@@ -2,16 +2,23 @@
     background-color: #292828;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.loginContainer{
+    width: 100%;
+    height: 100%;
     align-content: space-around;
 }
-
-.loginContainer{
+.loginForm{
     display: flex;
     flex-direction: column;
     gap:0.9em;
     align-items: center;
 }
-.loginContainer input{
+.loginForm input{
     background-color: rgb(233, 236, 239);
     font-size: larger;
     padding: 0.5em;
@@ -20,4 +27,36 @@
 h1{
     color: rgb(255, 255, 255);
     font-size: 3rem;
+}
+.routeContainer{
+    position: relative;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4em;
+}
+.userContainer{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+.userContainer span{
+    font-size: xx-large;
+    color: white;
+}
+.userContainer button{
+    padding: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.buttonContainer{
+    font-size: x-large;
+    display: flex;
+    gap:2em;
+}
+.buttonContainer button{
+    overlay: none;
+    min-width: 225px;
 }

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import NavButton from "../components/NavButton";
 import { toast } from "react-toastify";
 
 import homeStyle from "../styles/Home.module.css"
+import { FaUserPen } from "react-icons/fa6";
+import type { usuarioLocal } from "../types/ventas";
 
 interface UserForm{
     nombre:string,
@@ -10,10 +11,12 @@ interface UserForm{
 }
 
 export default function Home(){
+    const [error,setError] = useState("");
     const [formData,setFormData] = useState<UserForm>({
         nombre: "",
         password: "",
     });
+    const [usuario,setUsuario] = useState<usuarioLocal|null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -24,7 +27,7 @@ export default function Home(){
         }));
     };
 
-    const loginEncargado = async() => {
+    const loginUsuario = async() => {
         if(formData.nombre === "" || formData.password === ""){
             toast.error("Complete los campos faltantes");
             return;}
@@ -41,30 +44,70 @@ export default function Home(){
                 return;
             }
             const user = await response.json();
-            
-            window.electronAPI.loginSuccess(user)
-            console.log(user);//temporal
+            setUsuario(user);
+            setFormData({
+                nombre: "",
+                password: "",
+            })
 
+            console.log(user);//temporal
         }
         catch(error){
-            toast.error("Hubo un error inesperado");
+            setError("Hubo un error inesperado");
         }
     }
 
+    const toCaja = () => {
+        if(usuario===null){
+            toast.error("No hay usuario logueado, vuelva a iniciar sesión")
+            return;
+        }
+        window.electronAPI.loginSuccess(usuario);
+    }
+
+    const toGestion = () => {
+        if(usuario?.rol==="CAJERO"){
+            setError("Solo un administrador puede entrar a esta sección");
+            setTimeout(()=>{
+                setError("");
+            },2500);
+            return;
+        }
+
+        window.electronAPI.loginToAdmin(usuario);
+    }
 
     return(
         <div className={homeStyle.homeContainer}>
-            <h1>Inicio de sesion de caja</h1>
-                <form className={homeStyle.loginContainer} onSubmit={(e)=>{
-                    e.preventDefault();
-                    loginEncargado();
-                }}>
-                    <input name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="Usuario"/>
-                    <input name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="Contraseña"/>
-                    <button type="submit">Loguear Admin</button>
-                </form>
-
+            {usuario===null && (
+                <div className={homeStyle.loginContainer}>
+                    <h1>Inicio de sesion de caja</h1>
+                        <form className={homeStyle.loginForm} onSubmit={(e)=>{
+                            e.preventDefault();
+                            loginUsuario();
+                        }}>
+                            <input name="nombre" value={formData?.nombre} onChange={handleChange} type="text" placeholder="Usuario"/>
+                            <input name="password" value={formData?.password} onChange={handleChange} type="password" placeholder="Contraseña"/>
+                            <button type="submit">Loguear Admin</button>
+                        </form>
+                </div>
+            )}
+            {usuario && (
+                <div className={homeStyle.routeContainer}>
+                    <div className={homeStyle.userContainer}>
+                        <button title="Cambiar Usuario" onClick={()=>setUsuario(null)}><FaUserPen size={23}/></button>
+                        <span>Usuario: {usuario.nombre.toUpperCase()}</span>
+                    </div>
+                    <div className={homeStyle.buttonContainer}>
+                        <button onClick={toCaja}>Caja</button>
+                        <button onClick={toGestion}>Administración</button>
+                    </div>
+                    {error!=="" && (
+                        <p style={{position:"absolute",top:"100%",color:"rgb(209, 43, 43)"}}>{error}</p>
+                    )}
+                </div>
+            )}
+            
         </div>
     )
-    
 }

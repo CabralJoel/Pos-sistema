@@ -175,7 +175,7 @@ app.whenReady().then(() => {
     
   });
 
-    // login
+    // login a caja
   ipcMain.handle("login-success", (_, usuario) => {
     session.usuario = usuario;
 
@@ -191,6 +191,23 @@ app.whenReady().then(() => {
 
     
     openTurnoModal();
+  });
+  //login a gestiones
+  ipcMain.handle("login-to-admin",(_,usuario) => {
+    session.usuario = usuario;
+    // cerrar home
+    const home = windows.get("home");
+    home?.win.close();
+    //abrir gestiones
+    const adminRules = navigationRules["/gestiones"];
+    createWindow("/gestiones",{
+      ...adminRules,
+      windowKey:"gestiones"
+    });
+  });  
+
+  ipcMain.handle("get-usuario-actual",() => {
+    return session.usuario;
   });
   
   // abrir TurnoModal

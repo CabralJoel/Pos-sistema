@@ -78,11 +78,11 @@ export interface TurnoCierreDTO{
     efectivoFinal:number,
 }
 
-export interface TurnoDetalle{//TODO: descomentar
+export interface TurnoDetalle{
     idTurno:number,
     cajero:usuarioLocal,
-    //fechaInicio:string,
-    //fechaFin:string,
+    fechaInicio:string,
+    fechaFin:string,
     efectivoInicial:number,
     efectivoFinal:number,
     diferencia:number,
