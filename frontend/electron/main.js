@@ -282,6 +282,9 @@ app.whenReady().then(() => {
       }
     }
   });
+  ipcMain.handle("close-app", () => {
+    app.quit();
+  });
 
 app.on("will-quit",()=>{
   globalShortcut.unregisterAll();

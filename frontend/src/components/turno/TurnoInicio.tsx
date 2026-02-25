@@ -11,15 +11,15 @@ interface UserForm{
 }
 
 interface Props{
-    usuario:usuarioLocal|null,
+    usuario:usuarioLocal,
     onCrearTurno:(dto:TurnoDTO)=>Promise<void>
 }
 
 export default function TurnoInicio({usuario,onCrearTurno}:Props){
-    const [edit,setEdit] = useState<boolean>(usuario===null);
+    const [edit,setEdit] = useState<boolean>(false);
     const [efectivo,setEfectivo] = useState("");
     const efectivoNum = parseFloat(efectivo)||0;//pasamos efectivo a number
-    const [cajero,setCajero] = useState<usuarioLocal|null>(usuario);
+    const [cajero,setCajero] = useState<usuarioLocal>(usuario);
     const [formData,setFormData] = useState<UserForm>({
             nombre: "",
             password: ""

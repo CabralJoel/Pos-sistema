@@ -9,6 +9,8 @@ declare global {
         route: string;
         from?: string;
       }) => Promise<void>;
+      
+      closeApp: () => Promise<void>;
 
       loginSuccess: (usuario: any) => Promise<void>;
 

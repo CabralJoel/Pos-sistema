@@ -56,19 +56,40 @@ export default function TurnoModal(){
     }
 
     useEffect(() => {
-        window.electronAPI.getTurnoActual().then((turnoActual) => {
-            if(turnoActual){
+            const init = async () => {
+
+            const [turnoActual, usuario] = await Promise.all([
+                window.electronAPI.getTurnoActual(),
+                window.electronAPI.getUsuarioActual()
+            ]);
+
+            if (!usuario) {
+                toast.error("No hay usuario de sesión");
+                return;
+            }
+            setCajero(usuario);
+
+            if (turnoActual) {
                 setTurno(turnoActual);
-                setCajero(turnoActual.cajero);
                 setModo("CIERRE");
-            }else{
+            } else {
                 setModo("INICIO");
             }
-        })
+        };
+
+        init();
     },[]);
+
+    if(!cajero)return (
+    <div>
+        <p>se perdio la sesion del usuario,reinicie la app por seguridad</p>
+        <p>si el problema persiste contacte al desarrollador</p>
+        <button onClick={() => window.electronAPI.closeApp()}>Cerrar Aplicacion</button>
+    </div>);
 
     return(
         <div style={{height:"100%", width:"100%"}}>
+            
             {modo==="INICIO" && (
             <TurnoInicio usuario={cajero} onCrearTurno={InicioTurno}/>
         )}

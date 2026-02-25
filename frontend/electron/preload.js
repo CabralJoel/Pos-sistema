@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 const listeners = new Map();
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  closeApp: () => ipcRenderer.invoke("close-app"),
   
   navigate: (config) => ipcRenderer.invoke("navigate", config),
 
@@ -67,7 +68,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
       listeners.delete(callback);
     }
   },
-
 
   setCurrentPage: (pageKey) => ipcRenderer.send("set-current-page", pageKey),
 
