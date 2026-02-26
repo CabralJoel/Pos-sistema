@@ -1,4 +1,4 @@
-package com.pos.pos.controller.Dto.producto;
+package com.pos.pos.controller.Dto.proveedor;
 
 import com.pos.pos.modelo.Proveedor;
 

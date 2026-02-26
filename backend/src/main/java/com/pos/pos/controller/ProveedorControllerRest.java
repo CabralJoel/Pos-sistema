@@ -1,8 +1,9 @@
 package com.pos.pos.controller;
 
-import com.pos.pos.controller.Dto.producto.ProveedorRequestDTO;
-import com.pos.pos.controller.Dto.producto.ProveedorResponseDTO;
-import com.pos.pos.controller.Dto.producto.ProveedorUpdatedRequestDTO;
+import com.pos.pos.controller.Dto.proveedor.ProveedorProdDTO;
+import com.pos.pos.controller.Dto.proveedor.ProveedorRequestDTO;
+import com.pos.pos.controller.Dto.proveedor.ProveedorResponseDTO;
+import com.pos.pos.controller.Dto.proveedor.ProveedorUpdatedRequestDTO;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.Proveedor;
 import com.pos.pos.service.ProveedorService;
@@ -30,6 +31,12 @@ public class ProveedorControllerRest {
         if(opProveedor.isEmpty())throw new ElementoNoEncontrado("El proveedor no existe");
         Proveedor recuperado = opProveedor.get();
         return ResponseEntity.ok(ProveedorResponseDTO.desdeModelo(recuperado));
+    }
+
+    @GetMapping("/codigos")
+    public ResponseEntity<Set<ProveedorProdDTO>> getAllNombresProveedores(){
+        return ResponseEntity.ok(this.proveedorService.findAll().stream()
+                .map(ProveedorProdDTO :: desdeModelo).collect(Collectors.toSet()));
     }
 
     @GetMapping

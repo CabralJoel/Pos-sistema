@@ -16,11 +16,11 @@ public record ProductoRequestDTO(
 
     public Producto aModelo(Proveedor prov){
         validarNotNull(nombre,"Proveedor");
-        validarNotNull(code,"Proveedor");
-        validarNotNullD(precio,"Proveedor");
+        validarNotNull(code,"Codigo");
+        validarNotNullD(precio,"Precio");
         if(stock==null || stock<=0){throw new ParametroIncorrecto("Ingrese un stock mayor a 0");}
-        validarNotNullD(ganancia,"Proveedor");
-        validarNotNullD(costo,"Proveedor");
+        validarNotNullD(ganancia,"Porcentaje de ganancia");
+        validarNotNullD(costo,"Costo");
 
         return new Producto(code,nombre,precio,stock,prov);
     }

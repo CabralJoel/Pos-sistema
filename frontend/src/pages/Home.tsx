@@ -53,13 +53,13 @@ export default function Home(){
             console.log(user);//temporal
         }
         catch(error){
-            setError("Hubo un error inesperado");
+            toast.error("Hubo un error inesperado");
         }
     }
 
     const toCaja = () => {
         if(usuario===null){
-            toast.error("No hay usuario logueado, vuelva a iniciar sesión")
+            setError("No hay usuario logueado, vuelva a iniciar sesión")
             return;
         }
         window.electronAPI.loginSuccess(usuario);

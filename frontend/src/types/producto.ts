@@ -1,6 +1,7 @@
 export interface ProductoRequestDTO{
     code:string;
     nombre:string;
+    costo:number;
     precio:number;
     stock:number;
     ganancia:number;

@@ -20,3 +20,8 @@ export interface ProveedorResponse{
     telefono:string,
     descripcion?:string
 }
+
+export interface ProveedorNameResponse{
+    id:number,
+    code:string,
+}

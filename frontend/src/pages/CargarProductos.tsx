@@ -1,12 +1,13 @@
 import styles from "../styles/CargarProductos.module.css"
 import { NumberInput} from "../components/NumberInput";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { ProductoRequestDTO } from "../types/producto";
 import { handleAlfanumerico } from "../utils/soloAlfanumericos"; 
 import {toast } from "react-toastify";
 
 import { isNotEmpty, maxLength, mayorACero } from "../utils/validaciones";
 import { useValidator } from "../hooks/useValidator";
+import type { ProveedorNameResponse } from "../types/proveedor";
 //TODO: agregar calculos de inputs de precios
 interface ProductoForm{
     proveedor:string,
@@ -32,14 +33,14 @@ export default function CargarProductos(){
 
 
     const [formData,setFormData] = useState<ProductoForm>(initialForm);
-
+    const [proveedores,setProveedores] = useState<ProveedorNameResponse[]>([]);
     const [productos,setProductos] = useState<ProductoRequestDTO[]>([]);
 
     const emptyRows=19;
     const filasVacias = emptyRows - productos.length;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type } = e.target;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
+        const { name, value, type } = e.target as HTMLInputElement;
 
         setFormData(prev => ({
             ...prev,
@@ -48,26 +49,40 @@ export default function CargarProductos(){
     };
 
 
-    const proveedorVal = useValidator<string>();
     const codeVal = useValidator<string>();
     const nombreVal = useValidator<string>();
-
+    const provVal = useValidator<string>();
     const precioVal = useValidator<number>();
     const costoVal = useValidator<number>();
     const stockVal = useValidator<number>();
     const gananciaVal = useValidator<number>();
 
+    useEffect(()=>{//trae os codigos de los proveedores al iniciar componente
+        const getProveedores = async() => {
+            try{
+                const response = await fetch("http://localhost:8080/proveedores/codigos",{
+                    method:"GET",
+                });
+                const provCodes:ProveedorNameResponse[] = await response.json();
+                setProveedores(provCodes);
+            }
+            catch(error){
+                toast.error("Hubo un error al conectar con a app");
+            }
+        }
+
+        getProveedores();
+    },[]);
+
     const validarForm = () => {
         let ok = true;
 
-        // PROVEEDOR temporal, despues puede que se quite
-        const proveedorRes =
-            proveedorVal.validate(formData.proveedor, [
+        //PROVEEDOR
+        const provErr = 
+            provVal.validate(formData.proveedor,[
                 isNotEmpty("Proveedor"),
-                maxLength("Proveedor", 20),
-        ]);
-
-        if (!proveedorRes.ok) {ok = false; proveedorRes.errors.forEach(e => toast.error(e));}
+            ]);
+        if(!provErr.ok) ok = false;provErr.errors.forEach(e => toast.error(e));
 
         // CÓDIGO
         const codeErr =
@@ -124,6 +139,7 @@ export default function CargarProductos(){
         const dto: ProductoRequestDTO={
             code:formData.code,
             nombre:formData.nombre,
+            costo:Number(formData.costo || 0),
             precio:Number(formData.precio || 0),
             stock:Number(formData.stock || 0),
             ganancia:Number(formData.ganancia || 0),
@@ -132,7 +148,10 @@ export default function CargarProductos(){
 
         setProductos(prev=>[...prev,dto])
 
-        setFormData(initialForm);
+        setFormData(prev => ({
+            ...initialForm,
+            proveedor: prev.proveedor
+        }));
     }
 
     const handleGuardarProductos = async () =>{
@@ -145,6 +164,7 @@ export default function CargarProductos(){
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify(productos)
             });
+            console.log(productos);
             if(!response.ok){
                 const errorMsg = await response.text();
                 toast.error(errorMsg);
@@ -166,12 +186,16 @@ export default function CargarProductos(){
             <div className={styles.formContainer}>
                 <h2>Ingrese informacion del Producto</h2>
                 <div style={{paddingBottom:"20px"}}>
-                <label>Proveedor
-                    <input type="text" placeholder="Proveedor"//pasar a input de seleccion
-                    name="proveedor"
-                    value={formData.proveedor}
-                    onChange={handleChange}/>
-                </label>
+                    <label>Proveedor
+                        <select name="proveedor" value={formData.proveedor} onChange={handleChange}>
+                            <option value="" disabled>Seleccionar Proveedor</option>
+                            {proveedores.map((prov)=>(
+                                <option key={prov.id} value={prov.id}>
+                                    {prov.code}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
                 <form className={styles.form} >
 
@@ -225,7 +249,7 @@ export default function CargarProductos(){
                     <button type="button" className={styles.submitButton} onClick={handleGuardar}>Guardar</button>
                 </form>
             </div>
-            {/*LISTA DE PRODUCTOS CARADOS */}
+            {/*LISTA DE PRODUCTOS CARGADOS */}
             <div className={styles.pListContainer}>
                 <h2>Productos Cargados</h2>
                 <div className={styles.pList}>
