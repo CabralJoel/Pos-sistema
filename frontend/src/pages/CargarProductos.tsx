@@ -6,6 +6,7 @@ import { handleAlfanumerico } from "../utils/soloAlfanumericos";
 import {toast } from "react-toastify";
 
 import { isNotEmpty, maxLength, mayorACero } from "../utils/validaciones";
+import { redondear,calcularGanancia,calcularPrecio } from "../utils/calculos";
 import { useValidator } from "../hooks/useValidator";
 import type { ProveedorNameResponse } from "../types/proveedor";
 //TODO: agregar calculos de inputs de precios
@@ -31,7 +32,7 @@ export default function CargarProductos(){
         costo:""
     };
 
-
+    const [costoLote,setCostoLote] = useState<number|"">("");
     const [formData,setFormData] = useState<ProductoForm>(initialForm);
     const [proveedores,setProveedores] = useState<ProveedorNameResponse[]>([]);
     const [productos,setProductos] = useState<ProductoRequestDTO[]>([]);
@@ -39,25 +40,27 @@ export default function CargarProductos(){
     const emptyRows=19;
     const filasVacias = emptyRows - productos.length;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
-        const { name, value, type } = e.target as HTMLInputElement;
+const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
+    const parsedValue =type === "number" ? value === "" ? "" : Number(value): value;
 
-        setFormData(prev => ({
+    setFormData(prev => {
+        const updated = {
             ...prev,
-            [name]: type === "number"? value === "" ? "" : Number(value): value
-        }));
-    };
+            [name]: parsedValue
+        };
+        //recalculo de ganancia o precio resectivamente
+        if(name === "precio" && parsedValue !== "" && prev.costo !== "" && Number(prev.costo) > 0){
+            updated.ganancia = calcularGanancia(Number(parsedValue),Number(prev.costo));
+        }
+        if(name === "ganancia" && parsedValue !== "" && prev.costo !== "" && Number(prev.costo) > 0){
+            updated.precio = calcularPrecio(Number(parsedValue),Number(prev.costo));
+        }
+        return updated;
+    });
+};
 
-
-    const codeVal = useValidator<string>();
-    const nombreVal = useValidator<string>();
-    const provVal = useValidator<string>();
-    const precioVal = useValidator<number>();
-    const costoVal = useValidator<number>();
-    const stockVal = useValidator<number>();
-    const gananciaVal = useValidator<number>();
-
-    useEffect(()=>{//trae os codigos de los proveedores al iniciar componente
+    useEffect(()=>{//trae los codigos de los proveedores al iniciar componente, decidir si cambiar luego
         const getProveedores = async() => {
             try{
                 const response = await fetch("http://localhost:8080/proveedores/codigos",{
@@ -73,6 +76,39 @@ export default function CargarProductos(){
 
         getProveedores();
     },[]);
+
+    useEffect(()=>{//detecta cambios en costoLote y stock para calcular costo unitario del formData
+        if(costoLote === "" || formData.stock===""){
+            setFormData((prev)=>({
+                ...prev,
+                costo:"",
+            }));
+            return;
+        }
+        const costoUnidad = Number((costoLote/formData.stock).toFixed(2));
+        setFormData(prev =>{
+            const updated ={
+                ...prev,
+                costo: costoUnidad,
+            };//si hay ganancia recalcula el precio manteniendo el porcentaje de ganancia
+            if(prev.ganancia !== "" && Number(prev.ganancia) > 0){
+                updated.precio = calcularPrecio(
+                    Number(prev.ganancia),
+                    costoUnidad
+                );
+            }
+            return updated;
+        });
+    },[costoLote,formData.stock]);
+
+
+    const codeVal = useValidator<string>();
+    const nombreVal = useValidator<string>();
+    const provVal = useValidator<string>();
+    const precioVal = useValidator<number>();
+    const costoVal = useValidator<number>();
+    const stockVal = useValidator<number>();
+    const gananciaVal = useValidator<number>();
 
     const validarForm = () => {
         let ok = true;
@@ -147,6 +183,7 @@ export default function CargarProductos(){
         };
 
         setProductos(prev=>[...prev,dto])
+        setCostoLote("");
 
         setFormData(prev => ({
             ...initialForm,
@@ -214,11 +251,14 @@ export default function CargarProductos(){
                         onChange={handleChange}/>
                     </label>
                     <div className={styles.inputContainer}>
-                        <label>Costo
+                        <label>Costo Total
                             <NumberInput placeholder="Costo"
-                            name="costo"
-                            value={formData.costo}
-                            onChange={handleChange}/>
+                            name="costoLote"
+                            value={costoLote}
+                            onChange={(e)=>{
+                                const value = e.target.value === "" ? "" : Number(e.target.value);
+                                setCostoLote(value);
+                            }}/>
                         </label>
                         <label>Cantidad
                             <NumberInput placeholder="Stock" decimal={false}
@@ -228,7 +268,7 @@ export default function CargarProductos(){
                         </label>
                     </div>
                     <div className={styles.inputContainer}>
-                        <label>Precio
+                        <label>Precio Unidad
                             <NumberInput placeholder="Precio"
                             name="precio"
                             value={formData.precio}

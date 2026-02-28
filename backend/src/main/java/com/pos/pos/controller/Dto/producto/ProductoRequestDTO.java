@@ -17,10 +17,10 @@ public record ProductoRequestDTO(
     public Producto aModelo(Proveedor prov){
         validarNotNull(nombre,"Proveedor");
         validarNotNull(code,"Codigo");
-        validarNotNullD(precio,"Precio");
+        validarMayorACero(precio,"Precio");
         if(stock==null || stock<=0){throw new ParametroIncorrecto("Ingrese un stock mayor a 0");}
-        validarNotNullD(ganancia,"Porcentaje de ganancia");
-        validarNotNullD(costo,"Costo");
+        validarMayorACero(ganancia,"Porcentaje de ganancia");
+        validarMayorACero(costo,"Costo");
 
         return new Producto(code,nombre,precio,stock,prov);
     }
@@ -29,7 +29,7 @@ public record ProductoRequestDTO(
         if(valor==null || valor.isBlank()) throw new ParametroIncorrecto("El campo " + campo + " es obligatorio");
     }
 
-    private void validarNotNullD(Double valor, String campo){
+    private void validarMayorACero(Double valor, String campo){
         if(valor==null || valor<=0) throw new ParametroIncorrecto("Ingrese un " + campo + " mayor a 0");
     }
 }
