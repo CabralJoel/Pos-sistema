@@ -1,5 +1,6 @@
-import styles from "../styles/CargarProductos.module.css"
+import styles from "../styles/cargaProductos/CargarProductos.module.css"
 import { NumberInput} from "../components/NumberInput";
+import TablaProductos from "../components/cargaProductos/TablaProductos";
 import React, { useEffect, useState } from "react";
 import type { ProductoRequestDTO } from "../types/producto";
 import { handleAlfanumerico } from "../utils/soloAlfanumericos"; 
@@ -17,7 +18,7 @@ interface ProductoForm{
     precio:number|"",
     stock:number|"",
     ganancia:number|"",
-    costo:number|"";
+    costo:number|"";//costo por unidad
 }
 
 export default function CargarProductos(){
@@ -34,11 +35,13 @@ export default function CargarProductos(){
 
     const [costoLote,setCostoLote] = useState<number|"">("");
     const [formData,setFormData] = useState<ProductoForm>(initialForm);
-    const [proveedores,setProveedores] = useState<ProveedorNameResponse[]>([]);
-    const [productos,setProductos] = useState<ProductoRequestDTO[]>([]);
+    const [proveedores,setProveedores] = useState<ProveedorNameResponse[]>([]);//proveedores recuperados
+    const [productos,setProductos] = useState<ProductoRequestDTO[]>([]);//productos en lista por cargar
+    const totalFactura = productos.reduce((total,p) => {//monto que debe figurar en la factura
+        return total + (p.costo * p.stock);
+    },0);
 
-    const emptyRows=19;
-    const filasVacias = emptyRows - productos.length;
+    const [editIndex,setEditIndex] = useState<number|null>(null);
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
@@ -181,8 +184,12 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
             ganancia:Number(formData.ganancia || 0),
             proveedor:formData.proveedor
         };
-
-        setProductos(prev=>[...prev,dto])
+        if(editIndex!==null){
+            setProductos(prev=>prev.map((p,i)=> i === editIndex ? dto:p));
+            setEditIndex(null);
+        }else{
+            setProductos(prev=>[...prev,dto])
+        }
         setCostoLote("");
 
         setFormData(prev => ({
@@ -216,6 +223,15 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
         }
     };
     
+    const handleDelete = (index:number) => {
+        setProductos(prev => prev.filter((_,i) => i!==index));
+    }
+    const handleEdit = (index:number) =>{
+        const editable = productos[index];
+        setFormData(editable);
+        setCostoLote(editable.costo * editable.stock);
+        setEditIndex(index)
+    }
 
     return(
         <div className={styles.container}>
@@ -292,42 +308,13 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
             {/*LISTA DE PRODUCTOS CARGADOS */}
             <div className={styles.pListContainer}>
                 <h2>Productos Cargados</h2>
-                <div className={styles.pList}>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Codigo</th>
-                                <th>Producto</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Ganancia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {productos.map((p,index)=>(
-                                <tr key={index}>
-                                    <td>{p.code}</td>
-                                    <td>{p.nombre}</td>
-                                    <td>{p.precio}</td>
-                                    <td>{p.stock}</td>
-                                    <td>{p.ganancia}</td>
-                                </tr>
-                            ))}
-                            {/*filas vacias */}
-                            {Array.from({ length: filasVacias }).map((_, index) => (
-                                <tr key={`empty-${index}`}>
-                                    <td>&nbsp;</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <TablaProductos listaProductos={productos} onDelete={handleDelete} onEdit={handleEdit}/>
                 <div className={styles.confirmContainer}>
-                    <input type="text" />{/*cambiar input*/}
+                    <span style={{minWidth:"16em",border:"1px solid black",borderRadius:"3px",padding:"0.2em 1em",textAlign:"start",
+                        fontSize:"1.2em"
+                    }}>
+                            Total cargado: $ {totalFactura}
+                        </span>
                     <button type="button" className={styles.submitButton}
                     onClick={handleGuardarProductos}>
                         Guardar Productos

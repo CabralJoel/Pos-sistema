@@ -1,0 +1,42 @@
+.pList{
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+.pList table{
+    width: 100%;
+    flex: 1;
+    border: 1px solid black;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.pList th,td{
+    border: 1px solid black;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.pList thead {
+    background: #e2e8f0;
+}
+.pList table th:nth-child(1) { width: 10%; }
+.pList table th:nth-child(2) { width: 40%; }
+.pList table th:nth-child(3),
+.pList table th:nth-child(4),
+.pList table th:nth-child(5),
+.pList table th:nth-child(6),
+.pList table th:nth-child(7) { width: calc(30% / 3); }
+
+.tdButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    gap:2px;
+}
+.pList button{
+    padding: 0.1em 0.5em;
+}
