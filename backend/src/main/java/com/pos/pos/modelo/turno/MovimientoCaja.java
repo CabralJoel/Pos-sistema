@@ -19,7 +19,8 @@ public class MovimientoCaja {
     }
 
     public enum Concepto{
-        APERTURA(Tipo.INGRESO),GASTO(Tipo.EGRESO),RETIRO(Tipo.EGRESO);
+        INGRESO_MANUAL(Tipo.INGRESO),GASTO(Tipo.EGRESO),RETIRO(Tipo.EGRESO),
+        PAGO_PROVEEDOR(Tipo.EGRESO),DEVOLUCION(Tipo.EGRESO),AJUSTE(null);
 
         private final Tipo tipo;
 
@@ -39,15 +40,34 @@ public class MovimientoCaja {
     @Column(nullable = false)
     private Concepto concepto;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Tipo tipo;
+
     @Column(nullable = false)
     private Double monto;
 
     @Column(nullable = false)
     private String descripcion;
-
+    //constructor para movimientos con tipo fijo
     public MovimientoCaja(Turno turno,Concepto concepto,Double monto,String descripcion){
+        if(concepto.getTipo() == null){
+            throw new IllegalArgumentException("El concepto " + concepto + " requiere especificar el tipo");
+        }
         this.turno = turno;
         this.concepto = concepto;
+        this.tipo = getTipo();
+        this.monto = monto;
+        this.descripcion = descripcion;
+    }
+    //constructor para ajuste
+    public MovimientoCaja(Turno turno,Concepto concepto,Tipo tipo,Double monto,String descripcion){
+        if(concepto.getTipo() != null){
+            throw new IllegalArgumentException("El concepto " + concepto + " ya tiene tipo fijo");
+        }
+        this.turno = turno;
+        this.concepto = concepto;
+        this.tipo = tipo;
         this.monto = monto;
         this.descripcion = descripcion;
     }

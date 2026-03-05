@@ -1,5 +1,6 @@
 package com.pos.pos.controller;
 
+import com.pos.pos.controller.Dto.MovimientoCajaRequest;
 import com.pos.pos.controller.Dto.turno.*;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.modelo.turno.Turno;
@@ -37,5 +38,12 @@ public class TurnoController {
         Turno turno = turnoService.findById(idTurno)
                 .orElseThrow(()->new ElementoNoEncontrado("El turno buscado no existe"));
         return ResponseEntity.ok(TurnoResumenResponseDTO.desdeModelo(turno));
+    }
+
+    @PostMapping("/{idTurno}/crearMovimiento/")
+    public  ResponseEntity<Void> createMovimiento(@PathVariable Long idTurno,
+                                                    @RequestBody MovimientoCajaRequest dto){
+        turnoService.crearMovimiento(idTurno,dto);
+        return ResponseEntity.ok().build();
     }
 }

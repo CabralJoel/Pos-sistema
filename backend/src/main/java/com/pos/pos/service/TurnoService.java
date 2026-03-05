@@ -1,5 +1,6 @@
 package com.pos.pos.service;
 
+import com.pos.pos.controller.Dto.MovimientoCajaRequest;
 import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
 import com.pos.pos.modelo.turno.Turno;
 
@@ -10,4 +11,5 @@ public interface TurnoService {
     Turno update(Turno turno);
     Optional<Turno> findById(Long id);
     Turno cerrarTurno(Long idTurno, Double efectivo);
+    void crearMovimiento(Long idTurno, MovimientoCajaRequest movDto);
 }

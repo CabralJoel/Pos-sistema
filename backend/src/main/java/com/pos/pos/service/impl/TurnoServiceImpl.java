@@ -1,12 +1,12 @@
 package com.pos.pos.service.impl;
 
+import com.pos.pos.controller.Dto.MovimientoCajaRequest;
 import com.pos.pos.controller.Dto.turno.TurnoRequestDto;
 import com.pos.pos.controller.exception.ElementoNoEncontrado;
 import com.pos.pos.controller.exception.ParametroIncorrecto;
-import com.pos.pos.controller.exception.RolInvalidoException;
+import com.pos.pos.modelo.turno.MovimientoCaja;
 import com.pos.pos.modelo.turno.Turno;
 import com.pos.pos.modelo.Usuario;
-import com.pos.pos.modelo.UsuarioRol;
 import com.pos.pos.persistencia.interfaces.TurnoRepository;
 import com.pos.pos.service.TurnoService;
 import com.pos.pos.service.UsuarioService;
@@ -57,5 +57,21 @@ public class TurnoServiceImpl implements TurnoService {
         turnoRecuperdado.cerrarTurno(efectivoEnCaja);
 
         return turnoRepository.save(turnoRecuperdado);
+    }
+    @Override
+    public void crearMovimiento(Long idTurno,MovimientoCajaRequest movDto){
+        Turno turno = this.turnoRepository.findById(idTurno)
+                .orElseThrow(()->new ElementoNoEncontrado("El turno buscado no existe"));
+        MovimientoCaja movimiento;
+
+        if(movDto.concepto() == MovimientoCaja.Concepto.AJUSTE){
+            if(movDto.tipo()==null)throw new ParametroIncorrecto("Tipo de Movimiento no especificado en ajuste");
+            movimiento = new MovimientoCaja(turno,movDto.concepto(),movDto.tipo(),movDto.monto(),movDto.descripcion());
+        }else {
+            movimiento = new MovimientoCaja(turno,movDto.concepto(),movDto.monto(),movDto.descripcion());
+        }
+
+        turno.agregarMovimiento(movimiento);
+        turnoRepository.save(turno);
     }
 }

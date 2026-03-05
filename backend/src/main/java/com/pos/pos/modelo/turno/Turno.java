@@ -48,10 +48,10 @@ public class Turno {
     @Column
     private EstadoTurno estado;
 
-    @OneToMany(mappedBy = "turno",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "turno",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Venta> ventas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "turno",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "turno",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<MovimientoCaja> movimientos = new ArrayList<>();
 
     public Turno(Usuario cajero,Double efectivoInicial){
