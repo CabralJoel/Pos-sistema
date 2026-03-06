@@ -209,6 +209,22 @@ app.whenReady().then(() => {
   ipcMain.handle("get-usuario-actual",() => {
     return session.usuario;
   });
+
+  //abrir movimientoCajaModal
+  ipcMain.handle("open-movimiento-modal",() => {
+    const caja = windows.get("caja");
+    const existing = windows.get("movimiento-modal");
+    if(existing && !existing.win.isDestroyed()){
+      existing.win.focus();
+      return;
+    }
+    createWindow("/movimiento",{
+      windowKey:"movimiento-modal",
+      windowType:"modal",
+      parent: caja?.win,
+      modal:true,
+    })
+  });
   
   // abrir TurnoModal
   ipcMain.handle("open-turno-modal",() => {

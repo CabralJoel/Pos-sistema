@@ -7,10 +7,10 @@ import { handleAlfanumerico } from "../utils/soloAlfanumericos";
 import {toast } from "react-toastify";
 
 import { isNotEmpty, maxLength, mayorACero } from "../utils/validaciones";
-import { redondear,calcularGanancia,calcularPrecio } from "../utils/calculos";
+import { calcularGanancia,calcularPrecio } from "../utils/calculos";
 import { useValidator } from "../hooks/useValidator";
 import type { ProveedorNameResponse } from "../types/proveedor";
-//TODO: agregar calculos de inputs de precios
+
 interface ProductoForm{
     proveedor:string,
     code:string,

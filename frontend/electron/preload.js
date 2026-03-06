@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   getUsuarioActual: () => ipcRenderer.invoke("get-usuario-actual"),
 
+  openMovimientoModal: () =>ipcRenderer.invoke("open-movimiento-modal"),
+
   openTurnoModal: () => ipcRenderer.invoke("open-turno-modal"),
 
   confirmarTurno: (turno) => ipcRenderer.invoke("confirmar-turno", turno),

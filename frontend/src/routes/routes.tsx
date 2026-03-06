@@ -7,6 +7,7 @@ import Proveedores from "../pages/ProveedoresPage";
 import Caja from "../pages/CajaPage";
 import WindowPagoMixto from "../pages/WindowPagoMixto";
 import TurnoModal from "../pages/TurnoModal";
+import MovimientoCajaModal from "../pages/MovimientoCajaModal";
 //cambiar el elemento del inventario
 export  function AppRoutes(){
     return(
@@ -15,6 +16,7 @@ export  function AppRoutes(){
                 <Route path="/caja" element={<Caja/>}/>
                 <Route path="/pago-mixto" element={<WindowPagoMixto/>}/>
                 <Route path="/turno" element={<TurnoModal/>}/>
+                <Route path="/movimiento" element={<MovimientoCajaModal/>}/>
                 
                 <Route element={<NavLayout/>}> {/*las rutas dentro del NavLayout utilizan este nav*/}
                     <Route path="/carga" element={<CargarProductos/>}/>

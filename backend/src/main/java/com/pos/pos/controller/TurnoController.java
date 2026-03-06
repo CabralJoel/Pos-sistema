@@ -40,7 +40,7 @@ public class TurnoController {
         return ResponseEntity.ok(TurnoResumenResponseDTO.desdeModelo(turno));
     }
 
-    @PostMapping("/{idTurno}/crearMovimiento/")
+    @PostMapping("/{idTurno}/crearMovimiento")
     public  ResponseEntity<Void> createMovimiento(@PathVariable Long idTurno,
                                                     @RequestBody MovimientoCajaRequest dto){
         turnoService.crearMovimiento(idTurno,dto);

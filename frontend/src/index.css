@@ -23,6 +23,9 @@ html, body, #root {
 * {
   box-sizing: border-box;
 }
+textarea{
+  outline: none;
+}
 
 button {
   border-radius: 8px;

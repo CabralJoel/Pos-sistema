@@ -18,6 +18,8 @@ declare global {
 
       getUsuarioActual: () => Promise<any>;
 
+      openMovimientoModal: () => Promise<void>;
+
       openTurnoModal:() => Promise<void>;
 
       confirmarTurno: (turno: any) => Promise<void>;

@@ -106,3 +106,10 @@ export interface ResumenVentaTurnoLocal{
     total:number,
     ventas:ResumenVentaLocal[],
 }
+
+export interface movimientoRequestDTO{
+    tipo?:string,
+    concepto:string,
+    monto:number|"",
+    descripcion:string,
+}

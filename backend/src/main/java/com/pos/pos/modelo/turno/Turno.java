@@ -88,11 +88,11 @@ public class Turno {
                 .mapToDouble(MedioPago::getMonto).sum();
 
         Double ingresosMovimientos = movimientos.stream()
-                .filter(m->m.getConcepto().getTipo() == MovimientoCaja.Tipo.INGRESO)
+                .filter(m->m.getTipo() == MovimientoCaja.Tipo.INGRESO)
                 .mapToDouble(MovimientoCaja::getMonto).sum();
 
         Double egresosMovimientos = movimientos.stream()
-                .filter(m->m.getConcepto().getTipo() == MovimientoCaja.Tipo.EGRESO)
+                .filter(m->m.getTipo() == MovimientoCaja.Tipo.EGRESO)
                 .mapToDouble(MovimientoCaja::getMonto).sum();
 
         return efectivoVentas + ingresosMovimientos - egresosMovimientos;

@@ -56,7 +56,7 @@ public class MovimientoCaja {
         }
         this.turno = turno;
         this.concepto = concepto;
-        this.tipo = getTipo();
+        this.tipo = concepto.getTipo();
         this.monto = monto;
         this.descripcion = descripcion;
     }

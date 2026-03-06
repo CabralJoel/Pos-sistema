@@ -1,0 +1,52 @@
+.modalContainer{
+    display: flex;
+    flex-direction: column;
+    padding: 0 2em;
+    background-color: #949494;
+    height: 100%;
+    
+}
+.selectContainer{
+    display: flex;
+    padding: 0 3em;
+    gap: 20px;
+    justify-content: center;
+}
+.selectContainer select{
+    font-size: medium;
+    max-width: 45vw;
+}
+.infoContainer{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-around;
+    
+}
+.infoContainer label{
+    text-align: start;
+    font-size: x-large;
+}
+
+.infoContainer input{
+    max-width: 50vw;
+    padding: 7px;
+    font-size: large;
+}
+.infoContainer textarea{
+    font-size: x-large;
+    min-height: 38vh;
+    resize: none;
+    border-radius: 5px;
+}
+
+.buttonContainer{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+.buttonContainer button{
+    font-size: large;
+    min-width: 11em;
+}

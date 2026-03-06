@@ -314,10 +314,15 @@ export default function CajaPage(){
                     e.preventDefault();
                     cerrarTurno();
                     break
+                case "F9":
+                    e.preventDefault();
+                    window.electronAPI.openMovimientoModal();
+                    break;
                 case "F8":
                     e.preventDefault();
                     setAbrirVarios(prev=>!prev);
-                    break;
+                    break
+                
             }
         }
         window.addEventListener("keydown",handleKeyDown);
@@ -342,7 +347,7 @@ export default function CajaPage(){
                         mostrarResumen={mostratResumen} onCloseResumen={()=>setMostrarResumen(false)} />
                     </div>
                     <OpcionesCaja onFinalizarVenta={finalizarVenta} onCerrarTurno={cerrarTurno} 
-                    onMostrarResumen={()=>setMostrarResumen(prev=>!prev)}/>
+                    onMostrarResumen={()=>setMostrarResumen(prev=>!prev)} onMovimientoCaja={()=>window.electronAPI.openMovimientoModal()}/>
                 </div>
             </div>
         </div>
