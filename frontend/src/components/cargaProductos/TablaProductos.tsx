@@ -29,11 +29,11 @@ export default function TablaProductos({listaProductos,onDelete,onEdit}:listProp
                 </thead>
                 <tbody>
                     {listaProductos.map((p,index)=>(
-                        <tr key={index}>
+                        <tr key={p.code}>
                             <td>{p.code}</td>
                             <td>{p.nombre}</td>
                             <td>{p.precio}</td>
-                            <td>{p.costo * p.stock}</td>
+                            <td>{parseFloat((p.costo * p.stock).toFixed(2))}</td>
                             <td>{p.stock}</td>
                             <td>{p.ganancia}%</td>
                             <td>
